@@ -15,6 +15,7 @@ class World {
 	var entities:Array<Entity>;
 	var entitiesToSpawn:Array<{se:Entity,sx:Float,sy:Float}>;	
 	var entitiesToRemove:Array<Entity>;
+	var isWall:Array<Bool>;
 
 	public function new(game:Main) {
 		this.game = game;
@@ -32,9 +33,51 @@ class World {
 		entities = [];
 		entitiesToRemove = [];
 		entitiesToSpawn = [];
+		isWall = [];
+	}
+	
+	inline function tileIndex(tx:Int, ty:Int):Int {
+		return tx + ty * mapData.width;
 	}
 	
 	function parseLevelData() {		
+		var wallsMap = TiledMapHelpers.getWallsLayer(mapData);
+		
+		for (ty in 0...mapData.height) {
+			for (tx in 0...mapData.width) {
+				isWall[tileIndex(tx, ty)] = TiledMapHelpers.getTile(mapData, wallsMap, tx, ty) != 0;
+				// TODO --- entities: start/exit, monsters generators, items.
+			}
+		}
+	}
+	
+	public function isInBounds(tx:Int, ty:Int):Bool {
+		return tx >= 0 && tx < mapData.width && ty >= 0 && ty < mapData.height;
+	}
+	
+	/**
+	 * Check if out of bounds or blocked by a wall.
+	 * @param	tx
+	 * @param	ty
+	 * @return
+	 */
+	public function isBlockingAt(tx:Int, ty:Int):Bool {
+		return !isInBounds(tx,ty) || isWall[tileIndex(tx, ty)];
+	}
+	
+	public inline function toTilePos(x:Float, y:Float): { tx:Int, ty:Int } {
+		return { tx:Std.int(x / Main.TILE_SIZE), ty:Std.int(y / Main.TILE_SIZE) };
+	}
+	
+	/**
+	 * Check if position is out of bounds or blocked by a wall.
+	 * @param	x
+	 * @param	y
+	 * @return
+	 */
+	public inline function isBlocking(x:Float, y:Float):Bool {
+		var t = toTilePos(x, y);
+		return isBlockingAt(t.tx, t.ty);
 	}
 	
 	public function removeEntity(e:Entity) {
