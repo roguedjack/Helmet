@@ -15,7 +15,6 @@ class World {
 	var entities:Array<Entity>;
 	var entitiesToSpawn:Array<{se:Entity,sx:Float,sy:Float}>;	
 	var entitiesToRemove:Array<Entity>;
-	var actorsList:Array<Actor>;	
 
 	public function new(game:Main) {
 		this.game = game;
@@ -77,10 +76,6 @@ class World {
 		var spawn;
 		while ((spawn = entitiesToSpawn.pop()) != null) {
 			entities.push(spawn.se);
-			var actor = cast(spawn.se, Actor);
-			if (actor != null) {
-				actorsList.push(actor);
-			}
 			spawn.se.spawn(spawn.sx, spawn.sy);
 		}
 		
@@ -88,10 +83,6 @@ class World {
 		var removal;
 		while ((removal = entitiesToRemove.pop()) != null) {
 			entities.remove(removal);
-			var actor = cast(removal, Actor);
-			if (actor != null) {
-				actorsList.remove(actor);
-			}
 		}
 	}
 }
