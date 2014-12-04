@@ -48,6 +48,13 @@ class World {
 	public function update(elapsed:Float) {
 		time += elapsed;
 		
+		// do spawns.
+		var spawn;
+		while ((spawn = entitiesToSpawn.pop()) != null) {
+			entities.push(spawn.se);
+			spawn.se.spawn(spawn.sx, spawn.sy);
+		}		
+		
 		// update entities.
 		for (e in entities) {
 			e.update(elapsed);
@@ -70,13 +77,6 @@ class World {
 					}
 				}
 			}
-		}
-
-		// do spawns.
-		var spawn;
-		while ((spawn = entitiesToSpawn.pop()) != null) {
-			entities.push(spawn.se);
-			spawn.se.spawn(spawn.sx, spawn.sy);
 		}
 		
 		// do removals.
