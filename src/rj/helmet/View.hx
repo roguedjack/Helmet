@@ -80,14 +80,8 @@ class View extends Sprite {
 	}
 	
 	public function redrawLevelTilesBmp(mapData:TiledMapData) {
-		var floorMap = Lambda.find(mapData.layers, function(l) return l.name == Main.TILED_FLOOR_LAYER_NAME);
-		if (floorMap == null) {
-			throw "could not find floor layer in map";
-		}
-		var wallsMap = Lambda.find(mapData.layers, function(l) return l.name == Main.TILED_WALLS_LAYER_NAME);
-		if (wallsMap == null) {
-			throw "could not find walls layer in map";
-		}		
+		var floorMap = TiledMapHelpers.getFloorLayer(mapData);
+		var wallsMap = TiledMapHelpers.getWallsLayer(mapData);
 		
 		// draw the tiles				
 		var floorCanvas:BitmapData = new BitmapData(mapData.width * Main.TILE_SIZE, mapData.height * Main.TILE_SIZE);		
@@ -99,7 +93,7 @@ class View extends Sprite {
 			return { x : Main.TILE_SIZE * (t % Main.TILE_SHEET_COLUMNS), y : Main.TILE_SIZE * Std.int(t / Main.TILE_SHEET_ROWS) };
 		}		
 		inline function drawTile(layer:TiledMapLayer, tx, ty, canvas:BitmapData) {
-			var tile = layer.data[ty * mapData.width + tx];
+			var tile = TiledMapHelpers.getTile(mapData, layer, tx, ty);
 			if (tile == 0) {
 				return;
 			}
