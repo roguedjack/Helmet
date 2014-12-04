@@ -3,9 +3,14 @@
  <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
   <image source="../gfx/tiles.png" width="256" height="256"/>
  </tileset>
- <layer name="tiles" width="16" height="16">
+ <layer name="floor" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjZmBgYKYQM5GJR/Wj6kc3ixlNHTb1xOrHpmYg7Cfkf2x2Eat/oONvoPRTggGwBAJW
+   eJxjZGBgYBzFo3gUj0gMAAYeAQE=
+  </data>
+ </layer>
+ <layer name="walls" width="16" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjYmBgYKIQkwtG9aPqRzeLCU0dNvXE6semZiDsR5fHZh66XcTqJxUMF/2UYABTnwCr
   </data>
  </layer>
 </map>

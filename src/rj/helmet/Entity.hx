@@ -1,4 +1,5 @@
 package rj.helmet;
+import h2d.Anim;
 import h2d.col.Bounds;
 import h2d.Sprite;
 
@@ -8,6 +9,7 @@ import h2d.Sprite;
 	var MONSTER_GENERATOR = 2;
 	var EXIT = 3;
 	var ITEM = 4;
+	var PROJECTILE = 5;
 }
 
 /**
@@ -25,6 +27,7 @@ class Entity {
 
 	public function new(type:EntityType) {
 		this.type = type;
+		sprite = new Sprite();
 	}
 	
 	function set_pos( p:{x:Float,y:Float} ) {
@@ -47,15 +50,11 @@ class Entity {
 	}
 	
 	function onVisible() {
-		if (sprite != null) {
-			sprite.visible = true;
-		}
+		sprite.visible = true;
 	}
 	
 	function onHide() {
-		if (sprite != null) {
-			sprite.visible = false;
-		}
+		sprite.visible = false;
 	}
 	
 	function updateBounds() {
@@ -69,14 +68,19 @@ class Entity {
 	public function remove() {
 		isVisible = false;
 		Main.Instance.world.removeEntity(this);
-		if (sprite != null && Main.Instance.view != null) {
-			Main.Instance.view.removeEntitySprite(sprite);
+		if (Main.Instance.view != null) {
+			Main.Instance.view.removeEntitySprite(this);		
+		} else {
+			sprite.remove();
 		}
 	}
 	
 	public function spawn(x:Float, y:Float) {		
 		pos.x = x;
 		pos.y = y;
+		if (Main.Instance.view != null) {
+			Main.Instance.view.addEntitySprite(this);
+		}
 	}
 	
 	/**

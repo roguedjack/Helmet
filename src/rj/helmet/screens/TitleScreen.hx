@@ -11,7 +11,7 @@ import rj.helmet.Screen;
  * ...
  * @author roguedjack
  */
-class IntroScreen extends Screen {
+class TitleScreen extends Screen {
 	
 	var title:Text;
 	var msg:Text;

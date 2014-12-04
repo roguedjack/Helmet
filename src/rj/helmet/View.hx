@@ -7,7 +7,9 @@ import h2d.Tile;
 import hxd.BitmapData;
 import hxd.Res;
 import hxd.res.TiledMap.TiledMapData;
+import hxd.res.TiledMap.TiledMapLayer;
 import hxd.Timer;
+import rj.helmet.Entity.EntityType;
 
 /**
  * ...
@@ -17,9 +19,13 @@ class View extends Sprite {
 	
 	var tilesSetBmp:BitmapData;
 	var layers:Layers;
-	var tilesLayer:Sprite;
-	var tilesBmp:Bitmap;	
-	var entitiesLayer:Sprite;
+	var floorLayer:Sprite;
+	var floorBmp:Bitmap;	
+	var wallsLayer:Sprite;
+	var wallsBmp:Bitmap;		
+	var projectilesLayer:Sprite;	
+	var actorsLayer:Sprite;
+	var itemsLayer:Sprite;
 
 	public function new(?parent:Sprite) {
 		super(parent);
@@ -27,53 +33,98 @@ class View extends Sprite {
 		tilesSetBmp = Res.gfx.tiles.toBitmap(); // cache
 		
 		layers = new Layers(this);
-		tilesLayer = new Sprite();
-		entitiesLayer = new Sprite();
-		layers.addChildAt(tilesLayer, 0);
-		layers.addChildAt(entitiesLayer, 1);
+		floorLayer = new Sprite();
+		itemsLayer = new Sprite();
+		projectilesLayer = new Sprite();
+		wallsLayer = new Sprite();
+		actorsLayer = new Sprite();
+		layers.addChildAt(floorLayer, 0);
+		layers.addChildAt(itemsLayer, 1);
+		layers.addChildAt(projectilesLayer, 2);		
+		layers.addChildAt(wallsLayer, 3);
+		layers.addChildAt(actorsLayer, 4);
+	}
+	
+	inline function getEntityLayer(e:Entity):Sprite {
+		return switch (e.type) {
+			case EntityType.EXIT:
+				floorLayer;
+			case EntityType.ITEM:
+				itemsLayer;				
+			case EntityType.MONSTER_GENERATOR:
+				itemsLayer;
+			case EntityType.PLAYER:
+				actorsLayer;
+			case EntityType.PROJECTILE:
+				projectilesLayer;
+			case EntityType.MONSTER:
+				actorsLayer;
+			default:
+				actorsLayer;
+		}
 	}
 	
 	
-	public function addEntitySprite(s:Sprite) {
-		if (s == null) {
+	public function addEntitySprite(e:Entity) {
+		if (e.sprite == null) {
 			return;
 		}
-		// TODO layers: projectiles -> tiles -> actors -> items
-		entitiesLayer.addChild(s);
+		getEntityLayer(e).addChild(e.sprite);
 	}	
 	
-	public function removeEntitySprite(s:Sprite) {
-		if (s == null) {
+	public function removeEntitySprite(e:Entity) {
+		if (e.sprite == null) {
 			return;
 		}
-		s.remove();
+		e.sprite.remove();
 	}
 	
 	public function redrawLevelTilesBmp(mapData:TiledMapData) {
-		var tileMap = Lambda.find(mapData.layers, function(l) return l.name == Main.TILED_TILE_LAYER_NAME);
-		if (tileMap == null) {
-			throw "could not find tile layer in map";
+		var floorMap = Lambda.find(mapData.layers, function(l) return l.name == Main.TILED_FLOOR_LAYER_NAME);
+		if (floorMap == null) {
+			throw "could not find floor layer in map";
 		}
+		var wallsMap = Lambda.find(mapData.layers, function(l) return l.name == Main.TILED_WALLS_LAYER_NAME);
+		if (wallsMap == null) {
+			throw "could not find walls layer in map";
+		}		
 		
-		// draw the tiles
-		var canvas:BitmapData = new BitmapData(mapData.width * Main.TILE_SIZE, mapData.height * Main.TILE_SIZE);		
-		canvas.lock();		
+		// draw the tiles				
+		var floorCanvas:BitmapData = new BitmapData(mapData.width * Main.TILE_SIZE, mapData.height * Main.TILE_SIZE);		
+		var wallsCanvas:BitmapData = new BitmapData(mapData.width * Main.TILE_SIZE, mapData.height * Main.TILE_SIZE);		
+		floorCanvas.lock();		
+		wallsCanvas.lock();
+		inline function tileToSheetXY(t) {
+			t--;
+			return { x : Main.TILE_SIZE * (t % Main.TILE_SHEET_COLUMNS), y : Main.TILE_SIZE * Std.int(t / Main.TILE_SHEET_ROWS) };
+		}		
+		inline function drawTile(layer:TiledMapLayer, tx, ty, canvas:BitmapData) {
+			var tile = layer.data[ty * mapData.width + tx];
+			if (tile == 0) {
+				return;
+			}
+			var src = tileToSheetXY(tile);
+			canvas.draw(tx * Main.TILE_SIZE, ty * Main.TILE_SIZE, tilesSetBmp, src.x, src.y, Main.TILE_SIZE, Main.TILE_SIZE);
+		}
 		for (ty in 0...mapData.height) {
-			var y = ty * Main.TILE_SIZE;
 			for (tx in 0...mapData.width) {
-				var tile = tileMap.data[ty * mapData.width + tx] - 1;  // tiledmap tile numbering starts at 1
-				var srcY = Main.TILE_SIZE * Std.int(tile / Main.TILE_SHEET_ROWS);
-				var srcX = Main.TILE_SIZE * (tile % Main.TILE_SHEET_COLUMNS);
-				canvas.draw(tx*Main.TILE_SIZE, y, tilesSetBmp, srcX, srcY, Main.TILE_SIZE, Main.TILE_SIZE);
+				drawTile(floorMap, tx, ty, floorCanvas);
+				drawTile(wallsMap, tx, ty, wallsCanvas);
 			}
 		}				
-		canvas.unlock();
+		wallsCanvas.unlock();
+		floorCanvas.unlock();
 		// FIXME can't we just lock-draw-unlock the bitmap? detaching & reallocating sucks.
-		if (tilesBmp != null) {
-			tilesBmp.remove();
+		if (floorBmp != null) {
+			floorBmp.remove();
 		}
-		tilesBmp = new Bitmap(Tile.fromBitmap(canvas), tilesLayer);
-		canvas.dispose();
+		floorBmp = new Bitmap(Tile.fromBitmap(floorCanvas), floorLayer);		
+		floorCanvas.dispose();
+		if (wallsBmp != null) {
+			wallsBmp.remove();
+		}
+		wallsBmp = new Bitmap(Tile.fromBitmap(wallsCanvas), wallsLayer);
+		wallsCanvas.dispose();
 	}
 	
 	public function update(elapsed:Float) {
