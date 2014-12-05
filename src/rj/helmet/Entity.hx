@@ -1,15 +1,18 @@
 package rj.helmet;
 import h2d.Anim;
+import h2d.Bitmap;
 import h2d.col.Bounds;
 import h2d.Sprite;
+import h2d.Tile;
 
 @:enum abstract EntityType(Int) {
 	var PLAYER = 0;
 	var MONSTER = 1;
 	var MONSTER_GENERATOR = 2;
-	var EXIT = 3;
-	var ITEM = 4;
-	var PROJECTILE = 5;
+	var ITEM = 3;
+	var PROJECTILE = 4;
+	var START = 5;
+	var EXIT = 6;	
 }
 
 /**
@@ -20,49 +23,82 @@ class Entity {
 	
 	public var type(default, null):EntityType;
 	public var pos(default, set): { x:Float, y:Float };
+	
+	/**
+	 * Can this entity collide with others? (default False)
+	 */
 	public var canCollide(default, default):Bool;
+	/**
+	 * If colliding, is this entity blocking others? (default False)
+	 */
+	public var hardCollision(default, default):Bool;
+	
 	public var bounds(default, null):Bounds;
-	public var isVisible(default, set):Bool;
+
+	public var isVisible(get, set):Bool;
+	
 	public var sprite(default, null):Sprite;
+	
+	public var rotation(get, set):Float;
+		
+	var world:World;	
+	var colBox:Bounds;
+	var bitmap:Bitmap;
+	var anchor:Sprite;  // for rotation on center
 
 	public function new(type:EntityType) {
 		this.type = type;
-		sprite = new Sprite();
+		world = Main.Instance.world;
+		colBox = new Bounds();
+		bounds = new Bounds();
+		sprite = new Sprite();		
+		anchor = new Sprite(sprite);
+		bitmap = new Bitmap(null, anchor);
 	}
 	
-	function set_pos( p:{x:Float,y:Float} ) {
+	function set_pos( p: { x:Float, y:Float } ) {
 		pos = p;
-		updateBounds();
+		syncCollisionBounds();
+		syncSpritePos();
 		return pos;
+	}
+
+	function get_isVisible() {
+		return sprite.visible;
 	}
 	
 	function set_isVisible(b) {
-		if (b == isVisible) {
-			return b;
+		if (b != sprite.visible) {
+			if (b) {
+				sprite.visible = true;
+				onVisible();
+			} else {
+				sprite.visible = false;
+				onHide();
+			}
 		}
-		b = isVisible;
-		if (b) {
-			onVisible();
-		} else {
-			onHide();
-		}
-		return isVisible;
+		return b;
 	}
 	
-	function onVisible() {
-		sprite.visible = true;
+	function onVisible() { }
+	
+	function onHide() { }
+	
+	function get_rotation() {
+		return anchor.rotation;
 	}
 	
-	function onHide() {
-		sprite.visible = false;
+	function set_rotation(r) {		
+		anchor.rotation = r;
+		return anchor.rotation; 
 	}
 	
-	function updateBounds() {
-		if (bounds == null) {
-			return;
-		}
-		bounds.x = pos.x;
-		bounds.y = pos.y;
+	function syncCollisionBounds() {
+		bounds.set(pos.x + colBox.xMin, pos.y + colBox.yMin, colBox.width, colBox.height);
+	}
+	
+	function syncSpritePos() {
+		sprite.setPos(pos.x, pos.y);
 	}
 	
 	public function remove() {
@@ -75,27 +111,22 @@ class Entity {
 		}
 	}
 	
+	function setImage(t:Tile) {
+		anchor.setPos( 0.5 * t.width, 0.5 * t.height);		
+		bitmap.setPos( -anchor.x, -anchor.y);
+		bitmap.tile = t;
+	}
+	
+	function setCollisionBox(x:Int,y:Int,w:Int, h:Int) {
+		colBox = Bounds.fromValues(x, y, w, h);
+	}	
+	
 	public function spawn(x:Float, y:Float) {		
-		pos.x = x;
-		pos.y = y;
+		pos = { x:x, y:y };
 		if (Main.Instance.view != null) {
 			Main.Instance.view.addEntitySprite(this);
 		}
 	}
-	
-	/**
-	 * Check if bounds collide. Does not check for `isColliding` flag.
-	 * @param	other
-	 * @return
-	 */
-	public function checkCollisionWith(other:Entity):Bool {
-		if (bounds == null || other.bounds == null) {
-			return false;
-		}
-		return bounds.collide(other.bounds);
-	}
-	
-	public function onCollisionWith(other:Entity) {}
 	
 	public function update(elapsed:Float) {}
 }

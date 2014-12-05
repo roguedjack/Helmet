@@ -10,7 +10,11 @@
  </layer>
  <layer name="walls" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjYmBgYKIQkwtG9aPqRzeLCU0dNvXE6semZiDsR5fHZh66XcTqJxUMF/2UYABTnwCr
+   eJzjZmBgYCUT8wAxGwP5gI3K+lkYSHM/J5XtJ0c/BwnuBWFmKts/Gv5DO/y5GMjPv7xADAC12AJX
   </data>
  </layer>
+ <objectgroup name="entities" width="16" height="16">
+  <object name="exit_1" type="exit" x="448" y="32" width="32" height="32"/>
+  <object name="start" type="start" x="32" y="448" width="32" height="32"/>
+ </objectgroup>
 </map>

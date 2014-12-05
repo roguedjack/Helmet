@@ -1,6 +1,10 @@
 package rj.helmet;
+import h2d.col.Bounds;
 import hxd.Res;
 import hxd.res.TiledMap;
+import rj.helmet.entities.ExitEntity;
+import rj.helmet.entities.PlayerActor;
+import rj.helmet.entities.StartEntity;
 import rj.helmet.Entity.EntityType;
 
 /**
@@ -11,7 +15,9 @@ class World {
 	
 	var game:Main;
 	public var mapData(default,null):TiledMapData;
-	public var time(default,null):Float;
+	public var time(default, null):Float;
+	public var player(default, null):Entity;
+	public var startPoint(default, null):Entity;	
 	var entities:Array<Entity>;
 	var entitiesToSpawn:Array<{se:Entity,sx:Float,sy:Float}>;	
 	var entitiesToRemove:Array<Entity>;
@@ -42,12 +48,29 @@ class World {
 	
 	function parseLevelData() {		
 		var wallsMap = TiledMapHelpers.getWallsLayer(mapData);
-		
+		var entitiesMap = TiledMapHelpers.getEntitiesLayer(mapData);
+
+		// walls
 		for (ty in 0...mapData.height) {
 			for (tx in 0...mapData.width) {
 				isWall[tileIndex(tx, ty)] = TiledMapHelpers.getTile(mapData, wallsMap, tx, ty) != 0;
-				// TODO --- entities: start/exit, monsters generators, items.
 			}
+		}
+		
+		// entities
+		for (o in entitiesMap.objects) {
+			var e:Entity = null;
+			switch (o.type) {
+				case Main.TILEDOBJ_EXIT:
+					e = new ExitEntity();
+				case Main.TILEDOBJ_START:
+					e = new StartEntity();
+			}
+			if (e == null) {
+				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;
+			}
+			//trace("spawning " + e+" at " + o.x + ',' + o.y);
+			spawnEntity(e, o.x, o.y);
 		}
 	}
 	
@@ -66,7 +89,7 @@ class World {
 	}
 	
 	public inline function toTilePos(x:Float, y:Float): { tx:Int, ty:Int } {
-		return { tx:Std.int(x / Main.TILE_SIZE), ty:Std.int(y / Main.TILE_SIZE) };
+		return { tx:Math.floor(x / Main.TILE_SIZE), ty:Math.floor(y / Main.TILE_SIZE) };
 	}
 	
 	/**
@@ -86,8 +109,48 @@ class World {
 	
 	public function spawnEntity(e:Entity, x:Float, y:Float) {
 		entitiesToSpawn.push( { se:e, sx:x, sy:y } );
+		switch (e.type) {
+			case EntityType.START:
+				startPoint = e;
+			case EntityType.PLAYER:
+				player = e;
+			default:
+				// nop
+		}
 	}
 
+	public function checkWorldCollision(colBox:Bounds, x:Float, y:Float):{ tl:Int, tr:Int, tu:Int, td:Int, colUL:Bool, colUR:Bool, colDL:Bool, colDR:Bool } {
+		var tUL = toTilePos(x + colBox.xMin, y + colBox.yMin);
+		var tDR = toTilePos(x + colBox.xMax - 1, y + colBox.yMax - 1);
+		return {
+			tl:tUL.tx,
+			tr:tDR.tx,
+			tu:tUL.ty,
+			td:tDR.ty,
+			colUL:isBlockingAt(tUL.tx, tUL.ty),
+			colUR:isBlockingAt(tDR.tx, tUL.ty),
+			colDL:isBlockingAt(tUL.tx, tDR.ty),
+			colDR:isBlockingAt(tDR.tx, tDR.ty)
+		};
+	}
+	
+	public function checkEntitiesCollision(colBox:Bounds, x:Float, y:Float, ignore:Array<Entity>=null):Array<Entity> {
+		var bounds = Bounds.fromValues(x+colBox.xMin, y+colBox.yMin, colBox.width, colBox.height);
+		var colliders:Array<Entity> = [];
+		for (other in entities) {
+			if (!other.canCollide) {
+				continue;
+			}
+			if (ignore != null && ignore.indexOf(other) != -1) {
+				continue;
+			}
+			if (other.bounds.collide(bounds)) {
+				colliders.push(other);
+			}
+		}
+		return colliders;
+	}
+	
 	public function update(elapsed:Float) {
 		time += elapsed;
 		
@@ -101,25 +164,6 @@ class World {
 		// update entities.
 		for (e in entities) {
 			e.update(elapsed);
-		}
-		
-		// find & resolve entities collisions.
-		var n = entities.length;
-		for (i in 0...n) {
-			var e_i = entities[i];
-			if (e_i.canCollide) {
-				for (j in i + 1...n) {
-					var e_j = entities[j];
-					if (e_j.canCollide && e_i.checkCollisionWith(e_j)) {
-						e_i.onCollisionWith(e_j);
-						e_j.onCollisionWith(e_i);
-						// stop checking e_i if collision now disabled
-						if (!e_i.canCollide) {  
-							break;
-						}
-					}
-				}
-			}
 		}
 		
 		// do removals.

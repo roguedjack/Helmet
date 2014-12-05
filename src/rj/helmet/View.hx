@@ -17,34 +17,48 @@ import rj.helmet.Entity.EntityType;
  */
 class View extends Sprite {
 	
+	private static inline var SCALE = 2.0;
+	
 	var tilesSetBmp:BitmapData;
-	var layers:Layers;
+	var mapLayers:Layers;
 	var floorLayer:Sprite;
 	var floorBmp:Bitmap;	
 	var wallsLayer:Sprite;
-	var wallsBmp:Bitmap;		
+	var wallsBmp:Bitmap;			
 	var projectilesLayer:Sprite;	
 	var actorsLayer:Sprite;
 	var itemsLayer:Sprite;
+	public var followTarget(default,set):Entity;
 
 	public function new(?parent:Sprite) {
 		super(parent);
 
 		tilesSetBmp = Res.gfx.tiles.toBitmap(); // cache
 		
-		layers = new Layers(this);
+		mapLayers = new Layers(this);
+		mapLayers.setScale(SCALE);
 		floorLayer = new Sprite();
+		floorBmp = new Bitmap(null, floorLayer);
 		itemsLayer = new Sprite();
 		projectilesLayer = new Sprite();
 		wallsLayer = new Sprite();
+		wallsBmp = new Bitmap(null, wallsLayer);
 		actorsLayer = new Sprite();
-		layers.addChildAt(floorLayer, 0);
-		layers.addChildAt(itemsLayer, 1);
-		layers.addChildAt(projectilesLayer, 2);		
-		layers.addChildAt(wallsLayer, 3);
-		layers.addChildAt(actorsLayer, 4);
+		mapLayers.addChildAt(floorLayer, 0);
+		mapLayers.addChildAt(itemsLayer, 1);
+		mapLayers.addChildAt(projectilesLayer, 2);		
+		mapLayers.addChildAt(wallsLayer, 3);
+		mapLayers.addChildAt(actorsLayer, 4);
 	}
 	
+	function set_followTarget(e) {
+		return followTarget = e;
+	}
+	
+	function centerOn(x:Float, y:Float) {
+		mapLayers.setPos( -SCALE*x + 0.5*Main.WIDTH, -SCALE*y + 0.5*Main.HEIGHT);
+	}
+		
 	inline function getEntityLayer(e:Entity):Sprite {
 		return switch (e.type) {
 			case EntityType.EXIT:
@@ -66,16 +80,10 @@ class View extends Sprite {
 	
 	
 	public function addEntitySprite(e:Entity) {
-		if (e.sprite == null) {
-			return;
-		}
 		getEntityLayer(e).addChild(e.sprite);
 	}	
 	
 	public function removeEntitySprite(e:Entity) {
-		if (e.sprite == null) {
-			return;
-		}
 		e.sprite.remove();
 	}
 	
@@ -108,19 +116,24 @@ class View extends Sprite {
 		}				
 		wallsCanvas.unlock();
 		floorCanvas.unlock();
-		// FIXME can't we just lock-draw-unlock the bitmap? detaching & reallocating sucks.
-		if (floorBmp != null) {
-			floorBmp.remove();
-		}
-		floorBmp = new Bitmap(Tile.fromBitmap(floorCanvas), floorLayer);		
-		floorCanvas.dispose();
-		if (wallsBmp != null) {
-			wallsBmp.remove();
-		}
-		wallsBmp = new Bitmap(Tile.fromBitmap(wallsCanvas), wallsLayer);
+		floorBmp.tile = Tile.fromBitmap(floorCanvas);
+		floorCanvas.dispose();		
+		wallsBmp.tile = Tile.fromBitmap(wallsCanvas);
 		wallsCanvas.dispose();
 	}
 	
 	public function update(elapsed:Float) {
+		// autofollow player or start point.
+		if (followTarget == null) {
+			followTarget = Main.Instance.world.player;
+			if (followTarget == null) {
+				followTarget = Main.Instance.world.startPoint;
+			}
+		}
+		
+		// center on follow target
+		if (followTarget != null && followTarget.pos != null) {
+			centerOn(followTarget.pos.x, followTarget.pos.y);
+		}
 	}
 }

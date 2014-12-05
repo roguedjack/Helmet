@@ -1,7 +1,6 @@
 package rj.helmet;
 import hxd.res.TiledMap.TiledMapData;
 import hxd.res.TiledMap.TiledMapLayer;
-import rj.helmet.Tiles;
 
 /**
  * ...
@@ -24,6 +23,14 @@ class TiledMapHelpers {
 		}
 		return l;
 	}	
+	
+	public static inline function getEntitiesLayer(mapData:TiledMapData):TiledMapLayer {
+		var l = Lambda.find(mapData.layers, function(l) return l.name == Main.TILED_ENTITIES_LAYER_NAME);
+		if (l == null) {
+			throw "could not find entities layer in tiled map";
+		}
+		return l;
+	}		
 	
 	public static inline function getTile(mapData:TiledMapData, layer:TiledMapLayer, tx:Int, ty:Int):Int {
 		// TODO -- check out of bounds

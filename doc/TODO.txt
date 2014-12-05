@@ -1,1 +1,0 @@
-Add Start/Exit entities in Tiled and parse them.

@@ -23,6 +23,9 @@ class Main extends App {
 	public static inline var TILE_SHEET_ROWS = 8;
 	public static inline var TILED_FLOOR_LAYER_NAME = "floor";
 	public static inline var TILED_WALLS_LAYER_NAME = "walls";
+	public static inline var TILED_ENTITIES_LAYER_NAME = "entities";
+	public static inline var TILEDOBJ_EXIT = "exit";
+	public static inline var TILEDOBJ_START = "start";
 	
 	public static var Instance:Main;
 		
@@ -53,23 +56,23 @@ class Main extends App {
 		s2d.setFixedSize(WIDTH, HEIGHT);
 		engine.backgroundColor = 0x101010;
 		
+		Gfx.init();
+		
 		world = new World(this);
 		view = null;
 		
 		introScreen = new TitleScreen(this);
 		playScreen = new PlayScreen(this);
 		screen = introScreen;
-		
-		// TEST
-		world.loadLevel(Res.levels.level0);		
 	}
 	
 	override function update(dt:Float) {
 		screen.update(1.0 / engine.fps);
 		if (DEBUG_FPS) {
 			if (fpsText == null) {
-				fpsText = new Text(FontBuilder.getFont("arial", 10), s2d);				
+				fpsText = new Text(FontBuilder.getFont("arial", 10));				
 				fpsText.setPos(s2d.width - 50, 0);
+				s2d.addChildAt(fpsText, 10);
 			}
 			fpsText.text = 'fps:${Std.int(engine.fps)}';
 		}

@@ -1,0 +1,5 @@
+MILESTONE 1
+- Animated, movable character.
+- Scrollable view.
+- Working collision entity/world and entity/entity.
+
