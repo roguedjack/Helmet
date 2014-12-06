@@ -129,7 +129,7 @@ class Actor extends Entity {
 	}
 	
 	function updateAnim(elapsed:Float) {
-		if (animator == null) {
+		if (animator == null || iCurrentAnim == -1) {
 			return;
 		}
 		setImage(animator.getFrame());
@@ -187,7 +187,7 @@ class Actor extends Entity {
 
 		// check for entity collision.
 		// prevent movement if hard collision.
-		if (checkEntitiesCollision(elapsed, newx, newy, [this])) {
+		if (checkEntitiesCollision(elapsed, newx, newy)) {
 			return;
 		}
 		
@@ -203,8 +203,8 @@ class Actor extends Entity {
 	 * @return true if collided with an hard collision entity
 	 * @see onCollisionWith
 	 */
-	function checkEntitiesCollision(elapsed:Float, newx:Float, newy:Float, ignore:Array<Entity>):Bool {
-		var colliders = world.checkEntitiesCollision(colBox, newx, newy, ignore);
+	function checkEntitiesCollision(elapsed:Float, newx:Float, newy:Float):Bool {
+		var colliders = world.checkEntitiesCollision(colBox, newx, newy, function(e) { return canCollideWith(e);} );
 		var blocked = false;
 		if (colliders != null) {
 			for (other in colliders) {
@@ -212,9 +212,6 @@ class Actor extends Entity {
 					blocked = true;
 				}
 				onCollisionWith(elapsed, other);
-				if (Std.is(other,Actor)) {
-					cast(other,Actor).onCollisionWith(elapsed, this);
-				}
 			}
 		}
 		return blocked;
@@ -280,11 +277,7 @@ class Actor extends Entity {
 	 */
 	function onWorldCollision(elapsed:Float, colFlags:EnumFlags<ColFlags>) { }
 
-	/**
-	 * Set rotation to face last motion.
-	 */
-	function faceLastMotion() {
-		if (motion.dx != 0 || motion.dy != 0)
-			rotation = Math.atan2(motion.dx, -motion.dy);
+	function faceDirection(dx:Float, dy:Float) {
+		rotation = Math.atan2(dx, -dy);
 	}
 }

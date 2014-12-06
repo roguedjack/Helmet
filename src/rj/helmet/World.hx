@@ -4,6 +4,7 @@ import hxd.Res;
 import hxd.res.TiledMap;
 import rj.helmet.entities.ExitEntity;
 import rj.helmet.entities.PlayerActor;
+import rj.helmet.entities.SkeletonMonster;
 import rj.helmet.entities.StartEntity;
 import rj.helmet.Entity.EntityType;
 
@@ -16,7 +17,7 @@ class World {
 	var game:Main;
 	public var mapData(default,null):TiledMapData;
 	public var time(default, null):Float;
-	public var player(default, null):Entity;
+	public var player(default, null):Actor;
 	public var startPoint(default, null):Entity;	
 	var entities:Array<Entity>;
 	var entitiesToSpawn:Array<{se:Entity,sx:Float,sy:Float}>;	
@@ -65,6 +66,8 @@ class World {
 					e = new ExitEntity();
 				case Main.TILEDOBJ_START:
 					e = new StartEntity();
+				case Main.TILEDOBJ_GEN_SKELETON:
+					e = new MonsterGenerator(SkeletonMonster, Gfx.entities[24]);
 			}
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;
@@ -113,7 +116,7 @@ class World {
 			case EntityType.START:
 				startPoint = e;
 			case EntityType.PLAYER:
-				player = e;
+				player = cast(e, Actor);
 			default:
 				// nop
 		}
@@ -134,14 +137,11 @@ class World {
 		};
 	}
 	
-	public function checkEntitiesCollision(colBox:Bounds, x:Float, y:Float, ignore:Array<Entity>=null):Array<Entity> {
+	public function checkEntitiesCollision(colBox:Bounds, x:Float, y:Float, canCollideTest:Entity->Bool):Array<Entity> {
 		var bounds = Bounds.fromValues(x+colBox.xMin, y+colBox.yMin, colBox.width, colBox.height);
 		var colliders:Array<Entity> = [];
 		for (other in entities) {
-			if (!other.canCollide) {
-				continue;
-			}
-			if (ignore != null && ignore.indexOf(other) != -1) {
+			if (!(other.canCollide && canCollideTest(other))) {
 				continue;
 			}
 			if (other.bounds.collide(bounds)) {

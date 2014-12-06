@@ -16,5 +16,9 @@
  <objectgroup name="entities" width="16" height="16">
   <object name="exit_1" type="exit" x="448" y="32" width="32" height="32"/>
   <object name="start" type="start" x="32" y="448" width="32" height="32"/>
+  <object name="skeleton" type="gen_skeleton" x="32" y="288" width="32" height="32"/>
+  <object name="skeleton2" type="gen_skeleton" x="448" y="192" width="32" height="32"/>
+  <object name="skeleton3" type="gen_skeleton" x="32" y="64" width="32" height="32"/>
+  <object name="skeleton4" type="gen_skeleton" x="384" y="64" width="32" height="32"/>
  </objectgroup>
 </map>

@@ -3,3 +3,6 @@ MILESTONE 1
 - Scrollable view.
 - Working collision entity/world and entity/entity.
 
+MILESTONE 2
+- Fire axe weapon.
+- Skeleton NPC & generator.

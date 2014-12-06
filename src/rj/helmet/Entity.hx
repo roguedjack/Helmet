@@ -2,6 +2,7 @@ package rj.helmet;
 import h2d.Anim;
 import h2d.Bitmap;
 import h2d.col.Bounds;
+import h2d.filter.Glow;
 import h2d.Sprite;
 import h2d.Tile;
 
@@ -54,6 +55,7 @@ class Entity {
 		sprite = new Sprite();		
 		anchor = new Sprite(sprite);
 		bitmap = new Bitmap(null, anchor);
+		bitmap.filters = [ new Glow(0) ];  // black outline effect
 	}
 	
 	function set_pos( p: { x:Float, y:Float } ) {
@@ -119,6 +121,18 @@ class Entity {
 	
 	function setCollisionBox(x:Int,y:Int,w:Int, h:Int) {
 		colBox = Bounds.fromValues(x, y, w, h);
+	}	
+	
+	
+	/**
+	 * Check if this entity can collide with another.
+	 * Does not test for canCollide flag.
+	 * Default return true if the other entity is not this.
+	 * @param	other
+	 * @return
+	 */
+	function canCollideWith(other:Entity):Bool {
+		return other != this;
 	}	
 	
 	public function spawn(x:Float, y:Float) {		

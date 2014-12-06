@@ -26,6 +26,7 @@ class Main extends App {
 	public static inline var TILED_ENTITIES_LAYER_NAME = "entities";
 	public static inline var TILEDOBJ_EXIT = "exit";
 	public static inline var TILEDOBJ_START = "start";
+	public static inline var TILEDOBJ_GEN_SKELETON = "gen_skeleton";
 	
 	public static var Instance:Main;
 		
