@@ -12,8 +12,8 @@ class MonsterGenerator extends Entity {
 	
 	public var monsterClass(default, null):Class<Monster>;
 	public var spawnCooldown(default, default):Float;
-	private static var TILE_BOUNDS = Bounds.fromValues(0, 0, Main.TILE_SIZE, Main.TILE_SIZE);
 	var timer:Float;
+	var aggroRange:Float;
 
 	/**
 	 * 
@@ -21,10 +21,11 @@ class MonsterGenerator extends Entity {
 	 * @param	tile
 	 * @param	spawnCooldown delay between monster spawns
 	 */
-	public function new(monsterClass:Class<Monster>, tile:Tile, spawnCooldown:Float=1) {
+	public function new(monsterClass:Class<Monster>, tile:Tile, spawnCooldown:Float=1, aggroRange:Float=256) {
 		super(EntityType.MONSTER_GENERATOR);
 		this.monsterClass = monsterClass;
 		this.spawnCooldown = spawnCooldown;
+		this.aggroRange = aggroRange;
 		canCollide  = true;
 		hardCollision = true;
 		setCollisionBox(8, 8, 16, 16);
@@ -39,10 +40,15 @@ class MonsterGenerator extends Entity {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 		timer += elapsed;
-		if (timer >= spawnCooldown) {
+		if (timer >= spawnCooldown && distanceToPlayer() <= aggroRange) {
 			trySpawningMonster();
 			timer -= spawnCooldown;  // cooldown even if could not spawning
 		}
+	}
+	
+	inline function distanceToPlayer():Float {
+		var toPlayer = { dx:Math.round(world.player.pos.x - pos.x), dy:Math.round(world.player.pos.y - pos.y) };
+		return Math.sqrt(toPlayer.dx * toPlayer.dx + toPlayer.dy * toPlayer.dy);
 	}
 	
 	function trySpawningMonster():Bool {
@@ -53,7 +59,9 @@ class MonsterGenerator extends Entity {
 		if (world.isBlockingAt(t.tx, t.ty)) {
 			return false;
 		}
-		if (world.checkEntitiesCollision(TILE_BOUNDS, t.tx * Main.TILE_SIZE, t.ty * Main.TILE_SIZE, function(e) { return true; } ).length != 0) {
+		tmpColliders.splice(0, tmpColliders.length);
+		world.listEntitiesIn(Bounds.fromValues(t.tx * Main.TILE_SIZE,  t.ty * Main.TILE_SIZE, Main.TILE_SIZE, Main.TILE_SIZE), tmpColliders);
+		if (tmpColliders.length != 0) {
 			return false;
 		}
 		

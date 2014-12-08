@@ -17,11 +17,11 @@ class PlayerActor extends Actor {
 	private static inline var ANIM_IDLE = 0;
 	private static inline var ANIM_WALK = 1;
 	
-	private static inline var KEY_D = Key.A + ('d'.code - 'a'.code);
-	private static inline var KEY_Q = Key.A + ('q'.code - 'a'.code);
-	private static inline var KEY_S = Key.A + ('s'.code - 'a'.code);
-	private static inline var KEY_W = Key.A + ('w'.code - 'a'.code);
-	private static inline var KEY_Z = Key.A + ('z'.code - 'a'.code);
+	public static inline var KEY_D = Key.A + ('d'.code - 'a'.code);
+	public static inline var KEY_Q = Key.A + ('q'.code - 'a'.code);
+	public static inline var KEY_S = Key.A + ('s'.code - 'a'.code);
+	public static inline var KEY_W = Key.A + ('w'.code - 'a'.code);
+	public static inline var KEY_Z = Key.A + ('z'.code - 'a'.code);
 	
 	var weapon:WeaponShooter;
 
@@ -44,8 +44,8 @@ class PlayerActor extends Actor {
 		playAnim(ANIM_IDLE);
 	}
 
-	override function updateBehavior(elapsed:Float) {
-		super.updateBehavior(elapsed);
+	override function updateLiving(elapsed:Float) {
+		super.updateLiving(elapsed);
 		
 		// update weapon timer
 		if (weapon != null) {
@@ -63,27 +63,24 @@ class PlayerActor extends Actor {
 			if (weapon != null && weapon.canShoot) {
 				weapon.shoot();
 			}
-			motion = { dx:0, dy:0 };
-		} else {			
-			motion = { dx:mx, dy:my };
+			mx = my = 0;
 		}
 		if (mx != 0 || my != 0) {
+			move(mx * props.speed * elapsed, 0);
+			move(0, my * props.speed * elapsed);
 			faceDirection(mx, my);
-		}
-				
-		// anim move
-		if (motion.dx != 0 || motion.dy != 0) {
-			playAnim(ANIM_WALK);
-		} else {
+			playAnim(ANIM_WALK);			
+		} else {			
 			playAnim(ANIM_IDLE);
 		}		
 	}
 	
-	override function onCollisionWith(elapsed:Float, other:Entity) {
-		super.onCollisionWith(elapsed, other);
+	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {		
+		super.onCollisionWith(other, vx, vy, active);	
 		if (other.type == EntityType.EXIT) {
 			// spin madly!
-			rotation += 4 * Math.PI * elapsed;
+			// FIXME --- we collide only when moving, but when we move we set the rotation so this now has no effect.
+			rotation += 4 * Math.PI * world.elapsed;
 		}
 	}
 }

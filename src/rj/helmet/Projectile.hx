@@ -2,8 +2,8 @@ package rj.helmet;
 
 import haxe.EnumFlags;
 import rj.helmet.Actor.ActorState;
-import rj.helmet.Actor.ColFlags;
 import rj.helmet.Entity;
+import rj.helmet.Entity.ColFlags;
 import rj.helmet.Entity.EntityType;
 
 /**
@@ -13,41 +13,36 @@ import rj.helmet.Entity.EntityType;
 class Projectile extends Actor {
 	
 	public var owner(default, null):Entity;
-	var mx:Float;
-	var my:Float;
+	var dx:Float;
+	var dy:Float;
 	var spin:Float;
 
 	/**
 	 * 
 	 * @param	owner shooter
-	 * @param	mx motion
-	 * @param	my motion
+	 * @param	dx direction
+	 * @param	dy direction
 	 * @param	actorProps
 	 */
-	public function new(owner:Entity, mx:Float, my:Float, spin:Float, actorProps) {
+	public function new(owner:Entity, dx:Float, dy:Float, spin:Float, actorProps) {
 		super(EntityType.PROJECTILE, actorProps);
 		this.owner = owner;		
 		this.spin = spin;
-		this.mx = mx;
-		this.my = my;		
+		this.dx = dx;
+		this.dy = dy;		
 		canCollide = true;
-	}
-
-	/**
-	 * Start moving.
-	 */
-	override function onStartLiving() {
-		motion = { dx:mx, dy:my };
 	}
 	
 	/**
-	 * Spin
+	 * Move & spin
 	 * @param	elapsed
 	 */
-	override function updateBehavior(elapsed:Float) {
+	override function updateLiving(elapsed:Float) {
+		super.updateLiving(elapsed);
 		if (spin != 0) {
 			rotation += spin * elapsed;
-		}
+		}		
+		move(dx * elapsed * props.speed, dy * elapsed * props.speed);
 	}
 	
 	/**
@@ -58,23 +53,27 @@ class Projectile extends Actor {
 	override function canCollideWith(other:Entity):Bool {
 		return super.canCollideWith(other) && other != owner && other.type != EntityType.EXIT;
 	}
-	
-	/**
-	 * Dead immediatly.
-	 * @param	elapsed
-	 * @param	other
-	 */
-	override function onCollisionWith(elapsed:Float, other:Entity) {
-		state = ActorState.DEAD;
-	}
-	
-	/**
-	 * Dead immediatly.
-	 * @param	elapsed
-	 * @param	colFlags
-	 */
-	override function onWorldCollision(elapsed:Float, colFlags:EnumFlags<ColFlags>) {
-		state = ActorState.DEAD;
-	}
 
+	/**
+	 * Die immediatly.
+	 * @param	other
+	 * @param	vx
+	 * @param	vy
+	 * @param	active
+	 */
+	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {
+		super.onCollisionWith(other, vx, vy, active);
+		state = ActorState.DEAD;
+	}
+	
+	/**
+	 * Die immediatly.
+	 * @param	colFlags
+	 * @param	vx
+	 * @param	vy
+	 */
+	override function onWorldCollision(colFlags:EnumFlags<ColFlags>, vx:Float, vy:Float) {
+		super.onWorldCollision(colFlags, vx, vy);
+		state = ActorState.DEAD;
+	}
 }

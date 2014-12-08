@@ -17,6 +17,7 @@ class World {
 	var game:Main;
 	public var mapData(default,null):TiledMapData;
 	public var time(default, null):Float;
+	public var elapsed(default, null):Float;
 	public var player(default, null):Actor;
 	public var startPoint(default, null):Entity;	
 	var entities:Array<Entity>;
@@ -36,7 +37,7 @@ class World {
 	}
 	
 	function clearLevel() {
-		time = 0;
+		time = elapsed = 0;
 		entities = [];
 		entitiesToRemove = [];
 		entitiesToSpawn = [];
@@ -137,21 +138,18 @@ class World {
 		};
 	}
 	
-	public function checkEntitiesCollision(colBox:Bounds, x:Float, y:Float, canCollideTest:Entity->Bool):Array<Entity> {
-		var bounds = Bounds.fromValues(x+colBox.xMin, y+colBox.yMin, colBox.width, colBox.height);
-		var colliders:Array<Entity> = [];
-		for (other in entities) {
-			if (!(other.canCollide && canCollideTest(other))) {
-				continue;
-			}
-			if (other.bounds.collide(bounds)) {
-				colliders.push(other);
+	public function listEntitiesIn(bounds:Bounds, ?out:Array<Entity>):Array<Entity> {
+		var list = (out == null ? new Array<Entity>() : out);
+		for (e in entities) {
+			if (e.bounds.collide(bounds)) {
+				list.push(e);
 			}
 		}
-		return colliders;
+		return list;
 	}
 	
 	public function update(elapsed:Float) {
+		this.elapsed = elapsed;
 		time += elapsed;
 		
 		// do spawns.

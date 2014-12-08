@@ -5,6 +5,7 @@ import h2d.col.Bounds;
 import h2d.filter.Glow;
 import h2d.Sprite;
 import h2d.Tile;
+import haxe.EnumFlags;
 
 @:enum abstract EntityType(Int) {
 	var PLAYER = 0;
@@ -15,6 +16,14 @@ import h2d.Tile;
 	var START = 5;
 	var EXIT = 6;	
 }
+
+enum ColFlags {
+	COL_LEFT;
+	COL_RIGHT;
+	COL_UP;
+	COL_DOWN;
+}
+
 
 /**
  * ...
@@ -46,6 +55,7 @@ class Entity {
 	var colBox:Bounds;
 	var bitmap:Bitmap;
 	var anchor:Sprite;  // for rotation on center
+	var tmpColliders:Array<Entity>;  // to avoid re-allocation each frame
 
 	public function new(type:EntityType) {
 		this.type = type;
@@ -55,7 +65,9 @@ class Entity {
 		sprite = new Sprite();		
 		anchor = new Sprite(sprite);
 		bitmap = new Bitmap(null, anchor);
-		bitmap.filters = [ new Glow(0) ];  // black outline effect
+		tmpColliders = new Array<Entity>();
+		//nice but horrible fps drop when more than 20+ entities, even if not on screen 
+		//bitmap.filters = [ new Glow(0) ];  // black outline effect		
 	}
 	
 	function set_pos( p: { x:Float, y:Float } ) {
@@ -124,6 +136,111 @@ class Entity {
 	}	
 	
 	
+	public function spawn(x:Float, y:Float) {		
+		pos = { x:x, y:y };
+		if (Main.Instance.view != null) {
+			Main.Instance.view.addEntitySprite(this);
+		}
+	}
+	
+	/**
+	 * Try to move, checking and resolving collisions.
+	 * To allow sliding movement on walls or other entities, try moving on horizontal and vertical axis separatly.
+	 * @param	vx x movement
+	 * @param	vy y movement
+	 * @return the actual movement after collisions solved
+	 */
+	public function move(vx:Float, vy:Float):{vx:Float,vy:Float} {			
+		var newx = pos.x + vx;
+		var newy = pos.y + vy;
+		var newvx = vx;
+		var newvy = vy;
+		
+		// check & resolve collisions.
+		if (canCollide) {					
+			// check collision with entities.
+			if (checkEntitiesCollision(vx, vy)) {
+				// blocked, don't move.
+				return { vx:0, vy:0 };
+			}
+		
+			// check collision with world.
+			var col = world.checkWorldCollision(colBox, newx, newy);
+			var colFlags:EnumFlags<ColFlags> = new EnumFlags<ColFlags>();			
+			if (vx != 0) {
+				var col = world.checkWorldCollision(colBox, newx, pos.y);		
+				if (vx < 0) {
+					if (col.colDL || col.colUL) {
+						// forcing alignement cause entities getting stuck in other entities: newx = (col.tl + 1) * Main.TILE_SIZE - colBox.xMin;
+						newx = pos.x;
+						newvx = 0;
+						colFlags.set(COL_LEFT);
+					}
+				} else {
+					if (col.colDR || col.colUR) {
+						// forcing alignement cause entities getting stuck in other entities: newx = col.tr * Main.TILE_SIZE - colBox.xMax;
+						newx = pos.x;
+						newvx = 0;
+						colFlags.set(COL_RIGHT);
+					}			
+				}
+			}
+			if (vy != 0) {
+				var col = world.checkWorldCollision(colBox, newx, newy);		
+				if (vy < 0) {
+					if (col.colUL || col.colUR) {
+						// forcing alignement cause entities getting stuck in other entities: newy = (col.tu + 1) * Main.TILE_SIZE - colBox.yMin;
+						newy = pos.y;
+						newvy = 0;
+						colFlags.set(COL_UP);
+					}
+				} else {
+					if (col.colDL || col.colDR) {
+						// forcing alignement cause entities getting stuck in other entities: newy = col.td * Main.TILE_SIZE - colBox.yMax;
+						newy = pos.y;
+						newvy = 0;
+						colFlags.set(COL_DOWN);
+					}			
+				}
+			}				
+
+			if (colFlags.toInt() != 0) {
+				onWorldCollision(colFlags, vx, vy);
+			}			
+		}  // can collide
+		
+		// update pos & return movement.
+		pos = { x:newx, y:newy };
+		return { vx:newvx, vy:newvy };
+	}
+	
+	/**
+	 * 
+	 * @param	vx attempted x movement
+	 * @param	vy attempted y movement
+	 * @return true if collided with a blocking entity
+	 */
+	function checkEntitiesCollision(vx:Float, vy:Float):Bool {
+		var newx = pos.x + vx;
+		var newy = pos.y + vy;
+		var newBounds = Bounds.fromValues(newx + colBox.xMin, newy + colBox.yMin, colBox.width, colBox.height);
+		var blockingCollision = false;
+		
+		tmpColliders.splice(0, tmpColliders.length);
+		world.listEntitiesIn(newBounds, tmpColliders);
+		for (other in tmpColliders) {
+			if (other.canCollide && canCollideWith(other) && other.canCollideWith(this)) {
+				onCollisionWith(other, vx, vy, true);
+				other.onCollisionWith(this, vx, vy, false);
+				if (hardCollision && other.hardCollision) {
+					blockingCollision = true;
+				}
+			}
+		}
+		
+		return blockingCollision;
+	}
+		
 	/**
 	 * Check if this entity can collide with another.
 	 * Does not test for canCollide flag.
@@ -135,12 +252,22 @@ class Entity {
 		return other != this;
 	}	
 	
-	public function spawn(x:Float, y:Float) {		
-		pos = { x:x, y:y };
-		if (Main.Instance.view != null) {
-			Main.Instance.view.addEntitySprite(this);
-		}
-	}
+	/**
+	 * A collision with another entity happened while trying to move one of the two entities.
+	 * @param	other
+	 * @param	vx attempted x movement of the active entity
+	 * @param	vy attempted y movement of the active entity
+	 * @param	active true if this entity provoked the collision, false if the other entity provoked the collision
+	 */
+	function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) { }
 	
+	/**
+	 * A collision happened with the world.
+	 * @param	colFlags
+	 * @param	vx attempted x movement
+	 * @param	vy attempted y movement
+	 */
+	function onWorldCollision(colFlags:EnumFlags<ColFlags>, vx:Float, vy:Float) { }
+		
 	public function update(elapsed:Float) {}
 }

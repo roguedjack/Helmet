@@ -21,24 +21,57 @@ class Monster extends Actor {
 		this.aggroRange = aggroRange;
 	}
 	
+	//// Helpers
+	
+	function toDir8(vx:Float, vy:Float): { vx:Float, vy:Float } {
+		var l = Math.sqrt(vx * vx + vy * vy);
+		if (l == 0) {
+			return { vx:0, vy:0 };
+		}
+		vx /= l;
+		vy /= l;
+		// FIXME --- jerkyness due to comparing non-zero float thresholds?
+		vx = (vx < -0.75 ? -1 : vx < -0.25 ? -0.5 : vx > 0.75 ? 1 : vx > 0.25 ? 0.5 : 0);
+		vy = (vy < -0.75 ? -1 : vy < -0.25 ? -0.5 : vy > 0.75 ? 1 : vy > 0.25 ? 0.5 : 0);				
+		return { vx:vx, vy:vy };
+	}
+	
 	//// Common behaviors
 	
 	/**
 	 * Set a simple straight motion towards the player.
-	 * @return false if the player is not a valid target (not there, dead, too far)
+	 * @return the movement
 	 */
-	function doMoveStraightAtPlayer():Bool {
+	function doMoveStraightAtPlayer(elapsed:Float): { vx:Float, vy:Float } {
+		var m: { vx:Float, vy:Float } = { vx:0, vy:0 };
 		if (world.player == null || world.player.state != ActorState.LIVING) {
-			return false;
+			return m;
 		}
-		var toPlayer = { dx:Math.floor(world.player.pos.x - pos.x), dy:Math.floor(world.player.pos.y - pos.y) };
+		var toPlayer = { dx:world.player.pos.x - pos.x, dy:world.player.pos.y - pos.y };
 		if (Math.abs(toPlayer.dx) > aggroRange || Math.abs(toPlayer.dy) > aggroRange) {
-			return false;
+			return m;
 		}
-		motion = {  
-			dx: (toPlayer.dx > 0 ? 1 : toPlayer.dx < 0 ? -1 : 0),
-			dy: (toPlayer.dy > 0 ? 1 : toPlayer.dy < 0 ? -1 : 0)
-		};
-		return true;
+		m = toDir8(toPlayer.dx, toPlayer.dy);
+		m.vx *= props.speed * elapsed;
+		m.vy *= props.speed * elapsed;
+		m.vx = move(m.vx, 0).vx;
+		m.vy = move(0, m.vy).vy;
+		return m;
 	}
+	
+	/**
+	 * Face another entity.
+	 * Does not change facing if the target is null or change too small.
+	 * @param	target can be null
+	 */
+	function faceEntity(target:Entity) {
+		if (target == null) {
+			return;
+		}
+		var v = { vx:target.pos.x - pos.x, vy:target.pos.y - pos.y };
+		v = toDir8(v.vx, v.vy);
+		if (v.vx != 0 || v.vy != 0) {
+			faceDirection(v.vx, v.vy);		
+		}
+	}	
 }

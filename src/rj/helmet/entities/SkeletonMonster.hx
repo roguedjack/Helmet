@@ -3,6 +3,7 @@ package rj.helmet.entities;
 import h2d.Anim;
 import rj.helmet.Monster;
 
+
 /**
  * ...
  * @author roguedjack
@@ -26,16 +27,17 @@ class SkeletonMonster extends Monster {
 		playAnim(ANIM_IDLE);
 	}
 	
-	override function updateBehavior(elapsed:Float) {
-		super.updateBehavior(elapsed);
+	override function updateLiving(elapsed:Float) {
+		super.updateLiving(elapsed);
 				
 		// FIXME -- a lot of monster types do the same thing, not particular to skeleton
-		doMoveStraightAtPlayer();		
-		if (motion.dx != 0 || motion.dy != 0) {
-			playAnim(ANIM_WALK);
-			faceDirection(motion.dx, motion.dy);
+		var m = doMoveStraightAtPlayer(elapsed);		
+		if (m.vx != 0 || m.vy != 0) {
+			faceDirection(m.vx, m.vy);
+			playAnim(ANIM_WALK);			
 		} else {
+			faceEntity(world.player);
 			playAnim(ANIM_IDLE);
-		}
+		}	
 	}
 }
