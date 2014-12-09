@@ -14,7 +14,7 @@ class AxeProjectile extends Projectile {
 	
 	public function new(owner:Entity, vx:Float, vy:Float) {
 		super(owner, vx, vy, (SPIN_DEG*Math.PI)/180.0, { speed:SPEED } );
-		setImage(Gfx.entities[16]);
+		setImage(Gfx.entities[11]);
 		setCollisionBox(11, 9, 10, 10);
 	}
 	
