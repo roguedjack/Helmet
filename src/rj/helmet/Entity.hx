@@ -117,6 +117,7 @@ class Entity {
 	}
 	
 	public function remove() {
+		canCollide = false;
 		isVisible = false;
 		Main.Instance.world.removeEntity(this);
 		if (Main.Instance.view != null) {
@@ -235,6 +236,10 @@ class Entity {
 				other.onCollisionWith(this, vx, vy, false);
 				if (hardCollision && other.hardCollision) {
 					blockingCollision = true;
+				}
+				// if we were removed as a result of the collision, stop checking for collisions!
+				if (!canCollide) {
+					break;
 				}
 			}
 		}
