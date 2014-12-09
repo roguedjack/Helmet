@@ -9,3 +9,6 @@ MILESTONE 2
 
 MILESTONE 3
 - Doors & keys.
+
+MILESTONE 4
+- Play as warrior or valkryie.

@@ -38,6 +38,11 @@ class Projectile extends Actor {
 		canCollide = true;
 	}
 	
+	override function onStartSpawning() {
+		super.onStartSpawning();
+		faceDirection(dx, dy);
+	}
+	
 	/**
 	 * Move & spin
 	 * @param	elapsed
@@ -46,7 +51,7 @@ class Projectile extends Actor {
 		super.updateLiving(elapsed);
 		if (projProps.spin != 0) {
 			rotation += projProps.spin * elapsed;
-		}		
+		}
 		move(dx * elapsed * props.speed, dy * elapsed * props.speed);
 	}
 	

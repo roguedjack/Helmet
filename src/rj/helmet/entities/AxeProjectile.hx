@@ -10,7 +10,6 @@ import rj.helmet.Projectile;
  */
 class AxeProjectile extends Projectile {
 	
-	public static inline var COOLDOWN = 0.75;
 	public static inline var POWER = 10;
 	public static inline var SPEED = 128.0;
 	public static inline var SPIN_DEG = 720.0;

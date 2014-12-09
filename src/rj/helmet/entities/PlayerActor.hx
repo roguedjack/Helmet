@@ -1,6 +1,8 @@
 package rj.helmet.entities;
 
 import h2d.Anim;
+import h2d.col.Bounds;
+import h2d.Tile;
 import haxe.EnumFlags;
 import hxd.Key;
 import rj.helmet.Actor;
@@ -9,6 +11,25 @@ import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.Item.ItemType;
 import rj.helmet.WeaponShooter;
+
+@:enum abstract CharacterClass(Int) {
+	var WARRIOR = 0;
+	var VALKYRIE = 1;
+}
+
+class CharacterClassProps {
+	public var colBox(default,default):Bounds;
+	public var speed(default, default):Float;
+	public var health(default, default):Int;
+	public var weaponClass(default, default):Class<Projectile>;
+	public var weaponCooldown(default, default):Float;
+	public var framesIdle(default, default):Array<Tile>;
+	public var framesWalk(default, default):Array<Tile>;
+	public var animSpeed(default, default):Int;
+	
+	public function new() {
+	}
+}
 
 /**
  * ...
@@ -26,23 +47,26 @@ class PlayerActor extends Actor {
 	public static inline var KEY_Z = Key.A + ('z'.code - 'a'.code);
 	
 	public static inline var LIFELEAK_TIMER:Float = 1.0;
+	
+	public static var CHARACTER_CLASSES_PROPS:Array<CharacterClassProps>;
 
+	public var characterClass(default, null):CharacterClass;
 	public var nbKeys(default,null):Int;	
 	var weapon:WeaponShooter;
 	var lifeLeakTimer:CooldownTimer;
 
-	public function new() {
-		super(EntityType.PLAYER, {  // TODO --- player props depends on character class
-			speed:64.0,
-			health:10000
+	public function new(characterClass:CharacterClass) {
+		var cl = CHARACTER_CLASSES_PROPS[cast(characterClass, Int)];  // FIXME -- why do i need to cast an abstract int to an int?
+		
+		super(EntityType.PLAYER, { 
+			speed:cl.speed,
+			health:cl.health
 		});
-		setCollisionBox(8, 8, 16, 16);
 		
-		addAnim(ANIM_IDLE, new Anim([Gfx.entities[8]]));		
-		addAnim(ANIM_WALK, new Anim([Gfx.entities[9], Gfx.entities[10]], 5));
-		
-		// TODO ---- weapon depends on character class
-		equipWeapon(new WeaponShooter(this, AxeProjectile, AxeProjectile.COOLDOWN));		
+		setCollisionBox(Std.int(cl.colBox.xMin), Std.int(cl.colBox.yMin), Std.int(cl.colBox.width), Std.int(cl.colBox.height));		
+		addAnim(ANIM_IDLE, new Anim(cl.framesIdle, cl.animSpeed));		
+		addAnim(ANIM_WALK, new Anim(cl.framesWalk, 5));		
+		equipWeapon(new WeaponShooter(this, cl.weaponClass, cl.weaponCooldown));
 	}
 	
 	function equipWeapon(shooter:WeaponShooter) {
@@ -134,5 +158,33 @@ class PlayerActor extends Actor {
 	
 	inline function refreshHud() {
 		Main.Instance.view.hud.refresh();		
+	}
+	
+	public static function initCharacterClasses() {		
+		// the warrior is very strong.
+		var warrior = new CharacterClassProps();
+		warrior.colBox = Bounds.fromValues(8, 8, 16, 16);
+		warrior.health = 10000;
+		warrior.speed = 64.0;
+		warrior.framesIdle = [Gfx.entities[8]];
+		warrior.framesWalk = [Gfx.entities[9], Gfx.entities[10]];
+		warrior.animSpeed = 5;
+		warrior.weaponClass = AxeProjectile;
+		warrior.weaponCooldown = 0.75;
+		
+		// the valkryie is average
+		var valkyrie = new CharacterClassProps();
+		valkyrie.colBox = Bounds.fromValues(10, 10, 12, 12);
+		valkyrie.health = 8000;
+		valkyrie.speed = 80.0;
+		valkyrie.framesIdle = [Gfx.entities[12]];
+		valkyrie.framesWalk = [Gfx.entities[13], Gfx.entities[14]];
+		valkyrie.animSpeed = 7;
+		valkyrie.weaponClass = SwordProjectile;
+		valkyrie.weaponCooldown = 0.50;		
+		
+		CHARACTER_CLASSES_PROPS = new Array<CharacterClassProps>();		
+		CHARACTER_CLASSES_PROPS[cast(CharacterClass.WARRIOR, Int)] = warrior;   // FIXME -- why do i need to cast an abstract int to an int?
+		CHARACTER_CLASSES_PROPS[cast(CharacterClass.VALKYRIE,Int)] = valkyrie;   // FIXME -- why do i need to cast an abstract int to an int?
 	}
 }

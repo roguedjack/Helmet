@@ -6,6 +6,7 @@ import hxd.Key;
 import hxd.res.FontBuilder;
 import rj.helmet.Main;
 import rj.helmet.Screen;
+import rj.helmet.entities.PlayerActor.CharacterClass;
 
 /**
  * ...
@@ -27,8 +28,9 @@ class TitleScreen extends Screen {
 		addChild(title);
 		
 		msg = new Text(FontBuilder.getFont("arial", 16));
-		msg.text = "Press SPACE to play";
+		msg.text = "Press 1 - Play as WARRIOR\n\nPress 2 - Play as VALKYRIE";
 		msg.textColor = 0xFFFFFF;
+		msg.textAlign = Align.Center;
 		msg.dropShadow = { dx:1, dy:1, color:0, alpha:1 };
 		Screen.centerTextIn(msg, 0, 0.5*Main.HEIGHT, Main.WIDTH, 0.75 * Main.HEIGHT);
 		addChild(msg);
@@ -36,10 +38,12 @@ class TitleScreen extends Screen {
 	
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
-
-		msg.visible = Std.int(time * 2) % 2 == 0;
 		
-		if (Key.isDown(Key.SPACE)) {
+		if (Key.isDown(Key.NUMBER_1) || Key.isDown(Key.NUMPAD_1)) {
+			game.world.playerCharacterClass = CharacterClass.WARRIOR;
+			game.screen = game.playScreen;
+		} else if (Key.isDown(Key.NUMBER_2) || Key.isDown(Key.NUMPAD_2)) {
+			game.world.playerCharacterClass = CharacterClass.VALKYRIE;
 			game.screen = game.playScreen;
 		}
 	}

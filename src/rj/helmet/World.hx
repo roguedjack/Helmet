@@ -22,6 +22,7 @@ class World {
 	public var elapsed(default, null):Float;
 	public var player(default, null):PlayerActor;
 	public var startPoint(default, null):Entity;	
+	public var playerCharacterClass(default, default):CharacterClass;
 	var entities:Array<Entity>;
 	var entitiesToSpawn:Array<{se:Entity,sx:Float,sy:Float}>;	
 	var entitiesToRemove:Array<Entity>;
@@ -29,6 +30,7 @@ class World {
 
 	public function new(game:Main) {
 		this.game = game;
+		playerCharacterClass = CharacterClass.WARRIOR;
 		clearLevel();
 	}
 	

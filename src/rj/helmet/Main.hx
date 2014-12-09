@@ -4,6 +4,7 @@ import hxd.App;
 import hxd.Key;
 import hxd.Res;
 import hxd.res.FontBuilder;
+import rj.helmet.entities.PlayerActor;
 import rj.helmet.screens.TitleScreen;
 import rj.helmet.screens.PlayScreen;
 
@@ -61,6 +62,7 @@ class Main extends App {
 		engine.backgroundColor = 0x101010;
 		
 		Gfx.init();
+		PlayerActor.initCharacterClasses();
 		
 		world = new World(this);
 		view = null;
