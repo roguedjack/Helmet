@@ -18,7 +18,9 @@ import rj.helmet.Entity.EntityType;
 class View extends Sprite {
 	
 	private static inline var SCALE = 2.0;
-	
+
+	public var followTarget(default, set):Entity;	
+	public var hud(default, null):Hud;
 	var tilesSetBmp:BitmapData;
 	var mapLayers:Layers;
 	var floorLayer:Sprite;
@@ -28,7 +30,6 @@ class View extends Sprite {
 	var projectilesLayer:Sprite;	
 	var actorsLayer:Sprite;
 	var itemsLayer:Sprite;
-	public var followTarget(default,set):Entity;
 
 	public function new(?parent:Sprite) {
 		super(parent);
@@ -49,6 +50,8 @@ class View extends Sprite {
 		mapLayers.addChildAt(projectilesLayer, 2);		
 		mapLayers.addChildAt(wallsLayer, 3);
 		mapLayers.addChildAt(actorsLayer, 4);
+		
+		hud = new Hud(this);
 	}
 	
 	function set_followTarget(e) {
@@ -56,7 +59,7 @@ class View extends Sprite {
 	}
 	
 	function centerOn(x:Float, y:Float) {
-		mapLayers.setPos( -SCALE*x + 0.5*Main.WIDTH, -SCALE*y + 0.5*Main.HEIGHT);
+		mapLayers.setPos( -SCALE*x + 0.5*Main.WIDTH - 0.5*Hud.WIDTH, -SCALE*y + 0.5*Main.HEIGHT);
 	}
 		
 	inline function getEntityLayer(e:Entity):Sprite {
@@ -135,5 +138,8 @@ class View extends Sprite {
 		if (followTarget != null && followTarget.pos != null) {
 			centerOn(followTarget.pos.x, followTarget.pos.y);
 		}
+		
+		// hud
+		hud.update(elapsed);
 	}
 }

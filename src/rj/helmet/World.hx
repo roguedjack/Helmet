@@ -20,7 +20,7 @@ class World {
 	public var mapData(default,null):TiledMapData;
 	public var time(default, null):Float;
 	public var elapsed(default, null):Float;
-	public var player(default, null):Actor;
+	public var player(default, null):PlayerActor;
 	public var startPoint(default, null):Entity;	
 	var entities:Array<Entity>;
 	var entitiesToSpawn:Array<{se:Entity,sx:Float,sy:Float}>;	
@@ -125,7 +125,7 @@ class World {
 			case EntityType.START:
 				startPoint = e;
 			case EntityType.PLAYER:
-				player = cast(e, Actor);
+				player = cast(e, PlayerActor);
 			default:
 				// nop
 		}

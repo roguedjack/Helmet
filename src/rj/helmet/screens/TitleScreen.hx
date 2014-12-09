@@ -23,14 +23,14 @@ class TitleScreen extends Screen {
 		title.text = 'H E L M E T';
 		title.textColor = 0xFF0000;
 		title.dropShadow = { dx:2, dy:2, color:0x0F0000, alpha:1 };
-		centerTextIn(title, 0, 0.25 * Main.HEIGHT, Main.WIDTH, 0.5 * Main.HEIGHT);
+		Screen.centerTextIn(title, 0, 0.25 * Main.HEIGHT, Main.WIDTH, 0.5 * Main.HEIGHT);
 		addChild(title);
 		
 		msg = new Text(FontBuilder.getFont("arial", 16));
 		msg.text = "Press SPACE to play";
 		msg.textColor = 0xFFFFFF;
 		msg.dropShadow = { dx:1, dy:1, color:0, alpha:1 };
-		centerTextIn(msg, 0, 0.5*Main.HEIGHT, Main.WIDTH, 0.75 * Main.HEIGHT);
+		Screen.centerTextIn(msg, 0, 0.5*Main.HEIGHT, Main.WIDTH, 0.75 * Main.HEIGHT);
 		addChild(msg);
 	}
 	

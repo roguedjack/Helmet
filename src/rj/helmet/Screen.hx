@@ -32,7 +32,7 @@ class Screen extends Sprite {
 	
 	//// Helpers
 	
-	function centerTextIn(t:Text, xMin:Float, yMin:Float, xMax:Float, yMax:Float) {
+	public static function centerTextIn(t:Text, xMin:Float, yMin:Float, xMax:Float, yMax:Float) {
 		t.setPos(xMin + 0.5*(xMax - xMin - t.textWidth), yMin + 0.5*(yMax - yMin - t.textHeight));
 	}
 }

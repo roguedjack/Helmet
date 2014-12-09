@@ -25,7 +25,7 @@ class PlayerActor extends Actor {
 	public static inline var KEY_Z = Key.A + ('z'.code - 'a'.code);
 	
 	var weapon:WeaponShooter;
-	var nbKeys:Int;
+	public var nbKeys(default,null):Int;
 
 	public function new() {
 		super(EntityType.PLAYER, { speed:64.0 } );
@@ -94,7 +94,8 @@ class PlayerActor extends Actor {
 			case EntityType.DOOR: {
 				if (nbKeys > 0) {
 					--nbKeys;
-					cast(other, DoorEntity).open();
+					refreshHud();					
+					cast(other, DoorEntity).open();				
 				}
 			}
 			case EntityType.ITEM: {
@@ -110,8 +111,13 @@ class PlayerActor extends Actor {
 		switch (it.itemType) {
 			case ItemType.KEY:
 				++nbKeys;
+				refreshHud();
 			default:
 				// nop
-		}
+		}		
+	}
+	
+	inline function refreshHud() {
+		Main.Instance.view.hud.refreshInventoryView();		
 	}
 }
