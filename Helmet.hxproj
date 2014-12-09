@@ -23,7 +23,7 @@
     <option flashStrict="True" />
     <option noInlineOnDebug="False" />
     <option mainClass="rj.helmet.Main" />
-    <option enabledebug="True" />
+    <option enabledebug="False" />
     <option additional="" />
   </build>
   <!-- haxelib libraries -->

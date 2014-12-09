@@ -2,11 +2,13 @@ package rj.helmet;
 import h2d.col.Bounds;
 import hxd.Res;
 import hxd.res.TiledMap;
+import rj.helmet.entities.DoorEntity;
 import rj.helmet.entities.ExitEntity;
 import rj.helmet.entities.PlayerActor;
 import rj.helmet.entities.SkeletonMonster;
 import rj.helmet.entities.StartEntity;
 import rj.helmet.Entity.EntityType;
+import rj.helmet.Item.ItemType;
 
 /**
  * ...
@@ -69,6 +71,12 @@ class World {
 					e = new StartEntity();
 				case Main.TILEDOBJ_GEN_SKELETON:
 					e = new MonsterGenerator(SkeletonMonster, Gfx.entities[24]);
+				case Main.TILEDOBJ_HDOOR:
+					e = new DoorEntity(o.name, false);
+				case Main.TILEDOBJ_VDOOR:
+					e = new DoorEntity(o.name, true);
+				case Main.TILEDOBJ_KEY:
+					e = new Item(ItemType.KEY, Gfx.entities[56]);
 			}
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;
@@ -139,13 +147,27 @@ class World {
 	}
 	
 	public function listEntitiesIn(bounds:Bounds, ?out:Array<Entity>):Array<Entity> {
-		var list = (out == null ? new Array<Entity>() : out);
+		if (out == null) {
+			out = new Array<Entity>();			
+		}
 		for (e in entities) {
 			if (e.bounds.collide(bounds)) {
-				list.push(e);
+				out.push(e);
 			}
 		}
-		return list;
+		return out;
+	}
+	
+	public function filterEntities(predicateFn:Entity->Bool, ?out:Array<Entity>):Array<Entity> {
+		if (out == null) {
+			out = new Array<Entity>();
+		}
+		for (e in entities) {
+			if (predicateFn(e)) {
+				out.push(e);
+			}
+		}
+		return out;
 	}
 	
 	public function update(elapsed:Float) {

@@ -6,6 +6,7 @@ import hxd.Key;
 import rj.helmet.Actor;
 import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
+import rj.helmet.Item.ItemType;
 import rj.helmet.WeaponShooter;
 
 /**
@@ -24,6 +25,7 @@ class PlayerActor extends Actor {
 	public static inline var KEY_Z = Key.A + ('z'.code - 'a'.code);
 	
 	var weapon:WeaponShooter;
+	var nbKeys:Int;
 
 	public function new() {
 		super(EntityType.PLAYER, { speed:64.0 } );
@@ -42,6 +44,7 @@ class PlayerActor extends Actor {
 	override function onStartSpawning() {
 		super.onStartSpawning();
 		playAnim(ANIM_IDLE);
+		nbKeys = 0;
 	}
 
 	override function updateLiving(elapsed:Float) {
@@ -82,10 +85,33 @@ class PlayerActor extends Actor {
 	
 	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {		
 		super.onCollisionWith(other, vx, vy, active);	
-		if (other.type == EntityType.EXIT) {
-			// spin madly!
-			// FIXME --- we collide only when moving, but when we move we set the rotation so this now has no effect.
-			rotation += 4 * Math.PI * world.elapsed;
+		switch (other.type) {
+			case EntityType.EXIT: {
+				// spin madly!
+				// FIXME --- we collide only when moving, but when we move we set the rotation so this now has no effect.
+				rotation += 4 * Math.PI * world.elapsed;
+			}
+			case EntityType.DOOR: {
+				if (nbKeys > 0) {
+					--nbKeys;
+					cast(other, DoorEntity).open();
+				}
+			}
+			case EntityType.ITEM: {
+				addToInventory(cast(other, Item));
+				other.remove();
+			}
+			default:
+				// nop
+		}
+	}
+	
+	function addToInventory(it:Item) {
+		switch (it.itemType) {
+			case ItemType.KEY:
+				++nbKeys;
+			default:
+				// nop
 		}
 	}
 }

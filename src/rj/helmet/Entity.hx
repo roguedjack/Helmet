@@ -13,8 +13,9 @@ import haxe.EnumFlags;
 	var MONSTER_GENERATOR = 2;
 	var ITEM = 3;
 	var PROJECTILE = 4;
-	var START = 5;
-	var EXIT = 6;	
+	var DOOR = 5;
+	var START = 6;
+	var EXIT = 7;	
 }
 
 enum ColFlags {

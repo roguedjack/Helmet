@@ -6,3 +6,6 @@ MILESTONE 1
 MILESTONE 2
 - Fire axe weapon.
 - Skeleton NPC & generator.
+
+MILESTONE 3
+- Doors & keys.
