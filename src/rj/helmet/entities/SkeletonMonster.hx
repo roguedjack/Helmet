@@ -1,6 +1,7 @@
 package rj.helmet.entities;
 
 import h2d.Anim;
+import rj.helmet.Entity;
 import rj.helmet.Monster;
 
 
@@ -14,7 +15,10 @@ class SkeletonMonster extends Monster {
 	private static inline var ANIM_WALK = 1;
 
 	public function new() {
-		super( { speed : 24 } );		
+		super({ 
+			speed : 24, 
+			health: 10 	// TODO --- health pts depends on monster level
+		});
 
 		// FIXME -- a lot of monster types will have the same things, not particular to skeleton
 		setCollisionBox(8, 8 , 16, 16);
@@ -39,5 +43,13 @@ class SkeletonMonster extends Monster {
 			faceEntity(world.player);
 			playAnim(ANIM_IDLE);
 		}	
+	}
+	
+	override public function takeDamage(source:Entity, dmg:Int) {
+		super.takeDamage(source, dmg);
+		
+		// fade out to show health level
+		var healthLevel = health / props.health;
+		bitmap.alpha = 0.25 + 0.75 * healthLevel;
 	}
 }

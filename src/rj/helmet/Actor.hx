@@ -13,14 +13,17 @@ import rj.helmet.Entity.EntityType;
 }
 
 /**
- * An entity than can move and collide, may have an animation, a behavior and a living cycle.
+ * An entity that can take damage, has a living cycle and may have animations.
+ * 
  * @author roguedjack
  */
 class Actor extends Entity {
 	
 	public var state(default, set):ActorState;
+	public var health(default, default):Int;
 	var props: {
-		speed: Float
+		speed: Float,
+		health: Int
 	};
 	var animator:Anim;
 	var anims:Array<Anim>;
@@ -29,6 +32,7 @@ class Actor extends Entity {
 	public function new(type:EntityType, props) {
 		super(type);
 		this.props = props;
+		health = props.health;
 		hardCollision = true;
 		animator = new Anim();
 		anchor.addChild(animator);
@@ -141,5 +145,21 @@ class Actor extends Entity {
 
 	function faceDirection(dx:Float, dy:Float) {
 		rotation = Math.atan2(dx, -dy);
+	}
+
+	/**
+	 * Loose health. Switch to dying state if no health left.
+	 * Ignore damage if not living.
+	 * @param	source entity inflicting the damage -- can be null
+	 * @param	dmg
+	 */
+	public function takeDamage(source:Entity, dmg:Int) {
+		if (state != ActorState.LIVING) {
+			return;
+		}
+		health -= dmg;
+		if (health <= 0) {
+			state = ActorState.DYING;
+		}
 	}
 }

@@ -20,8 +20,10 @@ class Hud extends Sprite {
 	private static inline var INV_ITEM_SIZE = 16;
 	var bg:Bitmap;
 	var title:Text;
+	var healthTxt:Text;
 	var cachedEntitiesBmp:BitmapData;
 	var inventoryBmp:Bitmap;
+	var needRefresh:Bool;
 
 	public function new(?parent:Sprite) {
 		super(parent);
@@ -42,11 +44,23 @@ class Hud extends Sprite {
 		inventoryBmp.setPos(0, 100);
 		addChild(inventoryBmp);
 		
+		healthTxt = new Text(FontBuilder.getFont("arial", 16));
+		healthTxt.textColor = 0xFFFFFF;
+		healthTxt.text = "placeholder";
+		healthTxt.textAlign = Align.Center;
+		healthTxt.dropShadow = { dx:1, dy:1, color:0x0F0F0F, alpha:1 };		
+		healthTxt.setPos(10, 150);
+		addChild(healthTxt);
+		
 		cachedEntitiesBmp = Res.gfx.entities.toBitmap();
-		refreshInventoryView();
+		refresh();
 	}
 	
-	public function refreshInventoryView() {
+	public function refresh() {
+		needRefresh  = true;
+	}
+	
+	function doRefresh() {
 		var player = Main.Instance.world.player;
 		
 		inline function drawInventoryItem(canvas:BitmapData, x:Int, y:Int, itType:ItemType) {
@@ -74,6 +88,8 @@ class Hud extends Sprite {
 					y += Main.TILE_SIZE;
 				}
 			}
+			// update counters
+			healthTxt.text = "HEALTH\n" + player.health;
 		} else {
 			canvas.clear(0);
 		}
@@ -82,5 +98,9 @@ class Hud extends Sprite {
 	}
 	
 	public function update(elapsed:Float) {		
+		if (needRefresh) {
+			needRefresh = false;
+			doRefresh();
+		}
 	}
 }

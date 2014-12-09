@@ -4,6 +4,7 @@ import h2d.Anim;
 import haxe.EnumFlags;
 import hxd.Key;
 import rj.helmet.Actor;
+import rj.helmet.CooldownTimer;
 import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.Item.ItemType;
@@ -24,17 +25,24 @@ class PlayerActor extends Actor {
 	public static inline var KEY_W = Key.A + ('w'.code - 'a'.code);
 	public static inline var KEY_Z = Key.A + ('z'.code - 'a'.code);
 	
+	public static inline var LIFELEAK_TIMER:Float = 1.0;
+
+	public var nbKeys(default,null):Int;	
 	var weapon:WeaponShooter;
-	public var nbKeys(default,null):Int;
+	var lifeLeakTimer:CooldownTimer;
 
 	public function new() {
-		super(EntityType.PLAYER, { speed:64.0 } );
+		super(EntityType.PLAYER, {  // TODO --- player props depends on character class
+			speed:64.0,
+			health:10000
+		});
 		setCollisionBox(8, 8, 16, 16);
 		
 		addAnim(ANIM_IDLE, new Anim([Gfx.entities[8]]));		
 		addAnim(ANIM_WALK, new Anim([Gfx.entities[9], Gfx.entities[10]], 5));
 		
-		equipWeapon(new WeaponShooter(this, AxeProjectile, 0.75));
+		// TODO ---- weapon depends on character class
+		equipWeapon(new WeaponShooter(this, AxeProjectile, AxeProjectile.COOLDOWN));		
 	}
 	
 	function equipWeapon(shooter:WeaponShooter) {
@@ -45,6 +53,7 @@ class PlayerActor extends Actor {
 		super.onStartSpawning();
 		playAnim(ANIM_IDLE);
 		nbKeys = 0;
+		lifeLeakTimer = new CooldownTimer(LIFELEAK_TIMER);
 	}
 
 	override function updateLiving(elapsed:Float) {
@@ -81,6 +90,12 @@ class PlayerActor extends Actor {
 		} else {			
 			playAnim(ANIM_IDLE);
 		}		
+		
+		// slowly loose life
+		if (lifeLeakTimer.update(elapsed)) {
+			takeDamage(null, 1);
+			refreshHud();
+		}
 	}
 	
 	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {		
@@ -118,6 +133,6 @@ class PlayerActor extends Actor {
 	}
 	
 	inline function refreshHud() {
-		Main.Instance.view.hud.refreshInventoryView();		
+		Main.Instance.view.hud.refresh();		
 	}
 }
