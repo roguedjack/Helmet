@@ -55,6 +55,7 @@ class PlayerActor extends Actor {
 		// shoot or move.
 		// we can change direction while shooting.
 		var mx = 0, my = 0;
+		var moving;
 		if (Key.isDown(Key.UP) || Key.isDown(KEY_Z) || Key.isDown(KEY_W)) my -= 1;
 		if (Key.isDown(Key.DOWN) || Key.isDown(KEY_S)) my += 1;
 		if (Key.isDown(Key.LEFT) || Key.isDown(KEY_Q) || Key.isDown(Key.A)) mx -= 1;
@@ -63,12 +64,16 @@ class PlayerActor extends Actor {
 			if (weapon != null && weapon.canShoot) {
 				weapon.shoot();
 			}
-			mx = my = 0;
+			moving = false;
+		} else {
+			moving = (mx != 0 || my != 0);
 		}
 		if (mx != 0 || my != 0) {
+			faceDirection(mx, my);		
+		}
+		if (moving) {
 			move(mx * props.speed * elapsed, 0);
 			move(0, my * props.speed * elapsed);
-			faceDirection(mx, my);
 			playAnim(ANIM_WALK);			
 		} else {			
 			playAnim(ANIM_IDLE);
