@@ -1,5 +1,7 @@
 package rj.helmet;
+import hxd.Res;
 import rj.helmet.Actor.ActorState;
+import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
 
 /**
@@ -19,6 +21,18 @@ class Monster extends Actor {
 		canCollide = true;
 		hardCollision = true;
 		this.aggroRange = aggroRange;
+	}
+	
+	override public function takeDamage(source:Entity, dmg:Int) {
+		super.takeDamage(source, dmg);
+		if (health > 0) {
+			playSfx(Res.sfx.monster_hit);
+		}
+	}
+	
+	override function onStartDying() {
+		super.onStartDying();
+		playSfx(Res.sfx.monster_die);
 	}
 	
 	//// Helpers

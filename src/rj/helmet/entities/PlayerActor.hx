@@ -5,6 +5,7 @@ import h2d.col.Bounds;
 import h2d.Tile;
 import haxe.EnumFlags;
 import hxd.Key;
+import hxd.Res;
 import rj.helmet.Actor;
 import rj.helmet.CooldownTimer;
 import rj.helmet.Entity;
@@ -98,6 +99,7 @@ class PlayerActor extends Actor {
 		if (Key.isDown(Key.RIGHT) || Key.isDown(KEY_D)) mx += 1;							
 		if (Key.isDown(Key.SPACE) || Key.isDown(Key.MOUSE_LEFT)) {
 			if (weapon != null && weapon.canShoot) {
+				playSfx(Res.sfx.shoot);
 				weapon.shoot();
 			}
 			moving = false;
@@ -150,6 +152,7 @@ class PlayerActor extends Actor {
 		switch (it.itemType) {
 			case ItemType.KEY:
 				++nbKeys;
+				playSfx(Res.sfx.pickup_key);
 				refreshHud();
 			default:
 				// nop

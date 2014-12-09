@@ -1,5 +1,6 @@
 package rj.helmet.entities;
 import h2d.filter.Glow;
+import hxd.Res;
 import rj.helmet.Entity;
 
 using rj.helmet.Entity.EntityType;
@@ -30,7 +31,7 @@ class DoorEntity extends Entity {
 	 * Opens this door and all the other doors in the same group.
 	 */
 	public function open() {
-		// TODO --- play sfx
+		playSfx(Res.sfx.open_door);
 		doOpen();
 		// open all the doors in the same group
 		for (otherDoor in world.filterEntities(sameDoorGroupFilter)) {

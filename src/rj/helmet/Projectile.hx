@@ -1,6 +1,7 @@
 package rj.helmet;
 
 import haxe.EnumFlags;
+import hxd.Res;
 import rj.helmet.Actor.ActorState;
 import rj.helmet.Entity;
 import rj.helmet.Entity.ColFlags;
@@ -83,6 +84,7 @@ class Projectile extends Actor {
 				cast(other, Actor).takeDamage(this, projProps.power);
 			case EntityType.MONSTER_GENERATOR:
 				// TODO --- generators can take hits too
+				playSfx(Res.sfx.monster_die);
 				other.remove();
 			default:
 				// no effect on other.

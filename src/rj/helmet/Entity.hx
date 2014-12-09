@@ -6,6 +6,7 @@ import h2d.filter.Glow;
 import h2d.Sprite;
 import h2d.Tile;
 import haxe.EnumFlags;
+import hxd.res.Sound;
 
 @:enum abstract EntityType(Int) {
 	var PLAYER = 0;
@@ -274,6 +275,11 @@ class Entity {
 	 * @param	vy attempted y movement
 	 */
 	function onWorldCollision(colFlags:EnumFlags<ColFlags>, vx:Float, vy:Float) { }
-		
+
+	public function playSfx(sfx:Sound, vol:Float = 0.5) {
+		sfx.volume = vol;
+		sfx.play();
+	}
+	
 	public function update(elapsed:Float) {}
 }
