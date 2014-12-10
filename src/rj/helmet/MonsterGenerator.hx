@@ -4,6 +4,7 @@ import h2d.col.Bounds;
 import h2d.Tile;
 import hxd.Res;
 import rj.helmet.Entity.EntityType;
+import rj.helmet.fx.ShakeEntityFx;
 
 /**
  * ...
@@ -18,14 +19,6 @@ class MonsterGenerator extends Entity {
 	var maxHitPoints:Int;
 	var hitPoints:Int;
 	var tiles:Array<Tile>;
-	
-	// TODO --- make this into an shakefx class, will probably reuse the effect on other entities.
-	var shakeDuration:Float;
-	var shakeTimer:Float;
-	var shakeAmplitude:Float;
-	var shakePeriod:Float;
-	var preShakePos: { x:Float, y:Float };
-
 
 	/**
 	 * 
@@ -53,14 +46,6 @@ class MonsterGenerator extends Entity {
 		setImage(tiles[hitPoints > 0 ? maxHitPoints - hitPoints : 0]);
 	}
 	
-	function shake(duration:Float = 0.25, amplitude:Float=1, period:Float=2) {
-		preShakePos = pos;
-		shakeDuration = duration;
-		shakeTimer = duration;
-		shakeAmplitude = amplitude;
-		shakePeriod = period;
-	}
-	
 	override public function spawn(x:Float, y:Float) {
 		super.spawn(x, y);
 		timer = 0;
@@ -73,16 +58,6 @@ class MonsterGenerator extends Entity {
 		if (timer >= spawnCooldown && distanceToPlayer() <= aggroRange) {
 			trySpawningMonster();
 			timer -= spawnCooldown;  // cooldown even if could not spawning
-		}
-		
-		if (shakeTimer > 0) {
-			shakeTimer -= elapsed;
-			if (shakeTimer <= 0) {
-				//pos = preShakePos;
-			} else {
-				var t = (shakeDuration - shakeTimer) / shakeDuration;
-				move(shakeAmplitude * Math.sin(shakePeriod * 2 * Math.PI * t), shakeAmplitude * Math.cos(shakePeriod * 2 * Math.PI * t));
-			}
 		}
 	}
 	
@@ -121,7 +96,7 @@ class MonsterGenerator extends Entity {
 				playSfx(Res.sfx.monster_die);
 				remove();
 			} else {
-				shake();
+				startFx(new ShakeEntityFx());
 				refreshImage();
 			}
 		}

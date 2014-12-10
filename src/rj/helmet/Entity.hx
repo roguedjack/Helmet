@@ -58,6 +58,7 @@ class Entity {
 	var bitmap:Bitmap;
 	var anchor:Sprite;  // for rotation on center
 	var tmpColliders:Array<Entity>;  // to avoid re-allocation each frame
+	var fxs:Array<EntityFx>;
 
 	public function new(type:EntityType) {
 		this.type = type;
@@ -68,6 +69,7 @@ class Entity {
 		anchor = new Sprite(sprite);
 		bitmap = new Bitmap(null, anchor);
 		tmpColliders = new Array<Entity>();
+		fxs = new Array<EntityFx>();
 		//nice but horrible fps drop when more than 20+ entities, even if not on screen 
 		//bitmap.filters = [ new Glow(0) ];  // black outline effect		
 	}
@@ -280,6 +282,26 @@ class Entity {
 		sfx.volume = vol;
 		sfx.play();
 	}
+
+	public function startFx(fx:EntityFx) {
+		fxs.push(fx);
+		fx.start(this);
+	}
 	
-	public function update(elapsed:Float) {}
+	/**
+	 * Updates the entity logic.
+	 * Default updates all the entity fx.
+	 * @param	elapsed
+	 */
+	public function update(elapsed:Float) {
+		var iFx:Int = 0;
+		while (iFx < fxs.length) {
+			fxs[iFx].update(elapsed);
+			if (fxs[iFx].hasEnded) {
+				fxs.splice(iFx, 1);
+			} else {
+				++iFx;
+			}
+		}
+	}
 }
