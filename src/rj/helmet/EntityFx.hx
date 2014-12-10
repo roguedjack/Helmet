@@ -27,7 +27,7 @@ class EntityFx {
 			return;
 		}
 		time += elapsed;
-		apply(time > duration ? 1.0 : time / duration);
+		apply(elapsed, time > duration ? 1.0 : time / duration);
 		if (time >= duration) {
 			hasEnded = true;
 			onEnd();
@@ -37,9 +37,10 @@ class EntityFx {
 	/**
 	 * Applies the effect.
 	 * Default does nothing.
+	 * @param	elapsed
 	 * @param	t [0..1]
 	 */
-	function apply(t:Float) { }
+	function apply(elapsed:Float, t:Float) { }
 	
 	/**
 	 * On time ended.

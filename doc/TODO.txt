@@ -1,5 +1,6 @@
 X - Generators hitpoints.
-- Items hovering.
+X - Items hovering. 
+- Firing weapon: spawn projectile a few pixels forward.
 - Melee fighting.
 - Scoring & Treasures.
 - Food.

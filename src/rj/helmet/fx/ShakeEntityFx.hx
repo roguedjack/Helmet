@@ -10,21 +10,21 @@ import rj.helmet.EntityFx;
 class ShakeEntityFx extends EntityFx {
 	
 	var amplitude:Float;
-	var period:Float;
+	var frequency:Float;
 
 	/**
 	 * 
 	 * @param	duration
 	 * @param	amplitude how far the shaking moves the entity
-	 * @param	period how fast the shaking is
+	 * @param	frequency how fast the shaking is
 	 */
-	public function new(duration:Float = 0.25, amplitude:Float = 1, period:Float = 2) {
+	public function new(duration:Float = 0.25, amplitude:Float = 1, frequency:Float = 2) {
 		super(duration);
 		this.amplitude = amplitude;
-		this.period = period;
+		this.frequency = frequency;
 	}
 	
-	override function apply(t:Float) {
-		entity.move(amplitude * Math.sin(period * 2 * Math.PI * t), amplitude * Math.cos(period * 2 * Math.PI * t));
+	override function apply(elapsed:Float, t:Float) {
+		entity.move(amplitude * Math.sin(frequency * 2 * Math.PI * t), amplitude * Math.cos(frequency * 2 * Math.PI * t));
 	}
 }
