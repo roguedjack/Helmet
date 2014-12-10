@@ -9,7 +9,7 @@ import rj.helmet.Monster;
  * ...
  * @author roguedjack
  */
-class SkeletonMonster extends Monster {
+class GhostMonster extends Monster {
 	
 	private static inline var ANIM_IDLE = 0;
 	private static inline var ANIM_WALK = 1;

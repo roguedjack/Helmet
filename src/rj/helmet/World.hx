@@ -5,7 +5,7 @@ import hxd.res.TiledMap;
 import rj.helmet.entities.DoorEntity;
 import rj.helmet.entities.ExitEntity;
 import rj.helmet.entities.PlayerActor;
-import rj.helmet.entities.SkeletonMonster;
+import rj.helmet.entities.GhostMonster;
 import rj.helmet.entities.StartEntity;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.Item.ItemType;
@@ -76,8 +76,8 @@ class World {
 					e = new ExitEntity();
 				case Main.TILEDOBJ_START:
 					e = new StartEntity();
-				case Main.TILEDOBJ_GEN_SKELETON:
-					e = new MonsterGenerator(SkeletonMonster, Gfx.entities[24]);
+				case Main.TILEDOBJ_GEN_GHOST:
+					e = new MonsterGenerator(GhostMonster, Gfx.entities[24]);
 				case Main.TILEDOBJ_HDOOR:
 					e = new DoorEntity(o.name, false);
 				case Main.TILEDOBJ_VDOOR:
