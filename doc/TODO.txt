@@ -1,4 +1,5 @@
-- Generators hitpoints & generated monster levels.
+X - Generators hitpoints.
+- Items hovering.
 - Melee fighting.
 - Scoring & Treasures.
 - Food.

@@ -19,13 +19,13 @@ class GhostMonster extends Monster {
 	public function new() {
 		super({ 
 			speed : 24, 
-			health: 10 	// TODO --- health pts depends on monster level
+			health: 10
 		});
 
-		// FIXME -- a lot of monster types will have the same things, not particular to skeleton
+		// FIXME -- a lot of monster types will have the same things, not particular to this type
 		setCollisionBox(8, 8 , 16, 16);
-		addAnim(ANIM_IDLE, new Anim([Gfx.entities[25]]));
-		addAnim(ANIM_WALK, new Anim([Gfx.entities[26], Gfx.entities[27]], 2));
+		addAnim(ANIM_IDLE, new Anim([Gfx.entities[27]]));
+		addAnim(ANIM_WALK, new Anim([Gfx.entities[28], Gfx.entities[29]], 2));
 	}
 
 	override function onStartSpawning() {
@@ -37,7 +37,7 @@ class GhostMonster extends Monster {
 	override function updateLiving(elapsed:Float) {
 		super.updateLiving(elapsed);
 				
-		// FIXME -- a lot of monster types do the same thing, not particular to skeleton
+		// FIXME -- a lot of monster types do the same thing, not particular to this type
 		var m = doMoveStraightAtPlayer(elapsed);		
 		if (m.vx != 0 || m.vy != 0) {
 			faceDirection(m.vx, m.vy);

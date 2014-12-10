@@ -83,9 +83,7 @@ class Projectile extends Actor {
 			case EntityType.PLAYER:
 				cast(other, Actor).takeDamage(this, projProps.power);
 			case EntityType.MONSTER_GENERATOR:
-				// TODO --- generators can take hits too
-				playSfx(Res.sfx.monster_die);
-				other.remove();
+				cast(other, MonsterGenerator).takeHit();
 			default:
 				// no effect on other.
 		}
