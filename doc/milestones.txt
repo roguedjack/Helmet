@@ -12,3 +12,6 @@ MILESTONE 3
 
 MILESTONE 4
 - Play as warrior or valkryie.
+
+MILESTONE 5
+- Changing levels.

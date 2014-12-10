@@ -13,6 +13,8 @@ class SkeletonMonster extends Monster {
 	
 	private static inline var ANIM_IDLE = 0;
 	private static inline var ANIM_WALK = 1;
+	
+	var startingHealth:Int;
 
 	public function new() {
 		super({ 
@@ -28,6 +30,7 @@ class SkeletonMonster extends Monster {
 
 	override function onStartSpawning() {
 		super.onStartSpawning();
+		startingHealth = health;
 		playAnim(ANIM_IDLE);
 	}
 	
@@ -49,7 +52,7 @@ class SkeletonMonster extends Monster {
 		super.takeDamage(source, dmg);
 		
 		// fade out to show health level
-		var healthLevel = health / props.health;
+		var healthLevel = health / startingHealth;
 		bitmap.alpha = 0.25 + 0.75 * healthLevel;
 	}
 }

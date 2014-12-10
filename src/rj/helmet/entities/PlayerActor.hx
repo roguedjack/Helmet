@@ -11,6 +11,7 @@ import rj.helmet.CooldownTimer;
 import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.Item.ItemType;
+import rj.helmet.PlayerData;
 import rj.helmet.WeaponShooter;
 
 @:enum abstract CharacterClass(Int) {
@@ -48,26 +49,29 @@ class PlayerActor extends Actor {
 	public static inline var KEY_Z = Key.A + ('z'.code - 'a'.code);
 	
 	public static inline var LIFELEAK_TIMER:Float = 1.0;
+	public static inline var EXIT_LEVEL_TIMER:Float = 2.0;
 	
 	public static var CHARACTER_CLASSES_PROPS:Array<CharacterClassProps>;
 
-	public var characterClass(default, null):CharacterClass;
-	public var nbKeys(default,null):Int;	
+	var data:PlayerData;
 	var weapon:WeaponShooter;
 	var lifeLeakTimer:CooldownTimer;
+	var exitLevelTimer:CooldownTimer;
 
-	public function new(characterClass:CharacterClass) {
-		var cl = CHARACTER_CLASSES_PROPS[cast(characterClass, Int)];  // FIXME -- why do i need to cast an abstract int to an int?
+	public function new(data:PlayerData) {
+		this.data = data;
+		var cl = CHARACTER_CLASSES_PROPS[cast(data.characterClass, Int)];  // FIXME -- why do i need to cast an abstract int to an int?
 		
 		super(EntityType.PLAYER, { 
-			speed:cl.speed,
-			health:cl.health
+			speed:data.speed,
+			health:data.health
 		});
 		
 		setCollisionBox(Std.int(cl.colBox.xMin), Std.int(cl.colBox.yMin), Std.int(cl.colBox.width), Std.int(cl.colBox.height));		
 		addAnim(ANIM_IDLE, new Anim(cl.framesIdle, cl.animSpeed));		
 		addAnim(ANIM_WALK, new Anim(cl.framesWalk, 5));		
-		equipWeapon(new WeaponShooter(this, cl.weaponClass, cl.weaponCooldown));
+		equipWeapon(new WeaponShooter(this, cl.weaponClass, data.weaponCooldown));
+		refreshHud();
 	}
 	
 	function equipWeapon(shooter:WeaponShooter) {
@@ -77,12 +81,21 @@ class PlayerActor extends Actor {
 	override function onStartSpawning() {
 		super.onStartSpawning();
 		playAnim(ANIM_IDLE);
-		nbKeys = 0;
 		lifeLeakTimer = new CooldownTimer(LIFELEAK_TIMER);
 	}
 
 	override function updateLiving(elapsed:Float) {
 		super.updateLiving(elapsed);
+		
+		// exiting level?
+		if (exitLevelTimer != null) {
+			if (exitLevelTimer.update(elapsed)) {
+				Main.Instance.startNextLevel();
+			} else {
+				animExitingLevel(elapsed);
+			}
+			return;
+		}
 		
 		// update weapon timer
 		if (weapon != null) {
@@ -110,8 +123,8 @@ class PlayerActor extends Actor {
 			faceDirection(mx, my);		
 		}
 		if (moving) {
-			move(mx * props.speed * elapsed, 0);
-			move(0, my * props.speed * elapsed);
+			move(mx * speed * elapsed, 0);
+			move(0, my * speed * elapsed);
 			playAnim(ANIM_WALK);			
 		} else {			
 			playAnim(ANIM_IDLE);
@@ -128,13 +141,13 @@ class PlayerActor extends Actor {
 		super.onCollisionWith(other, vx, vy, active);	
 		switch (other.type) {
 			case EntityType.EXIT: {
-				// spin madly!
-				// FIXME --- we collide only when moving, but when we move we set the rotation so this now has no effect.
-				rotation += 4 * Math.PI * world.elapsed;
+				if (exitLevelTimer == null) {
+					startExitingLevel();
+				}				
 			}
 			case EntityType.DOOR: {
-				if (nbKeys > 0) {
-					--nbKeys;
+				if (data.nbKeys > 0) {
+					--data.nbKeys;
 					refreshHud();					
 					cast(other, DoorEntity).open();				
 				}
@@ -148,11 +161,23 @@ class PlayerActor extends Actor {
 		}
 	}
 	
+	function startExitingLevel() {
+		exitLevelTimer = new CooldownTimer(EXIT_LEVEL_TIMER);
+		canCollide = false;							
+		// TODO --- play sfx		
+	}
+	
+	function animExitingLevel(elapsed:Float) {
+		playAnim(ANIM_WALK);
+		anchor.scale(1 - 0.9 * elapsed);			
+		rotation += 4 * Math.PI * elapsed;		
+	}
+		
 	function addToInventory(it:Item) {
 		switch (it.itemType) {
 			case ItemType.KEY:
-				++nbKeys;
-				playSfx(Res.sfx.pickup_key);
+				++data.nbKeys;
+				playSfx(Res.sfx.pickup_key_wav);
 				refreshHud();
 			default:
 				// nop

@@ -4,6 +4,7 @@ import hxd.App;
 import hxd.Key;
 import hxd.Res;
 import hxd.res.FontBuilder;
+import hxd.res.TiledMap;
 import rj.helmet.entities.PlayerActor;
 import rj.helmet.screens.TitleScreen;
 import rj.helmet.screens.PlayScreen;
@@ -39,20 +40,25 @@ class Main extends App {
 	public var screen(default, set):Screen;
 	public var introScreen(default,null):TitleScreen;
 	public var playScreen(default, null):PlayScreen;
+	public var currentMap(get, never):TiledMap;
+	public var playerData(default, null):PlayerData;
 	
-	static inline var DEBUG_FPS = true;
-	var fpsText:Text;
+	static inline var DEBUG_INFO = true;
+	var debugText:Text;
+	
+	var mapCycle:Array<TiledMap>;
 	
 	function set_screen(s:Screen) {
-		if (s == screen) {
-			return s;
-		}
 		if (screen != null) {
 			screen.onLeave();
 		}
 		screen = s;
 		screen.onEnter();
 		return screen;
+	}
+	
+	function get_currentMap() {
+		return mapCycle[playerData.level];
 	}
 	
 	override function init() {
@@ -64,6 +70,8 @@ class Main extends App {
 		Gfx.init();
 		PlayerActor.initCharacterClasses();
 		
+		mapCycle = [ Res.levels.level0, Res.levels.level1 ];
+		
 		world = new World(this);
 		view = null;
 		
@@ -74,14 +82,35 @@ class Main extends App {
 	
 	override function update(dt:Float) {
 		screen.update(1.0 / engine.fps);
-		if (DEBUG_FPS) {
-			if (fpsText == null) {
-				fpsText = new Text(FontBuilder.getFont("arial", 10));				
-				fpsText.setPos(s2d.width - 50, 0);
-				s2d.addChildAt(fpsText, 10);
+		if (DEBUG_INFO) {
+			if (debugText == null) {
+				debugText = new Text(FontBuilder.getFont("arial", 10));				
+				debugText.textAlign = Align.Right;				
+				debugText.setPos(s2d.width - 100, 0);
+				s2d.addChildAt(debugText, 10);
 			}
-			fpsText.text = 'fps:${Std.int(engine.fps)}';
+			debugText.text = 'ents:${world.countEntities} fps:${Std.int(engine.fps)}';
 		}
+	}
+	
+	public function startNewGame(cl:CharacterClass) {
+		playerData = new PlayerData(cl);
+		screen = playScreen;		
+		startLevel(0);
+	}
+	
+	public function startNextLevel() {
+		startLevel(playerData.level + 1);
+	}
+	
+	public function startLevel(i:Int) {
+		if (world.player != null) {
+			playerData.takeSnapshot(world.player);
+			playerData.nbKeys = 0;  // remove all keys but not other bonuses
+		}
+		playerData.level = i % mapCycle.length;
+		world.loadMap(mapCycle[playerData.level]);
+		playScreen.onNewLevel();		
 	}
 	
 	static function main() {

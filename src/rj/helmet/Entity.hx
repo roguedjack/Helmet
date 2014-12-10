@@ -73,7 +73,7 @@ class Entity {
 	}
 	
 	function set_pos( p: { x:Float, y:Float } ) {
-		pos = p;
+		pos = { x:p.x, y:p.y };
 		syncCollisionBounds();
 		syncSpritePos();
 		return pos;

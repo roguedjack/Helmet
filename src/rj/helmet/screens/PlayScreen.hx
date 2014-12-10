@@ -18,10 +18,6 @@ class PlayScreen extends Screen {
 	override public function onEnter() {
 		super.onEnter();	
 		game.view = new View(this);
-				
-		game.world.loadLevel(Res.levels.level0);		
-		
-		game.view.redrawLevelTilesBmp(game.world.mapData);
 	}
 	
 	override public function onLeave() {
@@ -34,5 +30,9 @@ class PlayScreen extends Screen {
 		super.update(elapsed);
 		game.world.update(elapsed);
 		game.view.update(elapsed);
+	}
+	
+	public function onNewLevel() {
+		game.view.onNewLevel();
 	}
 }

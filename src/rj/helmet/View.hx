@@ -19,7 +19,7 @@ class View extends Sprite {
 	
 	private static inline var SCALE = 2.0;
 
-	public var followTarget(default, set):Entity;	
+	public var followTarget(default, default):Entity;	
 	public var hud(default, null):Hud;
 	var tilesSetBmp:BitmapData;
 	var mapLayers:Layers;
@@ -53,31 +53,31 @@ class View extends Sprite {
 		
 		hud = new Hud(this);
 	}
-	
-	function set_followTarget(e) {
-		return followTarget = e;
-	}
-	
+
 	function centerOn(x:Float, y:Float) {
 		mapLayers.setPos( -SCALE*x + 0.5*Main.WIDTH - 0.5*Hud.WIDTH, -SCALE*y + 0.5*Main.HEIGHT);
 	}
 		
 	inline function getEntityLayer(e:Entity):Sprite {
 		return switch (e.type) {
+			case EntityType.DOOR:
+				actorsLayer;			
 			case EntityType.EXIT:
-				floorLayer;
+				itemsLayer;			
 			case EntityType.ITEM:
 				itemsLayer;				
+			case EntityType.MONSTER:
+				actorsLayer;				
 			case EntityType.MONSTER_GENERATOR:
-				itemsLayer;
+				itemsLayer;			
 			case EntityType.PLAYER:
 				actorsLayer;
 			case EntityType.PROJECTILE:
-				projectilesLayer;
-			case EntityType.MONSTER:
-				actorsLayer;
+				projectilesLayer;				
+			case EntityType.START:
+				itemsLayer;			
 			default:
-				actorsLayer;
+				throw "layer: unhandled entity type " + e.type;
 		}
 	}
 	
@@ -90,7 +90,26 @@ class View extends Sprite {
 		e.sprite.remove();
 	}
 	
-	public function redrawLevelTilesBmp(mapData:TiledMapData) {
+	public function onNewLevel() {
+		clearSprites();
+		redrawLevelTilesBmp(Main.Instance.world.mapData);
+		followTarget = null;
+		hud.refresh();
+	}
+	
+	function clearSprites() {
+		while (actorsLayer.numChildren > 0) {
+			actorsLayer.removeChild(actorsLayer.getChildAt(0));
+		}
+		while (projectilesLayer.numChildren > 0) {
+			projectilesLayer.removeChild(projectilesLayer.getChildAt(0));
+		}				
+		while (itemsLayer.numChildren > 0) {
+			itemsLayer.removeChild(itemsLayer.getChildAt(0));
+		}		
+	}
+	
+	function redrawLevelTilesBmp(mapData:TiledMapData) {
 		var floorMap = TiledMapHelpers.getFloorLayer(mapData);
 		var wallsMap = TiledMapHelpers.getWallsLayer(mapData);
 		
@@ -127,11 +146,10 @@ class View extends Sprite {
 	
 	public function update(elapsed:Float) {
 		// autofollow player or start point.
-		if (followTarget == null) {
+		if (Main.Instance.world.player != null) {
 			followTarget = Main.Instance.world.player;
-			if (followTarget == null) {
-				followTarget = Main.Instance.world.startPoint;
-			}
+		} else {
+			followTarget = Main.Instance.world.startPoint;
 		}
 		
 		// center on follow target

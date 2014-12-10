@@ -26,7 +26,7 @@ class Monster extends Actor {
 	override public function takeDamage(source:Entity, dmg:Int) {
 		super.takeDamage(source, dmg);
 		if (health > 0) {
-			playSfx(Res.sfx.monster_hit);
+			playSfx(Res.sfx.monster_hit_wav);
 		}
 	}
 	
@@ -66,8 +66,8 @@ class Monster extends Actor {
 			return m;
 		}
 		m = toDir8(toPlayer.dx, toPlayer.dy);
-		m.vx *= props.speed * elapsed;
-		m.vy *= props.speed * elapsed;
+		m.vx *= speed * elapsed;
+		m.vy *= speed * elapsed;
 		m.vx = move(m.vx, 0).vx;
 		m.vy = move(0, m.vy).vy;
 		return m;

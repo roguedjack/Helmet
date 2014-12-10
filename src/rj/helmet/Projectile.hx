@@ -53,7 +53,7 @@ class Projectile extends Actor {
 		if (projProps.spin != 0) {
 			rotation += projProps.spin * elapsed;
 		}
-		move(dx * elapsed * props.speed, dy * elapsed * props.speed);
+		move(dx * elapsed * speed, dy * elapsed * speed);
 	}
 	
 	/**
@@ -66,7 +66,7 @@ class Projectile extends Actor {
 	}
 
 	/**
-	 * Die immediatly and inflict damage to other.	 
+	 * Remove and inflict damage to other.	 
 	 * @param	other
 	 * @param	vx
 	 * @param	vy
@@ -75,7 +75,7 @@ class Projectile extends Actor {
 	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {
 		super.onCollisionWith(other, vx, vy, active);
 		
-		state = ActorState.DEAD;
+		remove();
 		
 		switch (other.type) {
 			case EntityType.MONSTER:
@@ -92,13 +92,14 @@ class Projectile extends Actor {
 	}
 	
 	/**
-	 * Die immediatly.
+	 * Remove.
 	 * @param	colFlags
 	 * @param	vx
 	 * @param	vy
 	 */
 	override function onWorldCollision(colFlags:EnumFlags<ColFlags>, vx:Float, vy:Float) {
 		super.onWorldCollision(colFlags, vx, vy);
-		state = ActorState.DEAD;
+		remove();
 	}
+
 }

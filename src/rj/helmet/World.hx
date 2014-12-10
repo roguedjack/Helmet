@@ -22,7 +22,7 @@ class World {
 	public var elapsed(default, null):Float;
 	public var player(default, null):PlayerActor;
 	public var startPoint(default, null):Entity;	
-	public var playerCharacterClass(default, default):CharacterClass;
+	public var countEntities(get, never):Int;
 	var entities:Array<Entity>;
 	var entitiesToSpawn:Array<{se:Entity,sx:Float,sy:Float}>;	
 	var entitiesToRemove:Array<Entity>;
@@ -30,14 +30,18 @@ class World {
 
 	public function new(game:Main) {
 		this.game = game;
-		playerCharacterClass = CharacterClass.WARRIOR;
 		clearLevel();
+	
+	}
+		
+	function get_countEntities() {
+		return entities.length;
 	}
 	
-	public function loadLevel(tiledmap:TiledMap) {
+	public function loadMap(tiledmap:TiledMap) {
 		clearLevel();
 		mapData = tiledmap.toMap();
-		parseLevelData();
+		parseMapData();
 	}
 	
 	function clearLevel() {
@@ -46,13 +50,14 @@ class World {
 		entitiesToRemove = [];
 		entitiesToSpawn = [];
 		isWall = [];
+		player = null;
 	}
 	
 	inline function tileIndex(tx:Int, ty:Int):Int {
 		return tx + ty * mapData.width;
 	}
 	
-	function parseLevelData() {		
+	function parseMapData() {		
 		var wallsMap = TiledMapHelpers.getWallsLayer(mapData);
 		var entitiesMap = TiledMapHelpers.getEntitiesLayer(mapData);
 

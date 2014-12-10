@@ -31,7 +31,7 @@ class DoorEntity extends Entity {
 	 * Opens this door and all the other doors in the same group.
 	 */
 	public function open() {
-		playSfx(Res.sfx.open_door);
+		playSfx(Res.sfx.open_door_wav);
 		doOpen();
 		// open all the doors in the same group
 		for (otherDoor in world.filterEntities(sameDoorGroupFilter)) {

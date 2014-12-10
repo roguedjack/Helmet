@@ -20,6 +20,7 @@ class Hud extends Sprite {
 	private static inline var INV_ITEM_SIZE = 16;
 	var bg:Bitmap;
 	var title:Text;
+	var levelTxt:Text;
 	var healthTxt:Text;
 	var cachedEntitiesBmp:BitmapData;
 	var inventoryBmp:Bitmap;
@@ -39,10 +40,18 @@ class Hud extends Sprite {
 		title.text = 'H E L M E T';		
 		Screen.centerTextIn(title, 0, 0, WIDTH, 50);
 		addChild(title);
+					
+		levelTxt = new Text(FontBuilder.getFont("arial", 18));
+		levelTxt.textColor = 0xFFFFFF;
+		levelTxt.text = "placeholder";
+		levelTxt.textAlign = Align.Center;
+		levelTxt.dropShadow = { dx:1, dy:1, color:0x0F0F0F, alpha:1 };		
+		levelTxt.setPos(10, 50);
+		addChild(levelTxt);				
 		
 		inventoryBmp = new Bitmap();
 		inventoryBmp.setPos(0, 100);
-		addChild(inventoryBmp);
+		addChild(inventoryBmp);	
 		
 		healthTxt = new Text(FontBuilder.getFont("arial", 16));
 		healthTxt.textColor = 0xFFFFFF;
@@ -62,14 +71,17 @@ class Hud extends Sprite {
 	
 	function doRefresh() {
 		var player = Main.Instance.world.player;
+		var data = Main.Instance.playerData;
 		
+		levelTxt.text = 'LEVEL : ${data.level}';
+				
 		inline function drawInventoryItem(canvas:BitmapData, x:Int, y:Int, itType:ItemType) {
 			var itile;
 			switch (itType) {
 				case ItemType.KEY:
 					itile = 56;  // FIXME -- duplicate gfx constant, put that somewhere shared.
 				default:
-					throw "hud: unhandled item type";
+					throw "hud: unhandled item type "+itType;
 			}
 			var srcX = Main.TILE_SIZE * (itile % Main.TILE_SHEET_ROWS);
 			var srcY = Main.TILE_SIZE * Math.floor(itile / Main.TILE_SHEET_ROWS);
@@ -81,7 +93,7 @@ class Hud extends Sprite {
 			// redraw inventory			
 			var x = 0;
 			var y = 0;
-			for (i in 1...player.nbKeys) {
+			for (i in 0...data.nbKeys) {
 				drawInventoryItem(canvas, x, 0, ItemType.KEY);
 				if ((x += Main.TILE_SIZE) >= WIDTH - Main.TILE_SIZE) {
 					x = 0;

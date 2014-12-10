@@ -40,11 +40,9 @@ class TitleScreen extends Screen {
 		super.update(elapsed);
 		
 		if (Key.isDown(Key.NUMBER_1) || Key.isDown(Key.NUMPAD_1)) {
-			game.world.playerCharacterClass = CharacterClass.WARRIOR;
-			game.screen = game.playScreen;
+			game.startNewGame(CharacterClass.WARRIOR);
 		} else if (Key.isDown(Key.NUMBER_2) || Key.isDown(Key.NUMPAD_2)) {
-			game.world.playerCharacterClass = CharacterClass.VALKYRIE;
-			game.screen = game.playScreen;
+			game.startNewGame(CharacterClass.VALKYRIE);
 		}
 	}
 }

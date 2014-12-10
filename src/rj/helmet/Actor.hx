@@ -21,18 +21,15 @@ class Actor extends Entity {
 	
 	public var state(default, set):ActorState;
 	public var health(default, default):Int;
-	var props: {
-		speed: Float,
-		health: Int
-	};
+	public var speed(default, default):Float;
 	var animator:Anim;
 	var anims:Array<Anim>;
 	var iCurrentAnim:Int;
 	
 	public function new(type:EntityType, props) {
 		super(type);
-		this.props = props;
 		health = props.health;
+		speed = props.speed;
 		hardCollision = true;
 		animator = new Anim();
 		anchor.addChild(animator);

@@ -1,0 +1,7 @@
+- Generators hitpoints & generated monster levels.
+- Melee fighting.
+- Scoring & Treasures.
+- Food.
+- Elf & Wizard classes.
+- Tutorial messages.
+- Bonuses : moving speed, fire rate, fire power.
