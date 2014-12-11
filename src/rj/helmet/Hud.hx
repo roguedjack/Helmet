@@ -22,6 +22,7 @@ class Hud extends Sprite {
 	var title:Text;
 	var levelTxt:Text;
 	var healthTxt:Text;
+	var scoreTxt:Text;
 	var cachedEntitiesBmp:BitmapData;
 	var inventoryBmp:Bitmap;
 	var needRefresh:Bool;
@@ -60,6 +61,14 @@ class Hud extends Sprite {
 		healthTxt.dropShadow = { dx:1, dy:1, color:0x0F0F0F, alpha:1 };		
 		healthTxt.setPos(10, 150);
 		addChild(healthTxt);
+		
+		scoreTxt = new Text(FontBuilder.getFont("arial", 16));  // FIXME --- duplicate font allocation
+		scoreTxt.textColor = 0xFFFFFF;
+		scoreTxt.text = "placeholder";
+		scoreTxt.textAlign = Align.Center;
+		scoreTxt.dropShadow = { dx:1, dy:1, color:0x0F0F0F, alpha:1 };		
+		scoreTxt.setPos(110, 150);
+		addChild(scoreTxt);		
 		
 		cachedEntitiesBmp = Res.gfx.entities.toBitmap();
 		refresh();
@@ -102,6 +111,7 @@ class Hud extends Sprite {
 			}
 			// update counters
 			healthTxt.text = "HEALTH\n" + player.health;
+			scoreTxt.text = "SCORE\n" + data.score;
 		} else {
 			canvas.clear(0);
 		}

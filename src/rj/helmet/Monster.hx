@@ -3,6 +3,7 @@ import hxd.Res;
 import rj.helmet.Actor.ActorState;
 import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
+import rj.helmet.entities.PlayerActor;
 
 /**
  * ...
@@ -14,19 +15,31 @@ class Monster extends Actor {
 	 * Range below which the monster will be aggressive to the player.
 	 */
 	public var aggroRange(default, default):Float;
+	public var score(default, null):Int;
 
 	// FIXME --- make up my mind : use props or simple parameters?
-	public function new(props, aggroRange:Float=256) {
+	public function new(props, aggroRange:Float=256, score:Int=10) {
 		super(EntityType.MONSTER, props);
 		canCollide = true;
 		hardCollision = true;
 		this.aggroRange = aggroRange;
+		this.score = score;
 	}
 	
 	override public function takeDamage(source:Entity, dmg:Int) {
 		super.takeDamage(source, dmg);
 		if (health > 0) {
 			playSfx(Res.sfx.monster_hit_wav);
+		} else {
+			// score points if killed by player
+			if (source.type == EntityType.PLAYER) {
+				cast(source, PlayerActor).scorePoints(score);
+			} else if (source.type == EntityType.PROJECTILE) {
+				var proj = cast(source, Projectile);
+				if (proj.owner != null && proj.owner.type == EntityType.PLAYER) {
+					cast(proj.owner, PlayerActor).scorePoints(score);
+				}
+			}
 		}
 	}
 	

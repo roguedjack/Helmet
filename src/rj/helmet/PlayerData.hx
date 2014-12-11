@@ -15,12 +15,14 @@ class PlayerData {
 	public var weaponCooldown:Float;
 	public var meleeDamage:Int;
 	public var meleeCooldown:Float;
+	public var score:Int;
 	public var nbKeys:Int;
 
 	public function new(cl:CharacterClass) {		
 		this.characterClass = cl;
 		
 		level = 0;
+		score = 0;
 		nbKeys = 0;
 		
 		var props = PlayerActor.CHARACTER_CLASSES_PROPS[cast(cl, Int)];

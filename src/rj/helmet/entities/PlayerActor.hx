@@ -215,6 +215,11 @@ class PlayerActor extends Actor {
 		Main.Instance.view.hud.refresh();		
 	}
 	
+	public function scorePoints(pts:Int) {
+		data.score += pts;
+		refreshHud();
+	}
+	
 	public static function initCharacterClasses() {		
 		// the warrior is very strong.
 		var warrior = new CharacterClassProps();

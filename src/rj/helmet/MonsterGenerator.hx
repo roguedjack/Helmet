@@ -4,6 +4,7 @@ import h2d.col.Bounds;
 import h2d.Tile;
 import hxd.Res;
 import rj.helmet.Entity.EntityType;
+import rj.helmet.entities.PlayerActor;
 import rj.helmet.fx.ShakeEntityFx;
 
 /**
@@ -16,6 +17,7 @@ class MonsterGenerator extends Entity {
 	public var spawnCooldown(default, default):Float;
 	var timer:Float;
 	var aggroRange:Float;
+	var score:Int;
 	var maxHitPoints:Int;
 	var hitPoints:Int;
 	var tiles:Array<Tile>;
@@ -28,12 +30,14 @@ class MonsterGenerator extends Entity {
 	 * @param	hitPoints
 	 * @param	spawnCooldown delay between monster spawns
 	 * @param	aggroRange
+	 * @param	score
 	 */
-	public function new(monsterClass:Class<Monster>, tiles:Array<Tile>, hitPoints:Int=3, spawnCooldown:Float=1, aggroRange:Float=256) {
+	public function new(monsterClass:Class<Monster>, tiles:Array<Tile>, hitPoints:Int=3, spawnCooldown:Float=1, aggroRange:Float=256, score:Int=100) {
 		super(EntityType.MONSTER_GENERATOR);
 		this.monsterClass = monsterClass;
 		this.spawnCooldown = spawnCooldown;
 		this.aggroRange = aggroRange;
+		this.score = score;
 		this.maxHitPoints = hitPoints;
 		this.hitPoints = hitPoints;
 		this.tiles = tiles;
@@ -105,11 +109,20 @@ class MonsterGenerator extends Entity {
 		world.spawnEntity(m, x, y);
 	}
 
-	public function takeHit() {
+	public function takeHit(source:Entity) {
 		if (hitPoints > 0) {
 			if (--hitPoints <= 0) {
 				playSfx(Res.sfx.monster_die);
 				remove();
+				// score points if killed by player
+				if (source.type == EntityType.PLAYER) {
+					cast(source, PlayerActor).scorePoints(score);
+				} else if (source.type == EntityType.PROJECTILE) {
+					var proj = cast(source, Projectile);
+					if (proj.owner != null && proj.owner.type == EntityType.PLAYER) {
+						cast(proj.owner, PlayerActor).scorePoints(score);
+					}
+				}				
 			} else {
 				playSfx(Res.sfx.monster_hit_wav);
 				startFx(new ShakeEntityFx());
