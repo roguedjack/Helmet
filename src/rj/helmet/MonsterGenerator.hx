@@ -32,7 +32,7 @@ class MonsterGenerator extends Entity {
 	 * @param	aggroRange
 	 * @param	score
 	 */
-	public function new(monsterClass:Class<Monster>, tiles:Array<Tile>, hitPoints:Int=3, spawnCooldown:Float=1, aggroRange:Float=256, score:Int=100) {
+	public function new(monsterClass:Class<Monster>, tiles:Array<Tile>, hitPoints:Int=3, spawnCooldown:Float=3, aggroRange:Float=256, score:Int=100) {
 		super(EntityType.MONSTER_GENERATOR);
 		this.monsterClass = monsterClass;
 		this.spawnCooldown = spawnCooldown;
