@@ -19,6 +19,7 @@ class MonsterGenerator extends Entity {
 	var maxHitPoints:Int;
 	var hitPoints:Int;
 	var tiles:Array<Tile>;
+	var tmpSpawningPos:Array<{tx:Int, ty:Int}>;	
 
 	/**
 	 * 
@@ -40,6 +41,7 @@ class MonsterGenerator extends Entity {
 		hardCollision = true;
 		setCollisionBox(8, 8, 16, 16);
 		refreshImage();
+		tmpSpawningPos = new Array<{tx:Int,ty:Int}>();
 	}
 	
 	function refreshImage() {
@@ -67,22 +69,35 @@ class MonsterGenerator extends Entity {
 	}
 	
 	function trySpawningMonster():Bool {
-		// try to spawn monster in a free adjacent tile.
-		var t = world.toTilePos(pos.x, pos.y);
-		t.tx += 1 - Std.random(3);
-		t.ty += 1 - Std.random(3);
-		if (world.isBlockingAt(t.tx, t.ty)) {
+		// find all adjacent free tiles.
+		var t = world.toTilePos(pos.x, pos.y);		
+		var nbSpawnPos = 0;
+		for (tx in t.tx - 1...t.tx + 2) {			
+			for (ty in t.ty - 1...t.ty + 2) {				
+				if (tx == t.tx && ty == t.ty) {
+					continue;
+				}
+				if (canSpawnAt(tx, ty)) {
+					tmpSpawningPos[nbSpawnPos++] = { tx:tx, ty:ty };
+				}
+			}
+		}
+		if (nbSpawnPos == 0) {
+			return false;
+		}
+		// spawn a monster in one of them.		
+		var i = Std.random(nbSpawnPos);
+		spawnMonster(tmpSpawningPos[i].tx * Main.TILE_SIZE, tmpSpawningPos[i].ty * Main.TILE_SIZE);
+		return true;
+	}
+	
+	inline function canSpawnAt(tx:Int, ty:Int):Bool {
+		if (world.isBlockingAt(tx, ty)) {
 			return false;
 		}
 		tmpColliders.splice(0, tmpColliders.length);
-		world.listEntitiesIn(Bounds.fromValues(t.tx * Main.TILE_SIZE,  t.ty * Main.TILE_SIZE, Main.TILE_SIZE, Main.TILE_SIZE), tmpColliders);
-		if (tmpColliders.length != 0) {
-			return false;
-		}
-		
-		// tile is free.
-		spawnMonster(t.tx * Main.TILE_SIZE, t.ty * Main.TILE_SIZE);
-		return true;
+		world.listEntitiesIn(Bounds.fromValues(tx * Main.TILE_SIZE,  ty * Main.TILE_SIZE, Main.TILE_SIZE, Main.TILE_SIZE), tmpColliders);
+		return tmpColliders.length == 0;
 	}
 	
 	function spawnMonster(x:Float, y:Float) {
