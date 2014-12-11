@@ -35,7 +35,7 @@ class WeaponMelee {
 	}
 	
 	/**
-	 * Can damage monsters & generators.
+	 * Can damage actors & generators.
 	 * @param	target
 	 */
 	public function strike(target:Entity) {
