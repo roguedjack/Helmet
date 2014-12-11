@@ -7,26 +7,20 @@ import rj.helmet.fx.HoverEntityFx;
 
 @:enum abstract ItemType(Int) {
 	var KEY = 0;
+	var TREASURE = 1;
 }
 
 /**
  * ...
  * @author roguedjack
  */
-class Item extends Entity {
+class Item extends Entity {	
 	
 	public var itemType(default, null):ItemType;
 
-	public function new(itemType:ItemType, img:Tile) {
+	public function new(itemType:ItemType) {
 		super(EntityType.ITEM);
 		this.itemType = itemType;
 		canCollide  = true;		
-		setImage(img);
-		setCollisionBox(8, 8, 16, 16);
-	}
-	
-	override public function spawn(x:Float, y:Float) {
-		super.spawn(x, y);
-		startFx(new HoverEntityFx());
 	}
 }

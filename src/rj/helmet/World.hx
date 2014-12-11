@@ -4,9 +4,11 @@ import hxd.Res;
 import hxd.res.TiledMap;
 import rj.helmet.entities.DoorEntity;
 import rj.helmet.entities.ExitEntity;
+import rj.helmet.entities.KeyItem;
 import rj.helmet.entities.PlayerActor;
 import rj.helmet.entities.GhostMonster;
 import rj.helmet.entities.StartEntity;
+import rj.helmet.entities.TreasureItem;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.Item.ItemType;
 
@@ -83,7 +85,9 @@ class World {
 				case Main.TILEDOBJ_VDOOR:
 					e = new DoorEntity(o.name, true);
 				case Main.TILEDOBJ_KEY:
-					e = new Item(ItemType.KEY, Gfx.entities[56]);
+					e = new KeyItem();					
+				case Main.TILEDOBJ_TREASURE:
+					e = new TreasureItem();
 			}
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;

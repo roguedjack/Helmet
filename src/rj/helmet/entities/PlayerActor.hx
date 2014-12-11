@@ -206,6 +206,10 @@ class PlayerActor extends Actor {
 				++data.nbKeys;
 				playSfx(Res.sfx.pickup_key_wav);
 				refreshHud();
+			case ItemType.TREASURE:
+				scorePoints(TreasureItem.SCORE);
+				playSfx(Res.sfx.pickup_treasure_wav);
+				refreshHud();
 			default:
 				// nop
 		}		
