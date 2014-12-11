@@ -6,6 +6,8 @@ package rj.helmet;
  */
 class WeaponShooter {
 	
+	private static inline var OFFSET = 8.0;
+	
 	public var owner(default, null):Entity;
 	public var projectileClass(default, null):Class<Projectile>;
 	public var cooldown(default, default):Float;
@@ -39,6 +41,6 @@ class WeaponShooter {
 		timer += cooldown;		
 		var direction = { x:Math.sin(owner.rotation), y:-Math.cos(owner.rotation) };
 		var proj = Type.createInstance(projectileClass, [owner, direction.x, direction.y]);
-		Main.Instance.world.spawnEntity(proj, owner.pos.x, owner.pos.y);
+		Main.Instance.world.spawnEntity(proj, owner.pos.x + direction.x * OFFSET, owner.pos.y + direction.y * OFFSET);
 	}
 }
