@@ -13,6 +13,8 @@ class PlayerData {
 	public var health:Int;
 	public var speed:Float;
 	public var weaponCooldown:Float;
+	public var meleeDamage:Int;
+	public var meleeCooldown:Float;
 	public var nbKeys:Int;
 
 	public function new(cl:CharacterClass) {		
@@ -25,10 +27,13 @@ class PlayerData {
 		health = props.health;
 		speed = props.speed;
 		weaponCooldown = props.weaponCooldown;
+		meleeDamage = props.meleeDamage;
+		meleeCooldown = props.meleeCooldown;
 	}
 	
 	public function takeSnapshot(player:PlayerActor) {
 		health = player.health;
 		speed = player.speed;
+		// TODO --- weapons modifiers bonuses
 	}
 }

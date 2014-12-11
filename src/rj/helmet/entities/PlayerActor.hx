@@ -12,6 +12,7 @@ import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.Item.ItemType;
 import rj.helmet.PlayerData;
+import rj.helmet.WeaponMelee;
 import rj.helmet.WeaponShooter;
 
 @:enum abstract CharacterClass(Int) {
@@ -25,6 +26,8 @@ class CharacterClassProps {
 	public var health(default, default):Int;
 	public var weaponClass(default, default):Class<Projectile>;
 	public var weaponCooldown(default, default):Float;
+	public var meleeDamage(default, default):Int;
+	public var meleeCooldown(default, default):Float;
 	public var framesIdle(default, default):Array<Tile>;
 	public var framesWalk(default, default):Array<Tile>;
 	public var animSpeed(default, default):Int;
@@ -55,6 +58,7 @@ class PlayerActor extends Actor {
 
 	var data:PlayerData;
 	var weapon:WeaponShooter;
+	var melee:WeaponMelee;
 	var lifeLeakTimer:CooldownTimer;
 	var exitLevelTimer:CooldownTimer;
 
@@ -71,11 +75,16 @@ class PlayerActor extends Actor {
 		addAnim(ANIM_IDLE, new Anim(cl.framesIdle, cl.animSpeed));		
 		addAnim(ANIM_WALK, new Anim(cl.framesWalk, 5));		
 		equipWeapon(new WeaponShooter(this, cl.weaponClass, data.weaponCooldown));
+		equipMelee(new WeaponMelee(this, data.meleeDamage, data.meleeCooldown));
 		refreshHud();
 	}
 	
 	function equipWeapon(shooter:WeaponShooter) {
 		weapon = shooter;
+	}
+	
+	function equipMelee(melee:WeaponMelee) {
+		this.melee = melee;
 	}
 	
 	override function onStartSpawning() {
@@ -97,13 +106,18 @@ class PlayerActor extends Actor {
 			return;
 		}
 		
-		// update weapon timer
+		// update weapons timer
 		if (weapon != null) {
 			weapon.update(elapsed);
 		}
+		if (melee != null) {
+			melee.update(elapsed);
+		}
+		
 		
 		// shoot or move.
 		// we can change direction while shooting.
+		// melee is automatic when actively colliding with entities.
 		var mx = 0, my = 0;
 		var moving;
 		if (Key.isDown(Key.UP) || Key.isDown(KEY_Z) || Key.isDown(KEY_W)) my -= 1;
@@ -139,6 +153,7 @@ class PlayerActor extends Actor {
 	
 	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {		
 		super.onCollisionWith(other, vx, vy, active);	
+		
 		switch (other.type) {
 			case EntityType.EXIT: {
 				if (exitLevelTimer == null) {
@@ -151,11 +166,23 @@ class PlayerActor extends Actor {
 					refreshHud();					
 					cast(other, DoorEntity).open();				
 				}
-			}
+			}			
 			case EntityType.ITEM: {
 				addToInventory(cast(other, Item));
 				other.remove();
 			}
+			
+			case EntityType.MONSTER: {
+				if (active && melee.canStrike) {
+					melee.strike(other);
+				}
+			}
+			case EntityType.MONSTER_GENERATOR: {
+				if (active && melee.canStrike) {
+					melee.strike(other);
+				}
+			}
+			
 			default:
 				// nop
 		}
@@ -199,6 +226,8 @@ class PlayerActor extends Actor {
 		warrior.animSpeed = 5;
 		warrior.weaponClass = AxeProjectile;
 		warrior.weaponCooldown = 0.75;
+		warrior.meleeDamage = 10;
+		warrior.meleeCooldown = 0.50;
 		
 		// the valkryie is average
 		var valkyrie = new CharacterClassProps();
@@ -210,6 +239,8 @@ class PlayerActor extends Actor {
 		valkyrie.animSpeed = 7;
 		valkyrie.weaponClass = SwordProjectile;
 		valkyrie.weaponCooldown = 0.50;		
+		valkyrie.meleeDamage = 5;
+		valkyrie.meleeCooldown = 0.40;
 		
 		CHARACTER_CLASSES_PROPS = new Array<CharacterClassProps>();		
 		CHARACTER_CLASSES_PROPS[cast(CharacterClass.WARRIOR, Int)] = warrior;   // FIXME -- why do i need to cast an abstract int to an int?
