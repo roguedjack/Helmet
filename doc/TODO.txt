@@ -1,7 +1,7 @@
 X - Generators hitpoints.
 X - Items hovering. 
 X - Firing weapon: spawn projectile a few pixels forward.
-- Melee fighting.
+X - Melee fighting.
 - Scoring & Treasures.
 - Food.
 - Elf & Wizard classes.

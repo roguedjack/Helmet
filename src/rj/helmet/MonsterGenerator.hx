@@ -96,6 +96,7 @@ class MonsterGenerator extends Entity {
 				playSfx(Res.sfx.monster_die);
 				remove();
 			} else {
+				playSfx(Res.sfx.monster_hit_wav);
 				startFx(new ShakeEntityFx());
 				refreshImage();
 			}
