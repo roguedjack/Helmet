@@ -57,16 +57,16 @@ class Projectile extends Actor {
 	}
 	
 	/**
-	 * Don't collide with owner or exit.
+	 * Don't collide with owner and collide only with hard collision.
 	 * @param	other
 	 * @return
 	 */
 	override function canCollideWith(other:Entity):Bool {
-		return super.canCollideWith(other) && other != owner && other.type != EntityType.EXIT;
+		return super.canCollideWith(other) && other != owner && other.hardCollision;
 	}
 
 	/**
-	 * Remove and inflict damage to other.	 
+	 * Remove and inflict damage to other if monster/player/generator.
 	 * @param	other
 	 * @param	vx
 	 * @param	vy
