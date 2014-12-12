@@ -96,6 +96,11 @@ class World {
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;
 			}
+			
+			// force coordinates to grid
+			o.x = Main.TILE_SIZE * Math.floor(o.x / Main.TILE_SIZE);
+			o.y = Main.TILE_SIZE * Math.floor(o.y / Main.TILE_SIZE);
+			
 			//trace("spawning " + e+" at " + o.x + ',' + o.y);
 			spawnEntity(e, o.x, o.y);
 		}
