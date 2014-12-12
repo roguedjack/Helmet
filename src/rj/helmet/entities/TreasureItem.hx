@@ -9,7 +9,7 @@ import rj.helmet.Item.ItemType;
  */
 class TreasureItem extends Item {
 	
-	public static inline var SCORE = 100;
+	public static inline var SCORE = 500;
 
 	public function new() {
 		super(ItemType.TREASURE);
