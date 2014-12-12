@@ -87,6 +87,10 @@ class PlayerActor extends Actor {
 		this.melee = melee;
 	}
 	
+	function heal(amount:Int) {
+		health += amount;
+	}
+	
 	override function onStartSpawning() {
 		super.onStartSpawning();
 		playAnim(ANIM_IDLE);
@@ -209,6 +213,10 @@ class PlayerActor extends Actor {
 			case ItemType.TREASURE:
 				scorePoints(TreasureItem.SCORE);
 				playSfx(Res.sfx.pickup_treasure_wav);
+				refreshHud();
+			case ItemType.HEALTH:
+				heal(HealthItem.HEALTH);
+				playSfx(Res.sfx.pickup_health_wav);
 				refreshHud();
 			default:
 				// nop

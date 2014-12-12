@@ -4,8 +4,9 @@ X - Firing weapon: spawn projectile a few pixels forward.
 X - Melee fighting.
 X - Scoring (killing monsters & generators)
 X - Treasures.
-- Food (health potion)
+X - Food (health)
 - Particles.
 - Elf & Wizard classes.
 - Tutorial messages.
 - Bonuses : moving speed, fire rate, fire power.
+- Real maps not just test maps :-)

@@ -8,6 +8,7 @@ import rj.helmet.fx.HoverEntityFx;
 @:enum abstract ItemType(Int) {
 	var KEY = 0;
 	var TREASURE = 1;
+	var HEALTH = 2;
 }
 
 /**

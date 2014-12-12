@@ -4,6 +4,7 @@ import hxd.Res;
 import hxd.res.TiledMap;
 import rj.helmet.entities.DoorEntity;
 import rj.helmet.entities.ExitEntity;
+import rj.helmet.entities.HealthItem;
 import rj.helmet.entities.KeyItem;
 import rj.helmet.entities.PlayerActor;
 import rj.helmet.entities.GhostMonster;
@@ -88,6 +89,8 @@ class World {
 					e = new KeyItem();					
 				case Main.TILEDOBJ_TREASURE:
 					e = new TreasureItem();
+				case Main.TILEDOBJ_HEALTH:
+					e = new HealthItem();
 			}
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;

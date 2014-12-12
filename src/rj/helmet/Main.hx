@@ -33,6 +33,7 @@ class Main extends App {
 	public static inline var TILEDOBJ_VDOOR = "vdoor";
 	public static inline var TILEDOBJ_KEY = "key";
 	public static inline var TILEDOBJ_TREASURE = "treasure";
+	public static inline var TILEDOBJ_HEALTH = "health";
 	
 	public static var Instance:Main;
 		
