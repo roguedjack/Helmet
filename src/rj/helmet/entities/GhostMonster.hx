@@ -48,14 +48,7 @@ class GhostMonster extends Monster {
 		strike.update(elapsed);
 				
 		// FIXME -- a lot of monster types do the same thing, not particular to this type
-		var m = doMoveStraightAtPlayer(elapsed);		
-		if (m.vx != 0 || m.vy != 0) {
-			faceDirection(m.vx, m.vy);
-			playAnim(ANIM_WALK);			
-		} else {
-			faceEntity(world.player);
-			playAnim(ANIM_IDLE);
-		}	
+		doMoveStraightAtPlayer(elapsed, ANIM_IDLE, ANIM_WALK);		
 	}
 	
 	override public function takeDamage(source:Entity, dmg:Int) {

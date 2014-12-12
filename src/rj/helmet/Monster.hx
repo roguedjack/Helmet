@@ -47,40 +47,38 @@ class Monster extends Actor {
 		super.onStartDying();
 		playSfx(Res.sfx.monster_die);
 	}
-	
-	//// Helpers
-	
-	function toDir8(vx:Float, vy:Float): { vx:Float, vy:Float } {
-		var l = Math.sqrt(vx * vx + vy * vy);
-		if (l == 0) {
-			return { vx:0, vy:0 };
-		}
-		vx /= l;
-		vy /= l;
-		// FIXME --- jerkyness due to comparing non-zero float thresholds?
-		vx = (vx < -0.75 ? -1 : vx < -0.25 ? -0.5 : vx > 0.75 ? 1 : vx > 0.25 ? 0.5 : 0);
-		vy = (vy < -0.75 ? -1 : vy < -0.25 ? -0.5 : vy > 0.75 ? 1 : vy > 0.25 ? 0.5 : 0);				
-		return { vx:vx, vy:vy };
-	}
-	
+		
 	//// Common behaviors
 	
 	/**
-	 * Set a simple straight motion towards the player.
-	 * @return the movement
+	 * Set a simple straight motion towards the player and face this direction.
+	 * Will not move if the player is not living or beyond aggro range.
+	 * 
+	 * @param animIdle idle animation to play if does not wants to move
+	 * @param animWalk walking animation to play if wants to walk
+	 * @return the final movement
 	 */
-	function doMoveStraightAtPlayer(elapsed:Float): { vx:Float, vy:Float } {
+	function doMoveStraightAtPlayer(elapsed:Float, animIdle:Int, animWalk:Int): { vx:Float, vy:Float } {
 		var m: { vx:Float, vy:Float } = { vx:0, vy:0 };
 		if (world.player == null || world.player.state != ActorState.LIVING) {
+			playAnim(animIdle);
 			return m;
 		}
 		var toPlayer = { dx:world.player.pos.x - pos.x, dy:world.player.pos.y - pos.y };
 		if (Math.abs(toPlayer.dx) > aggroRange || Math.abs(toPlayer.dy) > aggroRange) {
+			playAnim(animIdle);
 			return m;
 		}
-		m = toDir8(toPlayer.dx, toPlayer.dy);
-		m.vx *= speed * elapsed;
-		m.vy *= speed * elapsed;
+		var l = Math.sqrt(toPlayer.dx * toPlayer.dx + toPlayer.dy * toPlayer.dy);
+		if (l == 0) { // just to be safe...
+			throw "distance to player is zero!";
+		}
+		toPlayer.dx /= l;
+		toPlayer.dy /= l;
+		faceDirection(toPlayer.dx, toPlayer.dy); // face where we would like to go
+		playAnim(animWalk);		
+		m.vx = elapsed * speed * toPlayer.dx;
+		m.vy = elapsed * speed * toPlayer.dy;
 		m.vx = move(m.vx, 0).vx;
 		m.vy = move(0, m.vy).vy;
 		return m;
@@ -96,7 +94,6 @@ class Monster extends Actor {
 			return;
 		}
 		var v = { vx:target.pos.x - pos.x, vy:target.pos.y - pos.y };
-		v = toDir8(v.vx, v.vy);
 		if (v.vx != 0 || v.vy != 0) {
 			faceDirection(v.vx, v.vy);		
 		}
