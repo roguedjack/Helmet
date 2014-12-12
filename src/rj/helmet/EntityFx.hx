@@ -27,7 +27,7 @@ class EntityFx {
 			return;
 		}
 		time += elapsed;
-		apply(elapsed, time > duration ? 1.0 : time / duration);
+		apply(elapsed, time >= duration ? 1.0 : time / duration);
 		if (time >= duration) {
 			hasEnded = true;
 			onEnd();
