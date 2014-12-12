@@ -9,6 +9,8 @@ package h3d.scene;
 	public inline function toInt() return this;
 }
 
+// rj --- compilation fix : missing ObjectFlags. qualifiers
+
 class Object {
 
 	static inline var ROT2RAD = -0.017453292519943295769236907684886;
@@ -76,7 +78,7 @@ class Object {
 	inline function set_posChanged(b) { if( b ) flags |= ObjectFlags.FPosChanged.toInt() else flags &= ~ObjectFlags.FPosChanged.toInt(); return b; }
 	inline function set_culled(b) { if( b ) flags |= ObjectFlags.FCulled.toInt() else flags &= ~ObjectFlags.FCulled.toInt(); return b; }
 	inline function set_visible(b) { culled = !b; if( b ) flags |= ObjectFlags.FVisible.toInt() else flags &= ~ObjectFlags.FVisible.toInt(); return b; }
-	inline function set_followPositionOnly(b) { if( b ) flags |= ObjectFlags.FFollowPosition.toInt() else flags &= ObjectFlags.FFollowPosition.toInt(); return b; }
+	inline function set_followPositionOnly(b) { if( b ) flags |= ObjectFlags.FFollowPosition.toInt() else flags &= ~ObjectFlags.FFollowPosition.toInt(); return b; }
 	inline function set_lightCameraCenter(b) { if( b ) flags |= ObjectFlags.FLightCameraCenter.toInt() else flags &= ~ObjectFlags.FLightCameraCenter.toInt(); return b; }
 
 	public function playAnimation( a : h3d.anim.Animation ) {

@@ -1,4 +1,5 @@
 package h2d.col;
+import hxd.Math;
 
 class Bounds {
 
@@ -96,10 +97,21 @@ class Bounds {
 		var dy = (yMax - yMin) * 0.5 * v;
 		var mx = (xMax + xMin) * 0.5;
 		var my = (yMax + yMin) * 0.5;
-		xMin = mx - dx * v;
-		yMin = my - dy * v;
-		xMax = mx + dx * v;
-		yMax = my + dy * v;
+		xMin = mx - dx;
+		yMin = my - dy;
+		xMax = mx + dx;
+		yMax = my + dy;
+	}
+
+	public function rotate( angle : Float ) {
+		var cos = Math.cos(angle);
+		var sin = Math.sin(angle);
+		var x0 = xMin, y0 = yMin, x1 = xMax, y1 = yMax;
+		empty();
+		addPos(x0 * cos - y0 * sin, x0 * sin + y0 * cos);
+		addPos(x1 * cos - y0 * sin, x1 * sin + y0 * cos);
+		addPos(x0 * cos - y1 * sin, x0 * sin + y1 * cos);
+		addPos(x1 * cos - y1 * sin, x1 * sin + y1 * cos);
 	}
 
 	public inline function offset( dx : Float, dy : Float ) {

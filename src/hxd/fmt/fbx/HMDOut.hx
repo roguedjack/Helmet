@@ -2,6 +2,7 @@ package hxd.fmt.fbx;
 using hxd.fmt.fbx.Data;
 import hxd.fmt.fbx.BaseLibrary;
 import hxd.fmt.hmd.Data;
+import hxd.fmt.hmd.Data.GeometryDataFormat.*; // rj --- compilation fix
 
 class HMDOut extends BaseLibrary {
 
@@ -64,7 +65,7 @@ class HMDOut extends BaseLibrary {
 		var stride = 3 + (normals == null ? 0 : 3) + uvs.length * 2 + (colors == null ? 0 : 3);
 		if( skin != null ) {
 			if( bonesPerVertex <= 0 || bonesPerVertex > 4 ) throw "assert";
-			g.vertexFormat.push(new GeometryFormat("weights", [GeometryDataFormat.DFloat, GeometryDataFormat.DVec2, GeometryDataFormat.DVec3, GeometryDataFormat.DVec4][bonesPerVertex-1]));
+			g.vertexFormat.push(new GeometryFormat("weights", [DFloat, DVec2, DVec3, DVec4][bonesPerVertex-1]));
 			g.vertexFormat.push(new GeometryFormat("indexes", DBytes4));
 			stride += 1 + bonesPerVertex;
 		}
@@ -138,7 +139,7 @@ class HMDOut extends BaseLibrary {
 					}
 					tmpBuf[p++] = int32tof(idx);
 				}
-				
+
 				var total = 0.;
 				for( i in 0...stride )
 					total += tmpBuf[i];
@@ -479,8 +480,21 @@ class HMDOut extends BaseLibrary {
 			j.parent = jo.parent == null ? -1 : jo.parent.index;
 			j.bind = jo.bindIndex;
 			j.position = makePosition(jo.defMat);
-			if( jo.transPos != null )
+			if( jo.transPos != null ) {
 				j.transpos = makePosition(jo.transPos);
+				if( j.transpos.sx != 1 || j.transpos.sy != 1 || j.transpos.sz != 1 ) {
+					// FIX : the scale is not correctly taken into account, this formula will extract it and fix things
+					var tmp = jo.transPos.clone();
+					tmp.transpose();
+					var s = tmp.getScale();
+					tmp.prependScale(1 / s.x, 1 / s.y, 1 / s.z);
+					tmp.transpose();
+					j.transpos = makePosition(tmp);
+					j.transpos.sx = round(s.x);
+					j.transpos.sy = round(s.y);
+					j.transpos.sz = round(s.z);
+				}
+			}
 			s.joints.push(j);
 		}
 		if( skin.splitJoints != null ) {
@@ -498,12 +512,6 @@ class HMDOut extends BaseLibrary {
 	function makePosition( m : h3d.Matrix ) {
 		var p = new Position();
 		var s = m.getScale();
-		var mold = m;
-		var m = m;
-		if( s.x < 0 || s.y < 0 || s.z < 0 ) {
-			m = m.clone();
-			m.prependScale(1 / s.x, 1 / s.y, 1 / s.z);
-		}
 		var q = new h3d.Quat();
 		q.initRotateMatrix(m);
 		q.normalize();
