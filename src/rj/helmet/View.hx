@@ -70,6 +70,8 @@ class View extends Sprite {
 				actorsLayer;				
 			case EntityType.MONSTER_GENERATOR:
 				itemsLayer;			
+			case EntityType.PARTICLE:
+				projectilesLayer;
 			case EntityType.PLAYER:
 				actorsLayer;
 			case EntityType.PROJECTILE:

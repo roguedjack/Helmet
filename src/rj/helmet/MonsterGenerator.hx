@@ -15,6 +15,7 @@ class MonsterGenerator extends Entity {
 	
 	public var monsterClass(default, null):Class<Monster>;
 	public var spawnCooldown(default, default):Float;
+	public var particleGenerator(default, default):ParticleGenerator;
 	var timer:Float;
 	var aggroRange:Float;
 	var score:Int;
@@ -28,11 +29,12 @@ class MonsterGenerator extends Entity {
 	 * @param	monsterClass constructor must be parameterless.
 	 * @param	tiles image for each hit point level, from higher to lower hitpoints.
 	 * @param	hitPoints
+	 * @param 	particleGenerator spawn particles when hit or destroyed -- can be null
 	 * @param	spawnCooldown delay between monster spawns
 	 * @param	aggroRange
 	 * @param	score
 	 */
-	public function new(monsterClass:Class<Monster>, tiles:Array<Tile>, hitPoints:Int=3, spawnCooldown:Float=3, aggroRange:Float=256, score:Int=100) {
+	public function new(monsterClass:Class<Monster>, tiles:Array<Tile>, particleGenerator:ParticleGenerator, hitPoints:Int=3, spawnCooldown:Float=3, aggroRange:Float=256, score:Int=100) {
 		super(EntityType.MONSTER_GENERATOR);
 		this.monsterClass = monsterClass;
 		this.spawnCooldown = spawnCooldown;
@@ -41,6 +43,7 @@ class MonsterGenerator extends Entity {
 		this.maxHitPoints = hitPoints;
 		this.hitPoints = hitPoints;
 		this.tiles = tiles;
+		this.particleGenerator = particleGenerator;
 		canCollide  = true;
 		hardCollision = true;
 		setCollisionBox(8, 8, 16, 16);
@@ -110,9 +113,12 @@ class MonsterGenerator extends Entity {
 	}
 
 	public function takeHit(source:Entity) {
+		spawnDebris();		
+		
 		if (hitPoints > 0) {
 			if (--hitPoints <= 0) {
 				playSfx(Res.sfx.monster_die);
+				spawnDebris(); // spawn x2 debris when destroyed
 				remove();
 				// score points if killed by player
 				if (source.type == EntityType.PLAYER) {
@@ -129,5 +135,12 @@ class MonsterGenerator extends Entity {
 				refreshImage();
 			}
 		}
+	}
+	
+	function spawnDebris() {
+		if (particleGenerator == null) {
+			return;
+		}
+		particleGenerator.emitBatch(bounds);
 	}
 }

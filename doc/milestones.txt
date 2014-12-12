@@ -19,3 +19,6 @@ MILESTONE 5
 MILESTONE 6
 - Melee.
 - Scoring.
+
+MILESTONE 7
+- Particles.

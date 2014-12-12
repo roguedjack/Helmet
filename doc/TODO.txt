@@ -5,7 +5,8 @@ X - Melee fighting.
 X - Scoring (killing monsters & generators)
 X - Treasures.
 X - Food (health)
-- Particles.
+X - Particles.
+- World parsing : floor tiledmap positions to ints!
 - Elf & Wizard classes.
 - Tutorial messages.
 - Bonuses : moving speed, fire rate, fire power.
