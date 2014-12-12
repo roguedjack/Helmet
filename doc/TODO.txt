@@ -6,7 +6,7 @@ X - Scoring (killing monsters & generators)
 X - Treasures.
 X - Food (health)
 X - Particles.
-- World parsing : force tiledmap pos to grid.
+X - World parsing : force tiledmap pos to grid.
 - Elf & Wizard classes.
 - Tutorial messages.
 - Bonuses : moving speed, fire rate, fire power.

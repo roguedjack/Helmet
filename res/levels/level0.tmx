@@ -22,7 +22,7 @@
   <object name="gen4" type="gen_ghost" x="288" y="32" width="32" height="32"/>
   <object name="door1" type="vdoor" x="192" y="416" width="32" height="32"/>
   <object name="door1" type="vdoor" x="192" y="448" width="32" height="32"/>
-  <object name="key1" type="key" x="120" y="417" width="32" height="32"/>
+  <object name="key1" type="key" x="128" y="416" width="32" height="32"/>
   <object name="gen5" type="gen_ghost" x="320" y="416" width="32" height="32"/>
   <object name="treasure1" type="treasure" x="256" y="416" width="32" height="32"/>
   <object name="treasure2" type="treasure" x="448" y="64" width="32" height="32"/>
