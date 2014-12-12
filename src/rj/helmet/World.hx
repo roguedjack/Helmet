@@ -165,7 +165,7 @@ class World {
 			colDR:isBlockingAt(tDR.tx, tDR.ty)
 		};
 	}
-	
+
 	public function listEntitiesIn(bounds:Bounds, ?out:Array<Entity>):Array<Entity> {
 		if (out == null) {
 			out = new Array<Entity>();			
@@ -176,6 +176,22 @@ class World {
 			}
 		}
 		return out;
+	}
+	
+	public function isFreeForSpawning(bounds:Bounds):Bool {
+		for (e in entities) {
+			if (e.bounds.collide(bounds)) {
+				return false;
+			}
+		}	
+		var spawnBounds = new Bounds();
+		for (e in entitiesToSpawn) {
+			spawnBounds.set(e.sx, e.sy, e.se.bounds.width, e.se.bounds.height);
+			if (spawnBounds.collide(bounds)) {
+				return false;
+			}
+		}				
+		return true;
 	}
 	
 	public function filterEntities(predicateFn:Entity->Bool, ?out:Array<Entity>):Array<Entity> {

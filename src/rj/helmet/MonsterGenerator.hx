@@ -79,7 +79,7 @@ class MonsterGenerator extends Entity {
 		// find all adjacent free tiles.
 		var t = world.toTilePos(pos.x, pos.y);		
 		var nbSpawnPos = 0;
-		for (tx in t.tx - 1...t.tx + 2) {			
+		for (tx in t.tx - 1...t.tx + 2) {						
 			for (ty in t.ty - 1...t.ty + 2) {				
 				if (tx == t.tx && ty == t.ty) {
 					continue;
@@ -102,9 +102,7 @@ class MonsterGenerator extends Entity {
 		if (world.isBlockingAt(tx, ty)) {
 			return false;
 		}
-		tmpColliders.splice(0, tmpColliders.length);
-		world.listEntitiesIn(Bounds.fromValues(tx * Main.TILE_SIZE,  ty * Main.TILE_SIZE, Main.TILE_SIZE, Main.TILE_SIZE), tmpColliders);
-		return tmpColliders.length == 0;
+		return world.isFreeForSpawning(Bounds.fromValues(tx * Main.TILE_SIZE,  ty * Main.TILE_SIZE, Main.TILE_SIZE, Main.TILE_SIZE));
 	}
 	
 	function spawnMonster(x:Float, y:Float) {

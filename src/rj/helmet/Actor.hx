@@ -36,6 +36,7 @@ class Actor extends Entity {
 		animator.visible = false;
 		iCurrentAnim = -1;
 		anims = new Array<Anim>();
+		isRemoved = false;
 	}
 	
 	function set_state(s) {
@@ -62,6 +63,7 @@ class Actor extends Entity {
 			case ActorState.DEAD:
 				canCollide = false;
 				isVisible = false;
+				remove();
 				onDead();
 				
 		}

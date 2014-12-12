@@ -47,6 +47,8 @@ class Entity {
 	public var hardCollision(default, default):Bool;
 	
 	public var bounds(default, null):Bounds;
+	
+	public var colBox(default, null):Bounds;
 
 	public var isVisible(get, set):Bool;
 	
@@ -54,8 +56,8 @@ class Entity {
 	
 	public var rotation(get, set):Float;
 		
+	var isRemoved:Bool;
 	var world:World;	
-	var colBox:Bounds;
 	var bitmap:Bitmap;
 	var anchor:Sprite;  // for rotation on center
 	var tmpColliders:Array<Entity>;  // to avoid re-allocation each frame
@@ -64,6 +66,7 @@ class Entity {
 	public function new(type:EntityType) {
 		this.type = type;
 		world = Main.Instance.world;
+		isRemoved = false;
 		colBox = new Bounds();
 		bounds = new Bounds();
 		sprite = new Sprite();		
@@ -121,6 +124,10 @@ class Entity {
 	}
 	
 	public function remove() {
+		if (isRemoved) {
+			return;
+		}
+		isRemoved = true;
 		canCollide = false;
 		isVisible = false;
 		Main.Instance.world.removeEntity(this);
@@ -140,7 +147,6 @@ class Entity {
 	function setCollisionBox(x:Int,y:Int,w:Int, h:Int) {
 		colBox = Bounds.fromValues(x, y, w, h);
 	}	
-	
 	
 	public function spawn(x:Float, y:Float) {		
 		pos = { x:x, y:y };
