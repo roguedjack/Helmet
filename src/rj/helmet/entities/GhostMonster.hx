@@ -2,6 +2,7 @@ package rj.helmet.entities;
 
 import h2d.Anim;
 import hxd.Res;
+import rj.helmet.Actor.ActorState;
 import rj.helmet.Entity;
 import rj.helmet.Monster;
 import rj.helmet.WeaponMelee;
@@ -17,7 +18,9 @@ class GhostMonster extends Monster {
 	private static inline var ANIM_WALK = 1;
 	private static inline var STRIKE_DMG = 5;
 	private static inline var STRIKE_COOLDOWN = 1.0;
+	private static inline var SPAWN_TIME = 1;
 	
+	var spawnTimer:Float;
 	var startingHealth:Int;
 	var strike:WeaponMelee;	
 
@@ -38,8 +41,21 @@ class GhostMonster extends Monster {
 	override function onStartSpawning() {
 		super.onStartSpawning();
 		startingHealth = health;
+		spawnTimer = 0;
+		rotation = Math.random() * 2 * Math.PI;
 		playAnim(ANIM_IDLE);
 	}
+	
+	override function updateSpawning(elapsed:Float) {		
+		canCollide = true;
+		spawnTimer += elapsed;
+		if (spawnTimer >= SPAWN_TIME) {
+			state = ActorState.LIVING;
+			bitmap.alpha = 1;
+		} else {
+			bitmap.alpha = 0.25 + 0.75 * spawnTimer / SPAWN_TIME;
+		}
+	}	
 	
 	override function updateLiving(elapsed:Float) {
 		super.updateLiving(elapsed);

@@ -7,6 +7,7 @@ X - Treasures.
 X - Food (health)
 X - Particles.
 X - World parsing : force tiledmap pos to grid.
+X - Ghost spawning fade in.
 - Elf & Wizard classes.
 - Tutorial messages.
 - Bonuses : moving speed, fire rate, fire power.
