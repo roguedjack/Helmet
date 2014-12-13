@@ -50,6 +50,13 @@ class Entity {
 	 */
 	public var hardCollision(default, default):Bool;
 	
+	/**
+	 * When colliding with walls, can we be moved to hug/stick to the wall(true) or should we stop moving(false)? (default False)
+	 * WARNING: Should be set to true only for entities that do not collide with other entities (eg:particles), or you will get 
+	 * buggy entity-entity collisions due to the entity being forcibly moved to hug the wall.
+	 */
+	public var canForceWallAlignement(default, default):Bool;
+	
 	public var bounds(default, null):Bounds;
 	
 	public var colBox(default, null):Bounds;
@@ -180,22 +187,27 @@ class Entity {
 			}
 		
 			// check collision with world.
-			var col = world.checkWorldCollision(colBox, newx, newy);
 			var colFlags:EnumFlags<ColFlags> = new EnumFlags<ColFlags>();			
 			if (vx != 0) {
 				var col = world.checkWorldCollision(colBox, newx, pos.y);		
 				if (vx < 0) {
 					if (col.colDL || col.colUL) {
-						// forcing alignement cause entities getting stuck in other entities: newx = (col.tl + 1) * Main.TILE_SIZE - colBox.xMin;
-						newx = pos.x;
-						newvx = 0;
+						if (canForceWallAlignement) {
+							newx = (col.tl + 1) * Main.TILE_SIZE - colBox.xMin;
+						} else {
+							newx = pos.x;
+							newvx = 0;
+						}
 						colFlags.set(COL_LEFT);
 					}
 				} else {
 					if (col.colDR || col.colUR) {
-						// forcing alignement cause entities getting stuck in other entities: newx = col.tr * Main.TILE_SIZE - colBox.xMax;
-						newx = pos.x;
-						newvx = 0;
+						if (canForceWallAlignement) {
+							newx = col.tr * Main.TILE_SIZE - colBox.width - 1;
+						} else {
+							newx = pos.x;
+							newvx = 0;
+						}
 						colFlags.set(COL_RIGHT);
 					}			
 				}
@@ -204,16 +216,22 @@ class Entity {
 				var col = world.checkWorldCollision(colBox, newx, newy);		
 				if (vy < 0) {
 					if (col.colUL || col.colUR) {
-						// forcing alignement cause entities getting stuck in other entities: newy = (col.tu + 1) * Main.TILE_SIZE - colBox.yMin;
-						newy = pos.y;
-						newvy = 0;
+						if (canForceWallAlignement) {
+							newy = (col.tu + 1) * Main.TILE_SIZE - colBox.yMin;
+						} else {
+							newy = pos.y;
+							newvy = 0;
+						}
 						colFlags.set(COL_UP);
 					}
 				} else {
 					if (col.colDL || col.colDR) {
-						// forcing alignement cause entities getting stuck in other entities: newy = col.td * Main.TILE_SIZE - colBox.yMax;
-						newy = pos.y;
-						newvy = 0;
+						if (canForceWallAlignement) {
+							newy = col.td  * Main.TILE_SIZE - colBox.height - 1;
+						} else {
+							newy = pos.y;
+							newvy = 0;
+						}
 						colFlags.set(COL_DOWN);
 					}			
 				}

@@ -40,6 +40,7 @@ class Particle extends Entity {
 		this.vy = vy;
 		canCollide = true;
 		hardCollision = false;
+		canForceWallAlignement = true;
 	}
 	
 	override public function spawn(x:Float, y:Float) {
