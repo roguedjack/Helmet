@@ -38,6 +38,10 @@ class Entity {
 	public var pos(default, set): { x:Float, y:Float };
 	
 	/**
+	 * Is this entity scheduled for removal next frame?
+	 */
+	public var isRemoved(default,null):Bool;	
+	/**
 	 * Can this entity collide with others? (default False)
 	 */
 	public var canCollide(default, default):Bool;
@@ -56,7 +60,6 @@ class Entity {
 	
 	public var rotation(get, set):Float;
 		
-	var isRemoved:Bool;
 	var world:World;	
 	var bitmap:Bitmap;
 	var anchor:Sprite;  // for rotation on center

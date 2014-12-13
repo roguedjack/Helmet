@@ -9,7 +9,7 @@ X - Particles.
 X - World parsing : force tiledmap pos to grid.
 X - Ghost spawning fade in.
 X - Elf 
-- Wizard
+X - Wizard
 - Tutorial messages.
 - Bonuses : moving speed, fire rate, fire power.
 - Real maps not just test maps :-)

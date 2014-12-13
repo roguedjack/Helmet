@@ -22,3 +22,6 @@ MILESTONE 6
 
 MILESTONE 7
 - Particles.
+
+MILESTONE 8
+- Play as Elf or Wizard, with cool projectiles.

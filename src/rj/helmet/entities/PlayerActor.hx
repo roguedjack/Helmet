@@ -19,6 +19,7 @@ import rj.helmet.WeaponShooter;
 	var WARRIOR = 0;
 	var VALKYRIE = 1;
 	var ELF = 2;
+	var WIZARD = 3;
 }
 
 class CharacterClassProps {
@@ -273,9 +274,23 @@ class PlayerActor extends Actor {
 		elf.meleeDamage = 3;
 		elf.meleeCooldown = 0.35;		
 		
+		// the wizard shoots an exploding fireball
+		var wizard = new CharacterClassProps();
+		wizard.colBox = Bounds.fromValues(8, 8, 16, 16);
+		wizard.health = 5000;
+		wizard.speed = 48.0;
+		wizard.framesIdle = [Gfx.entities[20]];
+		wizard.framesWalk = [Gfx.entities[21], Gfx.entities[22]];
+		wizard.animSpeed = 3;
+		wizard.weaponClass = FireballProjectile;
+		wizard.weaponCooldown = 1;		
+		wizard.meleeDamage = 2;
+		wizard.meleeCooldown = 0.50;			
+		
 		CHARACTER_CLASSES_PROPS = new Array<CharacterClassProps>();		
 		CHARACTER_CLASSES_PROPS[cast(CharacterClass.WARRIOR, Int)] = warrior;   // FIXME -- why do i need to cast an abstract int to an int?
 		CHARACTER_CLASSES_PROPS[cast(CharacterClass.VALKYRIE, Int)] = valkyrie;   // FIXME -- why do i need to cast an abstract int to an int?
-		CHARACTER_CLASSES_PROPS[cast(CharacterClass.ELF,Int)] = elf;   // FIXME -- why do i need to cast an abstract int to an int?
+		CHARACTER_CLASSES_PROPS[cast(CharacterClass.ELF, Int)] = elf;   // FIXME -- why do i need to cast an abstract int to an int?
+		CHARACTER_CLASSES_PROPS[cast(CharacterClass.WIZARD,Int)] = wizard;   // FIXME -- why do i need to cast an abstract int to an int?
 	}
 }
