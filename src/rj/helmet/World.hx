@@ -180,7 +180,7 @@ class World {
 	
 	public function isFreeForSpawning(bounds:Bounds):Bool {
 		for (e in entities) {
-			if (e.bounds.collide(bounds)) {
+			if (!e.isRemoved && e.bounds.collide(bounds)) {
 				return false;
 			}
 		}	
