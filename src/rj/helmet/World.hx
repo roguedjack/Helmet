@@ -101,6 +101,13 @@ class World {
 			o.x = Main.TILE_SIZE * Math.floor(o.x / Main.TILE_SIZE);
 			o.y = Main.TILE_SIZE * Math.floor(o.y / Main.TILE_SIZE);
 			
+			// die if another entity is already there!
+			for (other in entitiesToSpawn) {
+				if (other.sx == o.x && other.sy == o.y) {
+					throw "map parsing: entities "+o.name+" and another one on the same tile -- fix your map :-)";
+				}
+			}
+			
 			//trace("spawning " + e+" at " + o.x + ',' + o.y);
 			spawnEntity(e, o.x, o.y);
 		}
