@@ -8,7 +8,8 @@ X - Food (health)
 X - Particles.
 X - World parsing : force tiledmap pos to grid.
 X - Ghost spawning fade in.
-- Elf & Wizard classes.
+X - Elf 
+- Wizard
 - Tutorial messages.
 - Bonuses : moving speed, fire rate, fire power.
 - Real maps not just test maps :-)
