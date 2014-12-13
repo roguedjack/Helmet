@@ -39,6 +39,7 @@ class FireballProjectile extends Projectile {
 			health:0
 		});
 		this.isPart = isPart;		
+		disableSameCollision = true;
 		if (isPart) {
 			setImage(Gfx.entities[31]);
 			setCollisionBox(13, 13, 7, 7);
@@ -50,20 +51,6 @@ class FireballProjectile extends Projectile {
 		trailFxTimer = new CooldownTimer(TRAILFX_PERIOD);
 		trailFxProjector = new ParticleGenerator(DebrisParticle, [0xFF6400]);
 		trailFxProjector.batchSize = isPart ? 4 : 8;
-	}
-	
-	/**
-	 * Does not collide with other fireballs fired by the same owner (eg: player fireballs wont collide with each other)
-	 * @param	other
-	 * @return
-	 */
-	override function canCollideWith(other:Entity):Bool {
-		if (other.type == EntityType.PROJECTILE
-			&& Std.is(other, FireballProjectile)
-			&& cast(other, FireballProjectile).owner == owner) {
-			return false;
-		}
-		return super.canCollideWith(other);
 	}
 	
 	/**

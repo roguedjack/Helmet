@@ -27,6 +27,7 @@ class ArrowProjectile extends Projectile {
 		});
 		setImage(Gfx.entities[19]);
 		setCollisionBox(12, 12, 8, 8);
+		disableSameCollision = true;
 	}
 	
 	override function onStartSpawning() {

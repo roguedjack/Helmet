@@ -15,6 +15,11 @@ class Projectile extends Actor {
 	
 	public var owner(default, null):Entity;
 	public var power(default, default):Int;
+	/**
+	 * Disable collision with projectiles of the same concrete class fired by the same owner (default False).
+	 * Eg: the player fireballs not colliding with other player fireballs.
+	 */
+	public var disableSameCollision(default, default):Bool;
 	var dx:Float;
 	var dy:Float;
 	var projProps: {
@@ -58,10 +63,18 @@ class Projectile extends Actor {
 	
 	/**
 	 * Don't collide with owner and collide only with hard collision.
+	 * Additionally, if option `disableSameCollision` is set, don't collide with projectile of the same concrete class fired by the same owner.
 	 * @param	other
 	 * @return
 	 */
 	override function canCollideWith(other:Entity):Bool {
+		if (disableSameCollision
+			&& other != this 
+			&& other.type == EntityType.PROJECTILE
+			&& Std.is(other, Type.getClass(this))
+			&& cast(other, Projectile).owner == owner) {
+			return false;
+		}		
 		return super.canCollideWith(other) && other != owner && other.hardCollision;
 	}
 
