@@ -44,6 +44,8 @@ class Main extends App {
 	public var playScreen(default, null):PlayScreen;
 	public var currentMap(get, never):TiledMap;
 	public var playerData(default, null):PlayerData;
+
+	static inline var TARGET_FRAME_TIME = 1.0 / 60.0;
 	
 	static inline var DEBUG_INFO = true;
 	var debugText:Text;
@@ -80,18 +82,21 @@ class Main extends App {
 		introScreen = new TitleScreen(this);
 		playScreen = new PlayScreen(this);
 		screen = introScreen;
-	}
+	}	
 	
 	override function update(dt:Float) {
-		screen.update(1.0 / engine.fps);
+		// using dt instead of raw fps, if I understood it correctly it does some smoothing and lag check.
+		screen.update(dt * TARGET_FRAME_TIME); // raw fps --- screen.update(1.0 / engine.fps);
+		
 		if (DEBUG_INFO) {
 			if (debugText == null) {
 				debugText = new Text(FontBuilder.getFont("arial", 10));				
 				debugText.textAlign = Align.Right;				
-				debugText.setPos(s2d.width - 100, 0);
+				debugText.setPos(s2d.width - 125, 0);
 				s2d.addChildAt(debugText, 10);
 			}
-			debugText.text = 'ents:${world.countEntities} fps:${Std.int(engine.fps)}';
+			var rounded_dt = Math.fround(100 * dt) / 100.0;
+			debugText.text = 'ents:${world.countEntities} fps:${Std.int(engine.fps)} dt:$rounded_dt';
 		}
 	}
 	
