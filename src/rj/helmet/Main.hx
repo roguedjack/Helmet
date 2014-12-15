@@ -29,6 +29,7 @@ class Main extends App {
 	public static inline var TILEDOBJ_EXIT = "exit";
 	public static inline var TILEDOBJ_START = "start";
 	public static inline var TILEDOBJ_GEN_GHOST = "gen_ghost";
+	public static inline var TILEDOBJ_GEN_DEMON = "gen_demon";
 	public static inline var TILEDOBJ_HDOOR = "hdoor";
 	public static inline var TILEDOBJ_VDOOR = "vdoor";
 	public static inline var TILEDOBJ_KEY = "key";

@@ -3,6 +3,7 @@ import h2d.col.Bounds;
 import hxd.Res;
 import hxd.res.TiledMap;
 import rj.helmet.entities.DebrisParticle;
+import rj.helmet.entities.DemonMonster;
 import rj.helmet.entities.DoorEntity;
 import rj.helmet.entities.ExitEntity;
 import rj.helmet.entities.HealthItem;
@@ -88,6 +89,8 @@ class World {
 					e = new StartEntity();
 				case Main.TILEDOBJ_GEN_GHOST:
 					e = new MonsterGenerator(GhostMonster, [Gfx.entities[24], Gfx.entities[25], Gfx.entities[26]], new ParticleGenerator(DebrisParticle, [0x999999]));
+				case Main.TILEDOBJ_GEN_DEMON:
+					e = new MonsterGenerator(DemonMonster, [Gfx.entities[32], Gfx.entities[33], Gfx.entities[34]], new ParticleGenerator(DebrisParticle, [0x999999]));	
 				case Main.TILEDOBJ_HDOOR:
 					e = new DoorEntity(o.name, false);
 				case Main.TILEDOBJ_VDOOR:

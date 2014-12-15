@@ -10,14 +10,19 @@
  </layer>
  <layer name="walls" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJzjZmBgYIViPiQ2MZgHiNkYEACZTQxgG9U/qn8Y6eenUD+pAKSXi4G0PIuMeYEYAKA5AcM=
+   eJzjZmBgYIViPiQ2MZgHiNkYEACZTQxgG9U/qn8Y6eeH0iwM+PMNMw79pAKQXi4CduHDvEAMALnhAe0=
   </data>
  </layer>
  <objectgroup name="entities" width="16" height="16">
   <object name="start" type="start" x="32" y="32" width="32" height="32"/>
-  <object name="gen1" type="gen_ghost" x="160" y="64" width="32" height="32"/>
   <object name="exit1" type="exit" x="32" y="448" width="32" height="32"/>
   <object name="door1" type="vdoor" x="96" y="448" width="32" height="32"/>
   <object name="key1" type="key" x="64" y="384" width="32" height="32"/>
+  <object name="gen3" type="gen_demon" x="416" y="96" width="32" height="32"/>
+  <object name="gen1" type="gen_ghost" x="64" y="448" width="32" height="32"/>
+  <object name="gen2" type="gen_demon" x="160" y="96" width="32" height="32"/>
+  <object name="health1" type="health" x="128" y="32" width="32" height="32"/>
+  <object name="health2" type="health" x="288" y="32" width="32" height="32"/>
+  <object name="health3" type="health" x="448" y="32" width="32" height="32"/>
  </objectgroup>
 </map>

@@ -201,6 +201,10 @@ class PlayerActor extends Actor {
 	
 	override public function takeDamage(source:Entity, dmg:Int) {
 		super.takeDamage(source, dmg);
+		// hit sfx
+		if (source != null) {
+			playSfx(Res.sfx.hit_wav);
+		}
 		//  hurt fx
 		if (source != null) {
 			if (hurtFx.isActive) {

@@ -143,7 +143,11 @@ class Actor extends Entity {
 	}
 
 	function faceDirection(dx:Float, dy:Float) {
-		rotation = Math.atan2(dx, -dy);
+		rotation = angleToDirection(dx, dy);
+	}
+	
+	inline function angleToDirection(dx:Float, dy:Float) {
+		return Math.atan2(dx, -dy);
 	}
 
 	/**

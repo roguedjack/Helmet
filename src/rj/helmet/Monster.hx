@@ -256,4 +256,13 @@ class Monster extends Actor {
 		}
 	}	
 	*/
+	
+	/**
+	 * Try to shoot at the player.
+	 * Default does not shoot.
+	 * @return true if fired a shot, false if didn't/couldn't
+	 */
+	public function tryShootingAtPlayer():Bool {
+		return false;
+	}
 }
