@@ -41,9 +41,6 @@ class AiStateMovingState extends MonsterAIState {
 		// repath after time elapsed or 1 tile distance travelled
 		m.aiStateDistance = distanceFromStart(m);
 		if (m.aiStateTime >= movingTime || m.aiStateDistance >= Main.TILE_SIZE) {
-			if (m.aiStateDistance >= Main.TILE_SIZE) {
-				trace('distance repath');
-			}
 			m.aiState = pathState;
 			return;
 		}
