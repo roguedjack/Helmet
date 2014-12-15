@@ -21,15 +21,17 @@ class GhostMonster extends Monster {
 	private static inline var STRIKE_DMG = 5;
 	private static inline var STRIKE_COOLDOWN = 1.0;
 	private static inline var SPAWN_TIME = 1;
+	private static inline var IDLE_TIME = 1;
+	private static inline var MOVING_TIME = 1;
 	
 	var spawnTimer:Float;
 	var startingHealth:Int;
 	var strike:WeaponMelee;	
 	
 	static var LinkStates:Bool = true;
-	static var StateIdle:AiStateIdle = new AiStateIdle(0.5);
+	static var StateIdle:AiStateIdle = new AiStateIdle(IDLE_TIME);
 	static var StatePath:AiStatePathToPlayer = new AiStatePathToPlayer();
-	static var StateMoving:AiStateMovingState = new AiStateMovingState(1);
+	static var StateMoving:AiStateMovingState = new AiStateMovingState(MOVING_TIME);
 
 	public function new() {
 		super({ 
@@ -46,11 +48,9 @@ class GhostMonster extends Monster {
 		
 		if (LinkStates) {
 			LinkStates = false;
-			StateIdle.pathState = StatePath;
-			StatePath.idleState = StateIdle;
-			StatePath.movingState = StateMoving;
-			StateMoving.idleState = StateIdle;
-			StateMoving.pathState = StatePath;
+			StateIdle.link(StatePath);
+			StatePath.link(StateIdle, StateMoving);
+			StateMoving.link(StateIdle, StatePath);
 		}
 	}
 
