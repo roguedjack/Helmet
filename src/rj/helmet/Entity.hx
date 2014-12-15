@@ -34,6 +34,7 @@ enum ColFlags {
  */
 class Entity {
 	
+	public var world(default, null):World;  // for convenience = Main.Instance.world
 	public var type(default, null):EntityType;
 	public var pos(default, set): { x:Float, y:Float };
 	
@@ -67,7 +68,6 @@ class Entity {
 	
 	public var rotation(get, set):Float;
 		
-	var world:World;	
 	var bitmap:Bitmap;
 	var anchor:Sprite;  // for rotation on center
 	var tmpColliders:Array<Entity>;  // to avoid re-allocation each frame
