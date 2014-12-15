@@ -10,6 +10,11 @@ X - World parsing : force tiledmap pos to grid.
 X - Ghost spawning fade in.
 X - Elf 
 X - Wizard
+X - "Optimized" collision detection with collision grid
+	dsiabled by default, compile with -D COLLISION_GRID to enable it.
+	this actually has a hit on performance and it gets worse with more entities : firing x2 with the wizard = big lag.
+	reason: collision grid management has a big overhead (arrays manipulation each time we update the position of an entity)
+	vs the benefit of scanning a smaller list for collision. not worth it at all.
 - Tutorial messages.
 - Bonuses : moving speed, fire rate, fire power.
 - Real maps not just test maps :-)

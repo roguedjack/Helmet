@@ -21,7 +21,7 @@ import rj.helmet.Item.ItemType;
 class World {
 	
 	var game:Main;
-	public var mapData(default,null):TiledMapData;
+	public var mapData(default, null):TiledMapData;
 	public var time(default, null):Float;
 	public var elapsed(default, null):Float;
 	public var player(default, null):PlayerActor;
@@ -31,6 +31,9 @@ class World {
 	var entitiesToSpawn:Array<{se:Entity,sx:Float,sy:Float}>;	
 	var entitiesToRemove:Array<Entity>;
 	var isWall:Array<Bool>;
+	#if COLLISION_GRID
+	var collisionGrid:CollisionGrid;
+	#end
 
 	public function new(game:Main) {
 		this.game = game;
@@ -45,6 +48,9 @@ class World {
 	public function loadMap(tiledmap:TiledMap) {
 		clearLevel();
 		mapData = tiledmap.toMap();
+		#if COLLISION_GRID
+		collisionGrid = new CollisionGrid(mapData.width, mapData.height);
+		#end
 		parseMapData();
 	}
 	
@@ -144,6 +150,9 @@ class World {
 	
 	public function removeEntity(e:Entity) {
 		entitiesToRemove.push(e);
+		#if COLLISION_GRID
+		collisionGrid.remove(e);
+		#end
 	}
 	
 	public function spawnEntity(e:Entity, x:Float, y:Float) {
@@ -177,20 +186,38 @@ class World {
 		if (out == null) {
 			out = new Array<Entity>();			
 		}
+		#if COLLISION_GRID
+		var nearList = collisionGrid.listEntities(bounds);
+		for (e in nearList) {
+			if (e.bounds.collide(bounds)) {
+				out.push(e);
+			}
+		}
+		#else
 		for (e in entities) {
 			if (e.bounds.collide(bounds)) {
 				out.push(e);
 			}
 		}
+		#end
 		return out;
 	}
-	
+		
 	public function isFreeForSpawning(bounds:Bounds):Bool {
+		#if COLLISION_GRID
+		var nearList = collisionGrid.listEntities(bounds);
+		for (e in nearList) {
+			if (!e.isRemoved && e.bounds.collide(bounds)) {
+				return false;
+			}
+		}
+		#else
 		for (e in entities) {
 			if (!e.isRemoved && e.bounds.collide(bounds)) {
 				return false;
 			}
-		}	
+		}
+		#end
 		var spawnBounds = new Bounds();
 		for (e in entitiesToSpawn) {
 			spawnBounds.set(e.sx, e.sy, e.se.bounds.width, e.se.bounds.height);
@@ -212,6 +239,20 @@ class World {
 		}
 		return out;
 	}
+	
+	#if COLLISION_GRID
+	public function removeFromCollisionGrid(e:Entity) {
+		if (e.pos != null) {
+			collisionGrid.remove(e);
+		}
+	}
+	
+	public function addToCollisionGrid(e:Entity) {
+		if (e.pos != null) {
+			collisionGrid.add(e);
+		}
+	}
+	#end
 	
 	public function update(elapsed:Float) {
 		this.elapsed = elapsed;

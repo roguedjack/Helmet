@@ -89,9 +89,15 @@ class Entity {
 	}
 	
 	function set_pos( p: { x:Float, y:Float } ) {
+		#if COLLISION_GRID
+		world.removeFromCollisionGrid(this);
+		#end
 		pos = { x:p.x, y:p.y };
 		syncCollisionBounds();
 		syncSpritePos();
+		#if COLLISION_GRID
+		world.addToCollisionGrid(this);		
+		#end
 		return pos;
 	}
 
