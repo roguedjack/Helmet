@@ -15,6 +15,11 @@ X - "Optimized" collision detection with collision grid
 	this actually has a hit on performance and it gets worse with more entities : firing x2 with the wizard = big lag.
 	reason: collision grid management has a big overhead (arrays manipulation each time we update the position of an entity)
 	vs the benefit of scanning a smaller list for collision. not worth it at all.
+X - Player glow red when hit.
+X - Invisible walls (actually just add ground tiles on the wall layer in tiled!)
+- New monster : shooting demons.
+- Destructible walls (actually entities).
+- Teleporters.
 - Tutorial messages.
 - Bonuses : moving speed, fire rate, fire power.
 - Real maps not just test maps :-)

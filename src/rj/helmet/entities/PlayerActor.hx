@@ -2,6 +2,7 @@ package rj.helmet.entities;
 
 import h2d.Anim;
 import h2d.col.Bounds;
+import h2d.filter.Glow;
 import h2d.Tile;
 import haxe.EnumFlags;
 import hxd.Key;
@@ -10,6 +11,7 @@ import rj.helmet.Actor;
 import rj.helmet.CooldownTimer;
 import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
+import rj.helmet.fx.HurtEntityFx;
 import rj.helmet.Item.ItemType;
 import rj.helmet.PlayerData;
 import rj.helmet.WeaponMelee;
@@ -55,6 +57,7 @@ class PlayerActor extends Actor {
 	
 	public static inline var LIFELEAK_TIMER:Float = 1.0;
 	public static inline var EXIT_LEVEL_TIMER:Float = 2.0;
+	public static inline var HURTEFFECT_DURATION:Float = 0.25;
 	
 	public static var CHARACTER_CLASSES_PROPS:Array<CharacterClassProps>;
 
@@ -63,6 +66,7 @@ class PlayerActor extends Actor {
 	var melee:WeaponMelee;
 	var lifeLeakTimer:CooldownTimer;
 	var exitLevelTimer:CooldownTimer;
+	var hurtFx:HurtEntityFx;
 
 	public function new(data:PlayerData) {
 		this.data = data;
@@ -97,6 +101,7 @@ class PlayerActor extends Actor {
 		super.onStartSpawning();
 		playAnim(ANIM_IDLE);
 		lifeLeakTimer = new CooldownTimer(LIFELEAK_TIMER);
+		hurtFx = new HurtEntityFx(HURTEFFECT_DURATION);
 	}
 
 	override function updateLiving(elapsed:Float) {
@@ -191,6 +196,19 @@ class PlayerActor extends Actor {
 			
 			default:
 				// nop
+		}
+	}
+	
+	override public function takeDamage(source:Entity, dmg:Int) {
+		super.takeDamage(source, dmg);
+		//  hurt fx
+		if (source != null) {
+			if (hurtFx.isActive) {
+				hurtFx.extendDuration(HURTEFFECT_DURATION);
+			} else {
+				hurtFx.resetDuration(HURTEFFECT_DURATION);
+				startFx(hurtFx);
+			}
 		}
 	}
 	

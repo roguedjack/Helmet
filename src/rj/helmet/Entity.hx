@@ -67,9 +67,14 @@ class Entity {
 	public var sprite(default, null):Sprite;
 	
 	public var rotation(get, set):Float;
+	
+	public var bitmap(default, null):Bitmap;
+	
+	/**
+	 * Rotation center.
+	 */
+	public var anchor(default, null):Sprite;
 		
-	var bitmap:Bitmap;
-	var anchor:Sprite;  // for rotation on center
 	var tmpColliders:Array<Entity>;  // to avoid re-allocation each frame
 	var fxs:Array<EntityFx>;
 
