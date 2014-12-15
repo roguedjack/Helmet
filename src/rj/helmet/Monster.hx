@@ -24,6 +24,8 @@ class Monster extends Actor {
 	
 	public var aiState(default, set):MonsterAIState;
 	public var aiStateTime(default, null):Float;
+	public var aiStateDistance(default, default):Float;
+	public var aiStateStartPos(default, default): { x:Float, y:Float };
 	
 	var lastMoveX:Float;
 	var lastMoveY:Float;
@@ -55,7 +57,7 @@ class Monster extends Actor {
 	override function updateLiving(elapsed:Float) {
 		if (aiState != null) {
 			aiStateTime += elapsed;
-			aiState.onUpdate(this, world, elapsed);
+			aiState.onUpdate(this, elapsed);
 		}
 	}
 	

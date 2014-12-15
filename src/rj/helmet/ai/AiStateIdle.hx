@@ -15,8 +15,12 @@ class AiStateIdle extends MonsterAIState {
 		super();
 		this.idleTime = idleTime;
 	}
+	
+	public function link(pathState:MonsterAIState) {
+		this.pathState = pathState;
+	}	
 
-	override public function onUpdate(m:Monster, world:World, elapsed:Float) {
+	override public function onUpdate(m:Monster, elapsed:Float) {
 		if (m.aiStateTime < idleTime) {
 			return;
 		}

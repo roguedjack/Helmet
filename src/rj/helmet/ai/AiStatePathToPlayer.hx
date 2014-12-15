@@ -17,9 +17,14 @@ class AiStatePathToPlayer extends MonsterAIState {
 	public function new() {
 		super();	
 	}
+		
+	public function link(idleState:MonsterAIState, movingState:MonsterAIState) {
+		this.idleState = idleState;
+		this.movingState = movingState;
+	}	
 	
-	override public function onUpdate(m:Monster, world:World, elapsed:Float) {
-		if (world.player == null || world.player.state != ActorState.LIVING) {
+	override public function onUpdate(m:Monster, elapsed:Float) {
+		if (m.world.player == null || m.world.player.state != ActorState.LIVING) {
 			m.aiState = idleState;
 			return;
 		}

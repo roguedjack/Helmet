@@ -2,6 +2,7 @@ package rj.helmet.ai;
 import haxe.EnumFlags;
 import rj.helmet.Entity;
 import rj.helmet.Entity.ColFlags;
+import rj.helmet.MonsterAIState;
 import rj.helmet.World;
 import rj.helmet.Monster;
 
@@ -20,11 +21,33 @@ class AiStateMovingState extends MonsterAIState {
 		this.movingTime = movingTime;
 	}
 	
-	override public function onUpdate(m:Monster, world:World, elapsed:Float) {
-		if (m.aiStateTime >= movingTime) {
+	public function link(idleState:MonsterAIState, pathState:MonsterAIState) {
+		this.idleState = idleState;
+		this.pathState = pathState;
+	}
+	
+	inline function distanceFromStart(m:Monster) {
+		var dx = m.pos.x - m.aiStateStartPos.x;
+		var dy = m.pos.y - m.aiStateStartPos.y;
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+	
+	override public function onEnter(m:Monster) {
+		m.aiStateDistance = 0;
+		m.aiStateStartPos = m.pos;
+	}
+	
+	override public function onUpdate(m:Monster, elapsed:Float) {
+		// repath after time elapsed or 1 tile distance travelled
+		m.aiStateDistance = distanceFromStart(m);
+		if (m.aiStateTime >= movingTime || m.aiStateDistance >= Main.TILE_SIZE) {
+			if (m.aiStateDistance >= Main.TILE_SIZE) {
+				trace('distance repath');
+			}
 			m.aiState = pathState;
 			return;
 		}
+		
 		m.continueLastMovement();
 	}
 	

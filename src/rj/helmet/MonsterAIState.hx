@@ -15,7 +15,7 @@ class MonsterAIState {
 	
 	public function onLeave(m:Monster) { }
 	
-	public function onUpdate(m:Monster, world:World, elapsed:Float) { }
+	public function onUpdate(m:Monster, elapsed:Float) { }
 	
 	public function onCollisionWith(m:Monster, other:Entity, vx:Float, vy:Float, active:Bool) { }
 	
