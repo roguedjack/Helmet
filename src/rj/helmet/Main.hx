@@ -46,7 +46,7 @@ class Main extends App {
 	public var introScreen(default,null):TitleScreen;
 	public var playScreen(default, null):PlayScreen;
 	public var currentMap(get, never):TiledMap;
-	public var playerData(default, null):PlayerData;
+	public var playerSaveData(default, null):PlayerSaveData;
 
 	static inline var TARGET_FRAME_TIME = 1.0 / 60.0;
 	
@@ -65,7 +65,7 @@ class Main extends App {
 	}
 	
 	function get_currentMap() {
-		return mapCycle[playerData.level];
+		return mapCycle[playerSaveData.level];
 	}
 	
 	override function init() {
@@ -106,22 +106,22 @@ class Main extends App {
 	}
 	
 	public function startNewGame(cl:CharacterClass) {
-		playerData = new PlayerData(cl);
+		playerSaveData = new PlayerSaveData(cl);
 		screen = playScreen;		
 		startLevel(0);
 	}
 	
 	public function startNextLevel() {
-		startLevel(playerData.level + 1);
+		startLevel(playerSaveData.level + 1);
 	}
 	
 	public function startLevel(i:Int) {
 		if (world.player != null) {
-			playerData.takeSnapshot(world.player);
-			playerData.nbKeys = 0;  // remove all keys but not other bonuses
+			playerSaveData.takeSnapshot(world.player);
+			playerSaveData.nbKeys = 0;  // remove all keys but not other bonuses
 		}
-		playerData.level = i % mapCycle.length;
-		world.loadMap(mapCycle[playerData.level]);
+		playerSaveData.level = i % mapCycle.length;
+		world.loadMap(mapCycle[playerSaveData.level]);
 		playScreen.onNewLevel();		
 	}
 	

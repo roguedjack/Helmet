@@ -80,7 +80,7 @@ class Hud extends Sprite {
 	
 	function doRefresh() {
 		var player = Main.Instance.world.player;
-		var data = Main.Instance.playerData;
+		var data = Main.Instance.playerSaveData;
 		
 		levelTxt.text = 'LEVEL : ${data.level}';
 				

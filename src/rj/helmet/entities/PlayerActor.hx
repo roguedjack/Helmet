@@ -15,7 +15,7 @@ import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.fx.HurtEntityFx;
 import rj.helmet.Item.ItemType;
-import rj.helmet.PlayerData;
+import rj.helmet.PlayerSaveData;
 import rj.helmet.WeaponMelee;
 import rj.helmet.WeaponShooter;
 
@@ -89,14 +89,14 @@ class PlayerActor extends Actor {
 	
 	public static var CHARACTER_CLASSES_PROPS:Array<CharacterClassProps>;
 
-	var data:PlayerData;
+	var data:PlayerSaveData;
 	var weapon:WeaponShooter;
 	var melee:WeaponMelee;
 	var lifeLeakTimer:CooldownTimer;
 	var exitLevelTimer:CooldownTimer;
 	var hurtFx:HurtEntityFx;
 
-	public function new(data:PlayerData) {
+	public function new(data:PlayerSaveData) {
 		this.data = data;
 		var cl = CHARACTER_CLASSES_PROPS[cast(data.characterClass, Int)];  // FIXME -- why do i need to cast an abstract int to an int?
 		

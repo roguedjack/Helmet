@@ -3,10 +3,11 @@ import rj.helmet.entities.PlayerActor;
 import rj.helmet.entities.PlayerActor.CharacterClass;
 
 /**
- * ...
+ * Player data that must be saved between levels or can be saved between game sessions.
+ * 
  * @author roguedjack
  */
-class PlayerData {
+class PlayerSaveData {
 
 	public var characterClass(default,null):CharacterClass;	
 	public var level:Int;
@@ -36,6 +37,6 @@ class PlayerData {
 	public function takeSnapshot(player:PlayerActor) {
 		health = player.health;
 		speed = player.speed;
-		// TODO --- weapons modifiers bonuses
+		// TODO --- remember weapons modifiers bonuses
 	}
 }

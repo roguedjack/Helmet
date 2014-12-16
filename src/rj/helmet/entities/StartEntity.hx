@@ -20,7 +20,7 @@ class StartEntity extends Entity {
 		
 		// spawn player?
 		if (world.player == null) {
-			world.spawnEntity(new PlayerActor(Main.Instance.playerData), pos.x, pos.y);
+			world.spawnEntity(new PlayerActor(Main.Instance.playerSaveData), pos.x, pos.y);
 		}
 	}
 }
