@@ -26,8 +26,8 @@ class FireballProjectile extends Projectile {
 	public function new(owner:Entity, vx:Float, vy:Float, isSub:Bool = false) {
 		var data = GameData.FireballProjectile;
 		super(owner, vx, vy, 
-			isSub ? { power:data.power, spin:data.spin, speed:data.speed, gfx:data.gfx, colbox:data.colbox } 
-				  : { power:data.sub_power, spin:data.sub_spin, speed:data.sub_speed, gfx:data.sub_gfx, colbox:data.sub_colbox } );					
+			isSub ? { power:data.sub_power, spin:data.sub_spin, speed:data.sub_speed, gfx:data.sub_gfx, colbox:data.sub_colbox }  
+				  : { power:data.power, spin:data.spin, speed:data.speed, gfx:data.gfx, colbox:data.colbox } );
 		this.isSub = isSub;
 		disableSameCollision = true;
 		time = 0;
