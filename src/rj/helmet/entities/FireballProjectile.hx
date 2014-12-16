@@ -4,6 +4,7 @@ import h2d.col.Bounds;
 import haxe.EnumFlags;
 import hxd.Res;
 import rj.helmet.CooldownTimer;
+import rj.helmet.dat.GameData;
 import rj.helmet.Entity;
 import rj.helmet.ParticleGenerator;
 import rj.helmet.Projectile;
@@ -14,43 +15,27 @@ import rj.helmet.Projectile;
  * @author roguedjack
  */
 class FireballProjectile extends Projectile {
-	
-	public static inline var POWER = 8;
-	public static inline var SPEED = 128.0;
-	public static inline var SPIN_DEG = 720.0;	
-	public static inline var TIME_TO_EXPLOSION = 1;	
-	public static inline var PART_POWER = 5;	
-	public static inline var PART_SPEED = 160.0;
-	public static inline var PART_OFFSET = 4;
-	public static inline var PART_LIFETIME = 1;		
-	public static inline var TRAILFX_PERIOD = 0.10;
-	
+		
+	var lifeTime:Float;
+	var partOffset:Float;
 	var trailFxTimer:CooldownTimer;
 	var trailFxProjector:ParticleGenerator;
 	var time:Float;
-	var isPart:Bool;
+	var isSub:Bool;
 	
-	public function new(owner:Entity, vx:Float, vy:Float, isPart:Bool=false) {
-		super(owner, vx, vy, {
-			spin:SPIN_DEG * Math.PI / 180.0,			
-			power:(isPart ? PART_POWER : POWER)
-		}, { 
-			speed:(isPart ? PART_SPEED : SPEED),
-			health:0
-		});
-		this.isPart = isPart;		
+	public function new(owner:Entity, vx:Float, vy:Float, isSub:Bool = false) {
+		var data = GameData.FireballProjectile;
+		super(owner, vx, vy, 
+			isSub ? { power:data.power, spin:data.spin, speed:data.speed, gfx:data.gfx, colbox:data.colbox } 
+				  : { power:data.sub_power, spin:data.sub_spin, speed:data.sub_speed, gfx:data.sub_gfx, colbox:data.sub_colbox } );					
+		this.isSub = isSub;
 		disableSameCollision = true;
-		if (isPart) {
-			setImage(Gfx.entities[31]);
-			setCollisionBox(13, 13, 7, 7);
-		} else {
-			setImage(Gfx.entities[23]);			
-			setCollisionBox(9, 9, 14, 14);
-		}
 		time = 0;
-		trailFxTimer = new CooldownTimer(TRAILFX_PERIOD);
+		lifeTime = (isSub ? data.sub_time : data.time);
+		partOffset = data.sub_offset;
+		trailFxTimer = new CooldownTimer(data.trailfx_period);
 		trailFxProjector = new ParticleGenerator(DebrisParticle, [0xFF6400]);
-		trailFxProjector.batchSize = isPart ? 4 : 8;
+		trailFxProjector.batchSize = isSub ? data.sub_particles : data.particles;
 	}
 	
 	/**
@@ -64,15 +49,15 @@ class FireballProjectile extends Projectile {
 		}		
 		
 		// lifetime
-		if (isPart) {
-			if ((time += elapsed) >= PART_LIFETIME) {
+		if (isSub) {
+			if ((time += elapsed) >= lifeTime) {
 				remove();
 				return;
 			}
-			var t = time / PART_LIFETIME;
+			var t = time / lifeTime;
 			bitmap.alpha = 1.0 - 0.75 * t * t;
 		} else {
-			if ((time += elapsed) >= TIME_TO_EXPLOSION) {
+			if ((time += elapsed) >= lifeTime) {
 				remove();
 				explode();
 				return;
@@ -96,7 +81,7 @@ class FireballProjectile extends Projectile {
 	 */
 	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {
 		super.onCollisionWith(other, vx, vy, active);
-		if (!isPart) {
+		if (!isSub) {
 			explode();
 		}
 	}
@@ -109,7 +94,7 @@ class FireballProjectile extends Projectile {
 	 */
 	override function onWorldCollision(colFlags:EnumFlags<ColFlags>, vx:Float, vy:Float) {
 		remove();
-		if (!isPart) {
+		if (!isSub) {
 			explode();
 		}
 		
@@ -123,12 +108,12 @@ class FireballProjectile extends Projectile {
 		
 		var sx:Float, sy:Float;
 		for (px in -1...2) {
-			sx = pos.x + PART_OFFSET * px;
+			sx = pos.x + partOffset * px;
 			for (py in -1...2) {
 				if (px == 0 && py == 0) {
 					continue;
 				}
-				sy = pos.y + PART_OFFSET * py;
+				sy = pos.y + partOffset * py;
 				var part = new FireballProjectile(owner, px, py, true);
 				world.spawnEntity(part, sx, sy);
 			}

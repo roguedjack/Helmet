@@ -1,0 +1,54 @@
+{
+	"Projectiles" : [
+		{
+			"comment"	: "0 - ArrowProjectile",
+			"power"		: 3,
+			"speed"		: 192.0,
+			"spin"		: 0.0,
+			"gfx"		: 19,
+			"colbox"	: [ 12, 12, 8, 8 ]
+		},		
+		{
+			"comment"	: "1 - AxeProjectile",
+			"power"		: 10,
+			"speed"		: 128.0,
+			"spin"		: 720.0,
+			"gfx"		: 11,
+			"colbox"	: [ 8, 8, 16, 16 ]
+		},		
+		{
+			"comment"	: "2 - FireballProjectile",
+			"power"		: 8,
+			"speed"		: 128.0,
+			"spin"		: 720.0,
+			"gfx"		: 23,
+			"colbox"	: [ 9, 9, 14, 14 ],
+			"time"		: 1.0,
+			"particles"	: 8,
+			"sub_power"		: 5,
+			"sub_speed"		: 160.0,
+			"sub_gfx"		: 31,
+			"sub_colbox"	: [ 13, 13, 7, 7 ],
+			"sub_time"		: 1,
+			"sub_particles"	: 4,
+			"sub_offset"	: 4,
+			"trailfx_period": 0.10
+		},
+		{
+			"comment"	: "3 - SwordProjectile",
+			"power"		: 5,
+			"speed"		: 160.0,
+			"spin"		: 0.0,
+			"gfx"		: 15,
+			"colbox"	: [ 10, 10, 12, 12 ]
+		},
+		{
+			"comment"	: "4 - DemonShotProjectile",
+			"power"		: 3,
+			"speed"		: 128.0,
+			"spin"		: 720.0,
+			"gfx"		: 39,
+			"colbox"	: [ 12, 12, 8, 8 ]
+		}
+	]
+}

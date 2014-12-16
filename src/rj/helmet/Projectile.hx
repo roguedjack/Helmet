@@ -22,26 +22,27 @@ class Projectile extends Actor {
 	public var disableSameCollision(default, default):Bool;
 	var dx:Float;
 	var dy:Float;
-	var projProps: {
-		spin:Float,
-		power:Int
-	};
+	var spin:Float;
 
 	/**
 	 * 
 	 * @param	owner shooter
 	 * @param	dx direction
 	 * @param	dy direction
-	 * @param	projProps
-	 * @param	actorProps
 	 */
-	public function new(owner:Entity, dx:Float, dy:Float, projProps, actorProps) {
-		super(EntityType.PROJECTILE, actorProps);
+	public function new(owner:Entity, dx:Float, dy:Float, data) {
+		super(EntityType.PROJECTILE, {
+			speed:data.speed,
+			health:0
+		});
 		this.owner = owner;		
 		this.dx = dx;
 		this.dy = dy;		
-		this.projProps = projProps;
+		this.spin = data.spin * Math.PI / 180.0;
+		this.power = data.power;
 		canCollide = true;
+		setImage(Gfx.entities[data.gfx]);
+		setCollisionBox(data.colbox[0], data.colbox[1], data.colbox[2], data.colbox[3]);	
 	}
 	
 	override function onStartSpawning() {
@@ -55,8 +56,8 @@ class Projectile extends Actor {
 	 */
 	override function updateLiving(elapsed:Float) {
 		super.updateLiving(elapsed);
-		if (projProps.spin != 0) {
-			rotation += projProps.spin * elapsed;
+		if (spin != 0) {
+			rotation += spin * elapsed;
 		}
 		move(dx * elapsed * speed, dy * elapsed * speed);
 	}
@@ -92,9 +93,9 @@ class Projectile extends Actor {
 		
 		switch (other.type) {
 			case EntityType.MONSTER:
-				cast(other, Actor).takeDamage(this, projProps.power);
+				cast(other, Actor).takeDamage(this, power);
 			case EntityType.PLAYER:
-				cast(other, Actor).takeDamage(this, projProps.power);
+				cast(other, Actor).takeDamage(this, power);
 			case EntityType.MONSTER_GENERATOR:
 				cast(other, MonsterGenerator).takeHit(this);
 			default:

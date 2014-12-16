@@ -1,10 +1,12 @@
 package rj.helmet;
 import h2d.Text;
+import haxe.Resource;
 import hxd.App;
 import hxd.Key;
 import hxd.Res;
 import hxd.res.FontBuilder;
 import hxd.res.TiledMap;
+import rj.helmet.dat.GameData;
 import rj.helmet.entities.PlayerActor;
 import rj.helmet.screens.TitleScreen;
 import rj.helmet.screens.PlayScreen;
@@ -38,7 +40,7 @@ class Main extends App {
 	
 	public static var Instance:Main;
 		
-	public var world(default,null):World;
+	public var world(default, null):World;	
 	public var view(default, default):View;
 	public var screen(default, set):Screen;
 	public var introScreen(default,null):TitleScreen;
@@ -69,6 +71,8 @@ class Main extends App {
 	override function init() {
 		Instance = this;
 		
+		GameData.load();
+				
 		s2d.setFixedSize(WIDTH, HEIGHT);
 		engine.backgroundColor = 0x101010;
 		

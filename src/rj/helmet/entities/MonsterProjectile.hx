@@ -10,8 +10,8 @@ import rj.helmet.Projectile;
  */
 class MonsterProjectile extends Projectile {
 
-	public function new(owner:Entity, dx:Float, dy:Float, projProps, actorProps) {
-		super(owner, dx, dy, projProps, actorProps);		
+	public function new(owner:Entity, dx:Float, dy:Float, data) {
+		super(owner, dx, dy, data);		
 		disableSameCollision = true;
 	}
 
