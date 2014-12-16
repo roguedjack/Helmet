@@ -18,9 +18,9 @@ X - "Optimized" collision detection with collision grid
 X - Player glow red when hit.
 X - Invisible walls (actually just add ground tiles on the wall layer in tiled!)
 X - New monster : shooting demons.
-- Use CastleDB for gameplay modding.
-	- Projectiles.
-	- Characters.
+- Use CastleDB for gameplay modding. (could not get castle lib to work even when upgrading to latest nightly Haxe)
+	X - Projectiles.
+	X - Characters.
 	- Items.
 	- Monsters.
 - Destructible walls (actually entities).

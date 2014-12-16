@@ -1,4 +1,59 @@
 {
+	"Characters" : [
+		{
+			"comment"			: "0 - WarriorCharacter",
+			"colbox"			: [ 8, 8, 16, 16 ],
+			"health"			: 10000,
+			"speed"				: 64.0,
+			"framesIdle"		: [ 8 ],
+			"framesWalk"		: [ 9, 10 ],
+			"animSpeed"			: 5,
+			"weaponClass"		: "AxeProjectile",
+			"weaponCooldown"	: 0.75,
+			"meleeDamage"		: 10,
+			"meleeCooldown"		: 0.50
+		},
+		{
+			"comment"			: "1 - ValkyrieCharacter",
+			"colbox"			: [ 10, 10, 12, 12 ],
+			"health"			: 9000,
+			"speed"				: 80.0,
+			"framesIdle"		: [ 12 ],
+			"framesWalk"		: [ 13, 14 ],
+			"animSpeed"			: 7,
+			"weaponClass"		: "SwordProjectile",
+			"weaponCooldown"	: 0.50,
+			"meleeDamage"		: 5,
+			"meleeCooldown"		: 0.40
+		},
+		{
+			"comment"			: "2 - ElfCharacter",
+			"colbox"			: [ 10, 10, 12, 12 ],
+			"health"			: 7000,
+			"speed"				: 112.0,
+			"framesIdle"		: [ 16 ],
+			"framesWalk"		: [ 17, 18 ],
+			"animSpeed"			: 10,
+			"weaponClass"		: "ArrowProjectile",
+			"weaponCooldown"	: 0.35,
+			"meleeDamage"		: 3,
+			"meleeCooldown"		: 0.35
+		},		
+		{
+			"comment"			: "3 - WizardCharacter",
+			"colbox"			: [ 8, 8, 16, 16 ],
+			"health"			: 5000,
+			"speed"				: 48.0,
+			"framesIdle"		: [ 20 ],
+			"framesWalk"		: [ 21, 22 ],
+			"animSpeed"			: 3,
+			"weaponClass"		: "FireballProjectile",
+			"weaponCooldown"	: 1.0,
+			"meleeDamage"		: 2,
+			"meleeCooldown"		: 0.60
+		}
+	],
+
 	"Projectiles" : [
 		{
 			"comment"	: "0 - ArrowProjectile",

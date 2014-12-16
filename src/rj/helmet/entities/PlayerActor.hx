@@ -9,6 +9,8 @@ import hxd.Key;
 import hxd.Res;
 import rj.helmet.Actor;
 import rj.helmet.CooldownTimer;
+import rj.helmet.dat.GameData;
+import rj.helmet.entities.PlayerActor.CharacterClassProps;
 import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.fx.HurtEntityFx;
@@ -16,6 +18,13 @@ import rj.helmet.Item.ItemType;
 import rj.helmet.PlayerData;
 import rj.helmet.WeaponMelee;
 import rj.helmet.WeaponShooter;
+
+// must import all character projectile types for Type.resolveClass
+import rj.helmet.entities.ArrowProjectile;
+import rj.helmet.entities.AxeProjectile;
+import rj.helmet.entities.FireballProjectile;
+import rj.helmet.entities.SwordProjectile;
+// end import projectiles
 
 @:enum abstract CharacterClass(Int) {
 	var WARRIOR = 0;
@@ -37,6 +46,25 @@ class CharacterClassProps {
 	public var animSpeed(default, default):Int;
 	
 	public function new() {
+	}
+	
+	public static function fromData(data):CharacterClassProps {
+		var p = new CharacterClassProps();
+		p.colBox = Bounds.fromValues(data.colbox[0], data.colbox[1], data.colbox[2], data.colbox[3]);
+		p.speed = data.speed;
+		p.health = data.health;
+		var wpnClassname = "rj.helmet.entities." + data.weaponClass;
+		p.weaponClass = cast Type.resolveClass(wpnClassname);
+		if (p.weaponClass == null) {
+			throw "unknown character weapon class " + wpnClassname;
+		}
+		p.weaponCooldown = data.weaponCooldown;
+		p.meleeDamage = data.meleeDamage;
+		p.meleeCooldown = data.meleeCooldown;
+		p.framesIdle = [ Gfx.entities[data.framesIdle[0]] ];  // FIXME --- don't hardcode one frame limitation
+		p.framesWalk = [ Gfx.entities[data.framesWalk[0]], Gfx.entities[data.framesWalk[1]] ];  // FIXME --- don't hardcode two frames limitation
+		p.animSpeed = data.animSpeed;
+		return p;
 	}
 }
 
@@ -257,6 +285,12 @@ class PlayerActor extends Actor {
 	}
 	
 	public static function initCharacterClasses() {		
+		var warrior = CharacterClassProps.fromData(GameData.WarriorCharacter);
+		var valkyrie = CharacterClassProps.fromData(GameData.ValkyrieCharacter);
+		var elf = CharacterClassProps.fromData(GameData.ElfCharacter);
+		var wizard = CharacterClassProps.fromData(GameData.WizardCharacter);
+		
+		/*
 		// the warrior is very strong.
 		var warrior = new CharacterClassProps();
 		warrior.colBox = Bounds.fromValues(8, 8, 16, 16);
@@ -308,6 +342,7 @@ class PlayerActor extends Actor {
 		wizard.weaponCooldown = 1;		
 		wizard.meleeDamage = 2;
 		wizard.meleeCooldown = 0.50;			
+		*/
 		
 		CHARACTER_CLASSES_PROPS = new Array<CharacterClassProps>();		
 		CHARACTER_CLASSES_PROPS[cast(CharacterClass.WARRIOR, Int)] = warrior;   // FIXME -- why do i need to cast an abstract int to an int?
