@@ -107,7 +107,7 @@ class PlayerActor extends Actor {
 		
 		setCollisionBox(Std.int(cl.colBox.xMin), Std.int(cl.colBox.yMin), Std.int(cl.colBox.width), Std.int(cl.colBox.height));		
 		addAnim(ANIM_IDLE, new Anim(cl.framesIdle, cl.animSpeed));		
-		addAnim(ANIM_WALK, new Anim(cl.framesWalk, 5));		
+		addAnim(ANIM_WALK, new Anim(cl.framesWalk, cl.animSpeed));		
 		equipWeapon(new WeaponShooter(this, cl.weaponClass, data.weaponCooldown));
 		equipMelee(new WeaponMelee(this, data.meleeDamage, data.meleeCooldown));
 		refreshHud();
