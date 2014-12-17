@@ -60,6 +60,8 @@ class View extends Sprite {
 		
 	inline function getEntityLayer(e:Entity):Sprite {
 		return switch (e.type) {
+			case EntityType.ATTACHEMENT:
+				actorsLayer;
 			case EntityType.DOOR:
 				actorsLayer;			
 			case EntityType.EXIT:

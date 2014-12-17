@@ -12,6 +12,7 @@ import rj.helmet.Projectile;
 class SwordProjectile extends Projectile {
 	
 	public function new(owner:Entity, vx:Float, vy:Float) {
-		super(owner, vx, vy, GameData.SwordProjectile);		
+		super(owner, vx, vy, GameData.SwordProjectile);				
 	}
+
 }

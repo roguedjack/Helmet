@@ -19,8 +19,9 @@
 			"framesIdle"		: [ 12 ],
 			"framesWalk"		: [ 13, 14 ],
 			"animSpeed"			: 7,
-			"weapon"			: {	"projectile": "SwordProjectile", "cooldown": 0.50 },
-			"melee"				: {	"damage": 5, "cooldown": 0.40 }
+			"weapon"			: {	"projectile": "SwordProjectile", "cooldown": 0.55 },
+			"melee"				: {	"damage": 5, "cooldown": 0.40 },
+			"shield"			: { "xanchor": -5, "yanchor": -8, "gfx": 7, "colbox": [13,13,6,6]}			
 		},
 		{
 			"id"				: "ElfCharacter",

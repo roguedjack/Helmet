@@ -95,6 +95,7 @@ class PlayerActor extends Actor {
 	var lifeLeakTimer:CooldownTimer;
 	var exitLevelTimer:CooldownTimer;
 	var hurtFx:HurtEntityFx;
+	var shield:ShieldAttachement;
 
 	public function new(data:PlayerSaveData) {
 		this.data = data;
@@ -130,6 +131,15 @@ class PlayerActor extends Actor {
 		playAnim(ANIM_IDLE);
 		lifeLeakTimer = new CooldownTimer(LIFELEAK_TIMER);
 		hurtFx = new HurtEntityFx(HURTEFFECT_DURATION);
+		
+		// special: valkyrie shield
+		if (data.characterClass == CharacterClass.VALKYRIE) {
+			var shieldData = GameData.ValkyrieCharacter.shield;
+			shield = new ShieldAttachement(this, shieldData.xanchor, shieldData.yanchor, Gfx.entities[shieldData.gfx], shieldData.colbox);
+			world.spawnEntity(shield, pos.x, pos.y);			
+		} else {
+			shield = null;
+		}
 	}
 
 	override function updateLiving(elapsed:Float) {
@@ -182,6 +192,13 @@ class PlayerActor extends Actor {
 		} else {			
 			playAnim(ANIM_IDLE);
 		}		
+		
+		// shield only up when not moving or reloading
+		if (shield != null) {
+			var shieldUp = !moving && weapon.canShoot && melee.canStrike;
+			shield.isVisible = shieldUp;
+			shield.canCollide = shieldUp;
+		}
 		
 		// slowly loose life
 		if (lifeLeakTimer.update(elapsed)) {
