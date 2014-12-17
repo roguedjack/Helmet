@@ -1,7 +1,7 @@
 {
 	"Characters" : [
 		{
-			"comment"			: "0 - WarriorCharacter",
+			"id"				: "WarriorCharacter",
 			"colbox"			: [ 8, 8, 16, 16 ],
 			"health"			: 10000,
 			"speed"				: 64.0,
@@ -14,7 +14,7 @@
 			"meleeCooldown"		: 0.50
 		},
 		{
-			"comment"			: "1 - ValkyrieCharacter",
+			"id"				: "ValkyrieCharacter",
 			"colbox"			: [ 10, 10, 12, 12 ],
 			"health"			: 9000,
 			"speed"				: 80.0,
@@ -27,7 +27,7 @@
 			"meleeCooldown"		: 0.40
 		},
 		{
-			"comment"			: "2 - ElfCharacter",
+			"id"				: "ElfCharacter",
 			"colbox"			: [ 10, 10, 12, 12 ],
 			"health"			: 7000,
 			"speed"				: 112.0,
@@ -40,7 +40,7 @@
 			"meleeCooldown"		: 0.35
 		},		
 		{
-			"comment"			: "3 - WizardCharacter",
+			"id"				: "WizardCharacter",
 			"colbox"			: [ 8, 8, 16, 16 ],
 			"health"			: 5000,
 			"speed"				: 48.0,
@@ -56,7 +56,7 @@
 
 	"Projectiles" : [
 		{
-			"comment"	: "0 - ArrowProjectile",
+			"id"		: "ArrowProjectile",
 			"power"		: 3,
 			"speed"		: 192.0,
 			"spin"		: 0.0,
@@ -64,7 +64,7 @@
 			"colbox"	: [ 12, 12, 8, 8 ]
 		},		
 		{
-			"comment"	: "1 - AxeProjectile",
+			"id"		: "AxeProjectile",
 			"power"		: 10,
 			"speed"		: 128.0,
 			"spin"		: 720.0,
@@ -72,7 +72,7 @@
 			"colbox"	: [ 8, 8, 16, 16 ]
 		},		
 		{
-			"comment"	: "2 - FireballProjectile",
+			"id"		: "FireballProjectile",
 			"power"		: 8,
 			"speed"		: 128.0,
 			"spin"		: 720.0,
@@ -90,7 +90,7 @@
 			"trailfx_period": 0.10
 		},
 		{
-			"comment"	: "3 - SwordProjectile",
+			"id"		: "SwordProjectile",
 			"power"		: 5,
 			"speed"		: 160.0,
 			"spin"		: 0.0,
@@ -98,7 +98,7 @@
 			"colbox"	: [ 10, 10, 12, 12 ]
 		},
 		{
-			"comment"	: "4 - DemonShotProjectile",
+			"id"		: "DemonShotProjectile",
 			"power"		: 3,
 			"speed"		: 128.0,
 			"spin"		: 720.0,

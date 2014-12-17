@@ -16,6 +16,18 @@ class GameData {
 	public static var WizardCharacter:Dynamic;
 		
 	static inline var DATA_FILE = "data.json";
+	
+	private static function findById(dataArray:Iterable<Dynamic>, id:String, mustFind:Bool = true) {		
+		for (d in dataArray) {
+			if (d.id == id) {
+				return d;
+			}
+		}
+		if (mustFind) {
+			throw "could not find data with id " + id;
+		}
+		return null;
+	}
 		
 	public static function load() {
 		var content = Resource.getString(DATA_FILE);
@@ -25,11 +37,11 @@ class GameData {
 		var json = Json.parse(content);
 		
 		// Projectiles
-		ArrowProjectile = json.Projectiles[0];
-		AxeProjectile = json.Projectiles[1];
-		FireballProjectile = json.Projectiles[2];
-		SwordProjectile = json.Projectiles[3];
-		DemonShotProjectile = json.Projectiles[4];
+		ArrowProjectile = findById(json.Projectiles, "ArrowProjectile"); 
+		AxeProjectile = findById(json.Projectiles, "AxeProjectile"); 
+		FireballProjectile = findById(json.Projectiles, "FireballProjectile"); 
+		SwordProjectile = findById(json.Projectiles, "SwordProjectile"); 
+		DemonShotProjectile = findById(json.Projectiles, "DemonShotProjectile"); 
 		/*
 		trace(ArrowProjectile);
 		trace(AxeProjectile);
@@ -39,10 +51,10 @@ class GameData {
 		*/
 		
 		// Characters
-		WarriorCharacter = json.Characters[0];
-		ValkyrieCharacter = json.Characters[1];
-		ElfCharacter = json.Characters[2];
-		WizardCharacter = json.Characters[3];
+		WarriorCharacter = findById(json.Characters, "WarriorCharacter");
+		ValkyrieCharacter = findById(json.Characters, "ValkyrieCharacter");
+		ElfCharacter = findById(json.Characters, "ElfCharacter");
+		WizardCharacter = findById(json.Characters, "WizardCharacter");
 		/*
 		trace(WarriorCharacter);
 		trace(ValkyrieCharacter);
