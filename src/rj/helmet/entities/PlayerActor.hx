@@ -53,14 +53,14 @@ class CharacterClassProps {
 		p.colBox = Bounds.fromValues(data.colbox[0], data.colbox[1], data.colbox[2], data.colbox[3]);
 		p.speed = data.speed;
 		p.health = data.health;
-		var wpnClassname = "rj.helmet.entities." + data.weaponClass;
+		var wpnClassname = "rj.helmet.entities." + data.weapon.projectile;
 		p.weaponClass = cast Type.resolveClass(wpnClassname);
 		if (p.weaponClass == null) {
 			throw "unknown character weapon class " + wpnClassname;
 		}
-		p.weaponCooldown = data.weaponCooldown;
-		p.meleeDamage = data.meleeDamage;
-		p.meleeCooldown = data.meleeCooldown;
+		p.weaponCooldown = data.weapon.cooldown;
+		p.meleeDamage = data.melee.damage;
+		p.meleeCooldown = data.melee.cooldown;
 		p.framesIdle = [ Gfx.entities[data.framesIdle[0]] ];  // FIXME --- don't hardcode one frame limitation
 		p.framesWalk = [ Gfx.entities[data.framesWalk[0]], Gfx.entities[data.framesWalk[1]] ];  // FIXME --- don't hardcode two frames limitation
 		p.animSpeed = data.animSpeed;
