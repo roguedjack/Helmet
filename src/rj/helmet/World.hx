@@ -9,6 +9,7 @@ import rj.helmet.entities.DoorEntity;
 import rj.helmet.entities.ExitEntity;
 import rj.helmet.entities.HealthItem;
 import rj.helmet.entities.KeyItem;
+import rj.helmet.entities.MovingWall;
 import rj.helmet.entities.PlayerActor;
 import rj.helmet.entities.GhostMonster;
 import rj.helmet.entities.StartEntity;
@@ -102,6 +103,10 @@ class World {
 					e = new TreasureItem();
 				case Main.TILEDOBJ_HEALTH:
 					e = new HealthItem();
+				case Main.TILEDOBJ_HWALL:
+					e = new MovingWall(false, GameData.MovingWall);
+				case Main.TILEDOBJ_VWALL:
+					e = new MovingWall(true, GameData.MovingWall);					
 			}
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;

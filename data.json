@@ -182,5 +182,14 @@
 			"aggroRange"	: 256.0,
 			"score"			: 100
 		}
+	],
+
+	"Traps" : [
+		{
+			"id"			: "MovingWall",
+			"gfx"			: 2,
+			"colbox"		: [0, 0, 32, 32],
+			"speed"			: 24
+		}
 	]
 }

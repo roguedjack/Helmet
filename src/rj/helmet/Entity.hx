@@ -17,8 +17,9 @@ import hxd.res.Sound;
 	var DOOR = 5;
 	var PARTICLE = 6;
 	var ATTACHEMENT = 7;
-	var START = 8;
-	var EXIT = 9;	
+	var TRAP = 8;
+	var START = 9;
+	var EXIT = 10;	
 }
 
 enum ColFlags {

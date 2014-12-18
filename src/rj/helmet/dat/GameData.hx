@@ -25,6 +25,8 @@ class GameData {
 	
 	public static var GhostGenerator:Dynamic;
 	public static var DemonGenerator:Dynamic;
+	
+	public static var MovingWall:Dynamic;
 		
 	static inline var DATA_FILE = "data.json";
 	
@@ -53,47 +55,29 @@ class GameData {
 		FireballProjectile = findById(json.Projectiles, "FireballProjectile"); 
 		SwordProjectile = findById(json.Projectiles, "SwordProjectile"); 
 		DemonShotProjectile = findById(json.Projectiles, "DemonShotProjectile"); 
-		/*
-		trace(ArrowProjectile);
-		trace(AxeProjectile);
-		trace(FireballProjectile);
-		trace(SwordProjectile);
-		trace(DemonShotProjectile);
-		*/
 		
 		// Characters
 		WarriorCharacter = findById(json.Characters, "WarriorCharacter");
 		ValkyrieCharacter = findById(json.Characters, "ValkyrieCharacter");
 		ElfCharacter = findById(json.Characters, "ElfCharacter");
 		WizardCharacter = findById(json.Characters, "WizardCharacter");
-		/*
-		trace(WarriorCharacter);
-		trace(ValkyrieCharacter);
-		trace(ElfCharacter);
-		trace(WizardCharacter);
-		*/
+
 		
 		// Items
 		HealthItem = findById(json.Items, "HealthItem");
 		KeyItem = findById(json.Items, "KeyItem");
 		TreasureItem = findById(json.Items, "TreasureItem");
-		/*
-		trace(HealthItem);
-		trace(KeyItem);
-		trace(TreasureItem);
-		*/
 		
 		// Monsters
 		GhostMonster = findById(json.Monsters, "GhostMonster");
 		DemonMonster = findById(json.Monsters, "DemonMonster");
-		/*
-		trace(GhostMonster);
-		trace(DemonMonster);
-		*/
 		
 		// Generators
 		GhostGenerator = findById(json.Generators, "GhostGenerator");
 		DemonGenerator = findById(json.Generators, "DemonGenerator");
+		
+		// Traps
+		MovingWall = findById(json.Traps, "MovingWall");
 	}
 	
 	public static function parseEntityFrames(framesData:Array<Int>) : Array<Tile> {

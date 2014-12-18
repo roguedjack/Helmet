@@ -10,7 +10,7 @@
  </layer>
  <layer name="walls" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJzjZmBgYIViPiQ2MZgHiNkYEACZTQxgG9U/qn8Y6eeH0iwM+PMNMw79pAKQXi4CduHDvEAMALnhAe0=
+   eJzjZmBgYIViPiQ2MZgHiNkYEACZTQxgG9U/LPWzMOBPN8w0tn+g9PNDaXL9TyoA6eUiYBc+zAvEAP2JAhc=
   </data>
  </layer>
  <objectgroup name="entities" width="16" height="16">
@@ -24,5 +24,8 @@
   <object name="health1" type="health" x="128" y="32" width="32" height="32"/>
   <object name="health2" type="health" x="288" y="32" width="32" height="32"/>
   <object name="health3" type="health" x="448" y="32" width="32" height="32"/>
+  <object name="movingwall1" type="hwall" x="32" y="256" width="32" height="32"/>
+  <object name="movingwall2" type="vwall" x="160" y="320" width="32" height="32"/>
+  <object name="movingwall3" type="vwall" x="416" y="384" width="32" height="32"/>
  </objectgroup>
 </map>

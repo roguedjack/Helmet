@@ -80,6 +80,8 @@ class View extends Sprite {
 				projectilesLayer;				
 			case EntityType.START:
 				itemsLayer;			
+			case EntityType.TRAP:
+				actorsLayer;
 			default:
 				throw "layer: unhandled entity type " + e.type;
 		}
