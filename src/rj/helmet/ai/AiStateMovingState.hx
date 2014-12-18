@@ -53,7 +53,7 @@ class AiStateMovingState extends MonsterAIState {
 	}
 	
 	override public function onCollisionWith(m:Monster, other:Entity, vx:Float, vy:Float, active:Bool) {
-		if (other.hardCollision && other.type != EntityType.PROJECTILE) {
+		if (active && other.hardCollision && other.type != EntityType.PROJECTILE && other.type != EntityType.TRAP) {
 			m.aiState = idleState;
 		}
 	}
