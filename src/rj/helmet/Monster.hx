@@ -206,58 +206,6 @@ class Monster extends Actor {
 	}
 	
 	/**
-	 * Set a simple straight motion towards the player and face this direction.
-	 * Will not move if the player is not living or beyond aggro range.
-	 * 
-	 * @param animIdle idle animation to play if does not wants to move
-	 * @param animWalk walking animation to play if wants to walk
-	 * @return the final movement
-	 */
-	/* OBSOLETE
-	function doMoveStraightAtPlayer(elapsed:Float, animIdle:Int, animWalk:Int): { vx:Float, vy:Float } {
-		var m: { vx:Float, vy:Float } = { vx:0, vy:0 };
-		if (world.player == null || world.player.state != ActorState.LIVING) {
-			playAnim(animIdle);
-			return m;
-		}
-		var toPlayer = { dx:world.player.pos.x - pos.x, dy:world.player.pos.y - pos.y };
-		if (Math.abs(toPlayer.dx) > aggroRange || Math.abs(toPlayer.dy) > aggroRange) {
-			playAnim(animIdle);
-			return m;
-		}
-		var l = Math.sqrt(toPlayer.dx * toPlayer.dx + toPlayer.dy * toPlayer.dy);
-		if (l == 0) { // just to be safe...
-			throw "distance to player is zero!";
-		}
-		toPlayer.dx /= l;
-		toPlayer.dy /= l;
-		faceDirection(toPlayer.dx, toPlayer.dy); // face where we would like to go
-		playAnim(animWalk);		
-		m.vx = elapsed * speed * toPlayer.dx;
-		m.vy = elapsed * speed * toPlayer.dy;
-		m.vx = move(m.vx, 0).vx;
-		m.vy = move(0, m.vy).vy;
-		return m;
-	}
-	*/
-	/**
-	 * Face another entity.
-	 * Does not change facing if the target is null or change too small.
-	 * @param	target can be null
-	 */
-	/* OBSOLETE
-	function faceEntity(target:Entity) {
-		if (target == null) {
-			return;
-		}
-		var v = { vx:target.pos.x - pos.x, vy:target.pos.y - pos.y };
-		if (v.vx != 0 || v.vy != 0) {
-			faceDirection(v.vx, v.vy);		
-		}
-	}	
-	*/
-	
-	/**
 	 * Try to shoot at the player.
 	 * Default does not shoot.
 	 * @return true if fired a shot, false if didn't/couldn't

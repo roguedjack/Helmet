@@ -70,8 +70,10 @@ class GameData {
 		HealthItem = findById(json.Items, "HealthItem");
 		KeyItem = findById(json.Items, "KeyItem");
 		TreasureItem = findById(json.Items, "TreasureItem");
+		/*
 		trace(HealthItem);
 		trace(KeyItem);
 		trace(TreasureItem);
+		*/
 	}
 }
