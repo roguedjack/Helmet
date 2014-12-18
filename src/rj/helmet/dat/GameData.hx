@@ -1,6 +1,7 @@
 package rj.helmet.dat;
 import haxe.Json;
 import haxe.Resource;
+import h2d.Tile;
 
 class GameData {
 	
@@ -18,6 +19,9 @@ class GameData {
 	public static var HealthItem:Dynamic;
 	public static var KeyItem:Dynamic;
 	public static var TreasureItem:Dynamic;
+	
+	public static var GhostMonster:Dynamic;
+	public static var DemonMonster:Dynamic;
 		
 	static inline var DATA_FILE = "data.json";
 	
@@ -75,5 +79,35 @@ class GameData {
 		trace(KeyItem);
 		trace(TreasureItem);
 		*/
+		
+		// Monsters
+		GhostMonster = findById(json.Monsters, "GhostMonster");
+		DemonMonster = findById(json.Monsters, "DemonMonster");
+		/*
+		trace(GhostMonster);
+		trace(DemonMonster);
+		*/
+	}
+	
+	public static function parseEntityFrames(framesData:Array<Int>) : Array<Tile> {
+		if (framesData == null) {
+			trace("parseFrames : null frames data");
+		}
+		var frames = new Array<Tile>();
+		for (gfx in framesData) {
+			frames.push(Gfx.entities[gfx]);
+		}
+		return frames;
+	}
+	
+	public static function parseMonsterClassAi(aiData) : {  idle:MonsterAIState, path:MonsterAIState, move:MonsterAIState } {
+		var idle:Dynamic = Type.createInstance(Type.resolveClass("rj.helmet.ai.AiState" + aiData.idle.script), [aiData.idle.time]);		
+		var path:Dynamic = Type.createInstance(Type.resolveClass("rj.helmet.ai.AiState" + aiData.path.script), []);		
+		var move:Dynamic = Type.createInstance(Type.resolveClass("rj.helmet.ai.AiState" + aiData.move.script), [aiData.move.time]);
+		// FIXME --- uggly magic.
+		idle.link(path);
+		path.link(idle, move);
+		move.link(idle, path);
+		return { idle:idle, path:path, move:move };		
 	}
 }

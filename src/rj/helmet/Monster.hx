@@ -1,10 +1,17 @@
 package rj.helmet;
+import h2d.Anim;
 import haxe.EnumFlags;
 import hxd.Res;
 import rj.helmet.Actor.ActorState;
+import rj.helmet.ai.AiStateShootOrPathToPlayer;
+import rj.helmet.dat.GameData;
 import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.entities.PlayerActor;
+
+// must import all monster projectiles for Type.createInstance
+import rj.helmet.entities.DemonShotProjectile;
+// end import
 
 /**
  * ...
@@ -14,6 +21,7 @@ class Monster extends Actor {
 		
 	static inline var ANIM_IDLE = 0;
 	static inline var ANIM_WALK = 1;
+	static inline var ANIM_SHOOT = 2;
 	
 	/**
 	 * Range below which the monster will be aggressive to the player.
@@ -26,25 +34,55 @@ class Monster extends Actor {
 	public var aiStateTime(default, null):Float;
 	public var aiStateDistance(default, default):Float;
 	public var aiStateStartPos(default, default): { x:Float, y:Float };
-	
+
+	var spawnTime:Float;
+	var spawnTimer:Float;
+	var startingHealth:Int;	
+	var strike:WeaponMelee;
+	var shoot:WeaponShooter;
+	var shootAngleMargin:Float;
+	var aiIdleState:MonsterAIState;
 	var lastMoveX:Float;
 	var lastMoveY:Float;
 	var lastDir:Int;
 	var moveCollidedWithPlayer:Bool;  // flag if we collided with the player in this frame movement
 	
-	
-	// FIXME --- make up my mind : use props or simple parameters?
-	public function new(props, aggroRange:Float=256, score:Int=10) {
-		super(EntityType.MONSTER, props);
+	public function new(data) {
+		super(EntityType.MONSTER, { 
+			speed : data.speed, 
+			health: data.health
+		});
+		setCollisionBox(data.colbox[0], data.colbox[1], data.colbox[2], data.colbox[3]);
+
+		addAnim(ANIM_IDLE, new Anim(GameData.parseEntityFrames(data.framesIdle), data.animSpeed));
+		addAnim(ANIM_WALK, new Anim(GameData.parseEntityFrames(data.framesWalk), data.animSpeed));
+		if (data.framesShoot != null) {
+			addAnim(ANIM_SHOOT, new Anim(GameData.parseEntityFrames(data.framesShoot), data.animSpeed));
+		}
+		
+		strike = new WeaponMelee(this, data.melee.damage, data.melee.cooldown);
+		if (data.weapon != null) {
+			shoot = new WeaponShooter(this, cast Type.resolveClass("rj.helmet.entities." + data.weapon.projectile), data.weapon.cooldown);			
+			shootAngleMargin = data.weapon.angleMargin;
+		} else {
+			shoot = null;
+			shootAngleMargin = 0.0;
+		}
+
+		spawnTime = data.spawnTime;
+		aggroRange = data.aggroRange;
+		score = data.score;		
 		canCollide = true;
 		hardCollision = true;
-		this.aggroRange = aggroRange;
-		this.score = score;
+		
 		lastDir = 0;
 		lastMoveX = lastMoveY = 0;
 	}
 
 	function set_aiState(s) {
+		if (s == null) {
+			throw "setting null ai state!";
+		}
 		if (aiState != null) {
 			aiState.onLeave(this);
 		}
@@ -53,18 +91,52 @@ class Monster extends Actor {
 		s.onEnter(this);
 		return s;
 	}	
+
+	override function onStartSpawning() {	
+		super.onStartSpawning();
+		startingHealth = health;
+		spawnTimer = 0;
+		rotation = Math.random() * 2 * Math.PI;
+		playAnim(ANIM_IDLE);
+		
+		aiState = aiIdleState;
+	}		
+	
+	override function updateSpawning(elapsed:Float) {		
+		canCollide = true;
+		spawnTimer += elapsed;
+		if (spawnTimer >= spawnTime) {
+			state = ActorState.LIVING;
+			bitmap.alpha = 1;
+		} else {
+			bitmap.alpha = 0.25 + 0.75 * spawnTimer / spawnTime;
+		}
+	}		
 	
 	override function updateLiving(elapsed:Float) {
+		if (strike != null) {
+			strike.update(elapsed);
+		}
+		if (shoot != null) {
+			shoot.update(elapsed);
+		}
+		
 		if (aiState != null) {
 			aiStateTime += elapsed;
 			aiState.onUpdate(this, elapsed);
 		}
-	}
+	}	
 	
 	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {
+		// remember we collided with player
 		if (active && other.type == EntityType.PLAYER) {
 			moveCollidedWithPlayer = true;
 		}
+		// strike player in melee if we can
+		if (active && other.type == EntityType.PLAYER && strike.canStrike) {
+			strike.strike(other);
+		}
+		// notify ai
 		if (aiState != null) {
 			aiState.onCollisionWith(this, other, vx, vy, active);
 		}
@@ -98,7 +170,7 @@ class Monster extends Actor {
 		playSfx(Res.sfx.monster_die);
 	}
 		
-	//// Common behaviors
+	//// Common behaviors for AI states
 	
 	// FIXME -- this should be an enum...
 	static var DIR8 = [
@@ -207,10 +279,31 @@ class Monster extends Actor {
 	
 	/**
 	 * Try to shoot at the player.
-	 * Default does not shoot.
+	 * 
 	 * @return true if fired a shot, false if didn't/couldn't
-	 */
+	 */	
 	public function tryShootingAtPlayer():Bool {
+		if (shoot == null) {
+			return false;
+		}
+		if (shoot.canShoot) {
+			if (isAimingAtPlayer(shootAngleMargin * Math.PI / 180.0)) {
+				playSfx(Res.sfx.monster_shoot_wav);
+				shoot.shoot();
+				playAnim(ANIM_SHOOT);
+				aiState = aiIdleState;
+				return true;
+			}
+		}
 		return false;
 	}
+	
+	function isAimingAtPlayer(angularErrorMargin:Float):Bool {
+		if (world.player == null || world.player.state != ActorState.LIVING) {
+			return false;
+		}
+		var angleToPlayer = angleToDirection(world.player.pos.x - pos.x, world.player.pos.y - pos.y);
+		return Math.abs(angleToPlayer - rotation) <= angularErrorMargin;
+	}
+	
 }

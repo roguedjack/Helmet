@@ -118,5 +118,48 @@
 			"gfx"		: 57,
 			"colbox"	: [8, 8, 16, 16]
 		}
+	],
+
+	"Monsters": [
+		{
+			"id"			: "GhostMonster",			
+			"colbox"		: [8, 8, 16, 16],			
+			"framesIdle"	: [27],
+			"framesWalk"	: [28, 29],
+			"framesShoot"	: null,			
+			"animSpeed"		: 2,			
+			"health"		: 10,			
+			"speed"			: 32,
+			"score"			: 10,
+			"aggroRange"	: 256,
+			"spawnTime"		: 1.0,
+			"melee"			: { "damage": 5, "cooldown": 1.0 },
+			"weapon"		: null,			
+			"ai"			: {
+				"idle"	: { "script": "Idle", "time": 1.0 },
+				"path"	: { "script": "PathToPlayer" },
+				"move"	: { "script": "MovingState", "time": 1.0 }
+			}
+		},
+		{
+			"id"			: "DemonMonster",			
+			"colbox"		: [8, 8, 16, 16],			
+			"framesIdle"	: [35],
+			"framesWalk"	: [36, 37],
+			"framesShoot"	: [38],
+			"animSpeed"		: 4,			
+			"health"		: 10,			
+			"speed"			: 32,
+			"score"			: 10,
+			"aggroRange"	: 256,
+			"spawnTime"		: 1.0,
+			"melee"			: { "damage": 5, "cooldown": 1.0 },
+			"weapon"		: { "projectile": "DemonShotProjectile", "cooldown": 1.0, "angleMargin": 10.0 },			
+			"ai"			: {
+				"idle"	: { "script": "Idle", "time": 0.5 },
+				"path"	: { "script": "ShootOrPathToPlayer" },
+				"move"	: { "script": "MovingState", "time": 0.5 }
+			}
+		}		
 	]
 }
