@@ -3,6 +3,7 @@ package rj.helmet.entities;
 import haxe.EnumFlags;
 import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
+import rj.helmet.fx.PushFx;
 import rj.helmet.WeaponMelee;
 
 /**
@@ -14,6 +15,8 @@ class MovingWall extends Entity {
 	var mx:Float;
 	var my:Float;
 	var speed:Float;
+	var pushForce:Float;
+	var pushDuration:Float;
 	var crush:WeaponMelee;
 
 	public function new(isVertical:Bool, data) {
@@ -31,6 +34,8 @@ class MovingWall extends Entity {
 			my = 0;
 		}
 		crush = new WeaponMelee(this, data.crush.damage, data.crush.cooldown);		
+		pushForce = data.crush.pushForce;
+		pushDuration = data.crush.pushDuration;
 	}
 	
 	/**
@@ -56,7 +61,7 @@ class MovingWall extends Entity {
 	}
 	
 	/**
-	 * Inflicts crush damage to player, monsters & generators.
+	 * Inflicts crush damage to player, monsters & generators and push them.
 	 * @param	other
 	 * @param	vx
 	 * @param	vy
@@ -65,6 +70,7 @@ class MovingWall extends Entity {
 	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {
 		if (active && crush.canStrike && (other.type == EntityType.PLAYER || other.type == EntityType.MONSTER || other.type == EntityType.MONSTER_GENERATOR)) {			
 			crush.strike(other);
+			other.startFx(new PushFx(pushForce * mx, pushForce * my, pushDuration));
 		}
 	}
 }

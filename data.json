@@ -188,9 +188,9 @@
 		{
 			"id"			: "MovingWall",
 			"gfx"			: 2,
-			"colbox"		: [0, 0, 32, 32],
+			"colbox"		: [1, 1, 30, 30],
 			"speed"			: 24,
-			"crush"			: { "damage": 3, "cooldown": 0.5 }
+			"crush"			: { "damage": 3, "cooldown": 0.5, "pushForce": 32, "pushDuration": 0.5 }
 		}
 	]
 }
