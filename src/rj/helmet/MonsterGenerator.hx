@@ -51,7 +51,9 @@ class MonsterGenerator extends Entity {
 	}
 	
 	function refreshImage() {
-		setImage(tiles[hitPoints > 0 ? maxHitPoints - hitPoints : 0]);
+		var hitLevel = (maxHitPoints - hitPoints) / maxHitPoints;
+		var hitImage = Math.floor(hitLevel * tiles.length);		
+		setImage(tiles[hitImage]);
 	}
 	
 	override public function spawn(x:Float, y:Float) {
@@ -109,11 +111,11 @@ class MonsterGenerator extends Entity {
 		world.spawnEntity(m, x, y);
 	}
 
-	public function takeHit(source:Entity) {
+	public function takeHit(source:Entity, damage:Int) {
 		spawnDebris();		
 		
 		if (hitPoints > 0) {
-			if (--hitPoints <= 0) {
+			if ((hitPoints -= damage) <= 0) {
 				playSfx(Res.sfx.monster_die);
 				spawnDebris(); // spawn x2 debris when destroyed
 				remove();

@@ -44,7 +44,7 @@ class WeaponMelee {
 		if (Std.is(target, Actor)) {
 			cast(target, Actor).takeDamage(owner, damage);
 		} else if (Std.is(target, MonsterGenerator)) {
-			cast(target, MonsterGenerator).takeHit(owner);
+			cast(target, MonsterGenerator).takeHit(owner, damage);
 		}
 	}	
 }
