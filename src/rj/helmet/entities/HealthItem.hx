@@ -1,5 +1,6 @@
 package rj.helmet.entities;
 
+import rj.helmet.dat.GameData;
 import rj.helmet.fx.HoverEntityFx;
 import rj.helmet.Item;
 import rj.helmet.Item.ItemType;
@@ -10,12 +11,11 @@ import rj.helmet.Item.ItemType;
  */
 class HealthItem extends Item {
 	
-	public static inline var HEALTH = 100;
+	public var health(default, null):Int;
 
 	public function new() {
-		super(ItemType.HEALTH);		
-		setImage(Gfx.entities[58]);
-		setCollisionBox(8, 8, 16, 16);
+		super(ItemType.HEALTH, GameData.HealthItem);				
+		health = GameData.HealthItem.health;
 	}
 	
 	override public function spawn(x:Float, y:Float) {

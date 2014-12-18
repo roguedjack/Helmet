@@ -14,6 +14,10 @@ class GameData {
 	public static var ValkyrieCharacter:Dynamic;	
 	public static var ElfCharacter:Dynamic;
 	public static var WizardCharacter:Dynamic;
+	
+	public static var HealthItem:Dynamic;
+	public static var KeyItem:Dynamic;
+	public static var TreasureItem:Dynamic;
 		
 	static inline var DATA_FILE = "data.json";
 	
@@ -61,9 +65,13 @@ class GameData {
 		trace(ElfCharacter);
 		trace(WizardCharacter);
 		*/
+		
+		// Items
+		HealthItem = findById(json.Items, "HealthItem");
+		KeyItem = findById(json.Items, "KeyItem");
+		TreasureItem = findById(json.Items, "TreasureItem");
+		trace(HealthItem);
+		trace(KeyItem);
+		trace(TreasureItem);
 	}
 }
-
-
-
-

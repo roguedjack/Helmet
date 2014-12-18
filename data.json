@@ -98,5 +98,25 @@
 			"gfx"		: 39,
 			"colbox"	: [ 12, 12, 8, 8 ]
 		}
+	],
+
+	"Items" : [
+		{
+			"id"		: "HealthItem",
+			"health"	: 100,
+			"gfx"		: 58,
+			"colbox"	: [8, 8, 16, 16]
+		},
+		{
+			"id"		: "KeyItem",
+			"gfx"		: 56,
+			"colbox"	: [8, 8, 16, 16]
+		},
+		{
+			"id"		: "TreasureItem",
+			"score"		: 500,
+			"gfx"		: 57,
+			"colbox"	: [8, 8, 16, 16]
+		}
 	]
 }

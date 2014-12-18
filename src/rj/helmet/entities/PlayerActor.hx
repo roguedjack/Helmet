@@ -280,11 +280,11 @@ class PlayerActor extends Actor {
 				playSfx(Res.sfx.pickup_key_wav);
 				refreshHud();
 			case ItemType.TREASURE:
-				scorePoints(TreasureItem.SCORE);
+				scorePoints(cast(it, TreasureItem).score);
 				playSfx(Res.sfx.pickup_treasure_wav);
 				refreshHud();
 			case ItemType.HEALTH:
-				heal(HealthItem.HEALTH);
+				heal(cast(it, HealthItem).health);
 				playSfx(Res.sfx.pickup_health_wav);
 				refreshHud();
 			default:

@@ -19,9 +19,11 @@ class Item extends Entity {
 	
 	public var itemType(default, null):ItemType;
 
-	public function new(itemType:ItemType) {
+	public function new(itemType:ItemType, data) {
 		super(EntityType.ITEM);
 		this.itemType = itemType;
 		canCollide  = true;		
+		setImage(Gfx.entities[data.gfx]);
+		setCollisionBox(data.colbox[0], data.colbox[1], data.colbox[2], data.colbox[3]);		
 	}
 }
