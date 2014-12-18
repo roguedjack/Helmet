@@ -22,6 +22,9 @@ class GameData {
 	
 	public static var GhostMonster:Dynamic;
 	public static var DemonMonster:Dynamic;
+	
+	public static var GhostGenerator:Dynamic;
+	public static var DemonGenerator:Dynamic;
 		
 	static inline var DATA_FILE = "data.json";
 	
@@ -87,6 +90,10 @@ class GameData {
 		trace(GhostMonster);
 		trace(DemonMonster);
 		*/
+		
+		// Generators
+		GhostGenerator = findById(json.Generators, "GhostGenerator");
+		DemonGenerator = findById(json.Generators, "DemonGenerator");
 	}
 	
 	public static function parseEntityFrames(framesData:Array<Int>) : Array<Tile> {

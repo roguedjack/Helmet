@@ -3,6 +3,7 @@ package rj.helmet;
 import h2d.col.Bounds;
 import h2d.Tile;
 import hxd.Res;
+import rj.helmet.dat.GameData;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.entities.PlayerActor;
 import rj.helmet.fx.ShakeEntityFx;
@@ -30,23 +31,21 @@ class MonsterGenerator extends Entity {
 	 * @param	tiles image for each hit point level, from higher to lower hitpoints.
 	 * @param	hitPoints
 	 * @param 	particleGenerator spawn particles when hit or destroyed -- can be null
-	 * @param	spawnCooldown delay between monster spawns
-	 * @param	aggroRange
-	 * @param	score
+	 * @param	data
 	 */
-	public function new(monsterClass:Class<Monster>, tiles:Array<Tile>, particleGenerator:ParticleGenerator, hitPoints:Int=3, spawnCooldown:Float=3, aggroRange:Float=256, score:Int=100) {
+	public function new(monsterClass:Class<Monster>, particleGenerator:ParticleGenerator, data) {
 		super(EntityType.MONSTER_GENERATOR);
 		this.monsterClass = monsterClass;
-		this.spawnCooldown = spawnCooldown;
-		this.aggroRange = aggroRange;
-		this.score = score;
-		this.maxHitPoints = hitPoints;
-		this.hitPoints = hitPoints;
-		this.tiles = tiles;
+		this.spawnCooldown = data.time;
+		this.aggroRange = data.aggroRange;
+		this.score = data.score;
+		this.maxHitPoints = data.hits;
+		this.hitPoints = data.hits;
+		this.tiles = GameData.parseEntityFrames(data.gfx);
 		this.particleGenerator = particleGenerator;
 		canCollide  = true;
 		hardCollision = true;
-		setCollisionBox(8, 8, 16, 16);
+		setCollisionBox(data.colbox[0], data.colbox[1], data.colbox[2], data.colbox[3]);		
 		refreshImage();
 		tmpSpawningPos = new Array<{tx:Int,ty:Int}>();
 	}

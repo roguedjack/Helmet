@@ -161,5 +161,26 @@
 				"move"	: { "script": "MovingState", "time": 0.5 }
 			}
 		}		
+	],
+
+	"Generators": [
+		{
+			"id"			: "GhostGenerator",
+			"gfx"			: [24, 25, 26],
+			"colbox"		: [9, 5, 15, 21],
+			"hits"			: 3,
+			"time"			: 3.0,
+			"aggroRange"	: 256.0,
+			"score"			: 100
+		},
+		{
+			"id"			: "DemonGenerator",
+			"gfx"			: [32, 33, 34],
+			"colbox"		: [5, 5, 22, 21],
+			"hits"			: 3,
+			"time"			: 3.0,
+			"aggroRange"	: 256.0,
+			"score"			: 100
+		}
 	]
 }
