@@ -61,8 +61,8 @@ class CharacterClassProps {
 		p.weaponCooldown = data.weapon.cooldown;
 		p.meleeDamage = data.melee.damage;
 		p.meleeCooldown = data.melee.cooldown;
-		p.framesIdle = [ Gfx.entities[data.framesIdle[0]] ];  // FIXME --- don't hardcode one frame limitation
-		p.framesWalk = [ Gfx.entities[data.framesWalk[0]], Gfx.entities[data.framesWalk[1]] ];  // FIXME --- don't hardcode two frames limitation
+		p.framesIdle = GameData.parseEntityFrames(data.framesIdle);
+		p.framesWalk = GameData.parseEntityFrames(data.framesWalk);
 		p.animSpeed = data.animSpeed;
 		return p;
 	}
@@ -305,61 +305,7 @@ class PlayerActor extends Actor {
 		var warrior = CharacterClassProps.fromData(GameData.WarriorCharacter);
 		var valkyrie = CharacterClassProps.fromData(GameData.ValkyrieCharacter);
 		var elf = CharacterClassProps.fromData(GameData.ElfCharacter);
-		var wizard = CharacterClassProps.fromData(GameData.WizardCharacter);
-		
-		/*
-		// the warrior is very strong.
-		var warrior = new CharacterClassProps();
-		warrior.colBox = Bounds.fromValues(8, 8, 16, 16);
-		warrior.health = 10000;
-		warrior.speed = 64.0;
-		warrior.framesIdle = [Gfx.entities[8]];
-		warrior.framesWalk = [Gfx.entities[9], Gfx.entities[10]];
-		warrior.animSpeed = 5;
-		warrior.weaponClass = AxeProjectile;
-		warrior.weaponCooldown = 0.75;
-		warrior.meleeDamage = 10;
-		warrior.meleeCooldown = 0.50;
-		
-		// the valkyrie is average
-		var valkyrie = new CharacterClassProps();
-		valkyrie.colBox = Bounds.fromValues(10, 10, 12, 12);
-		valkyrie.health = 9000;
-		valkyrie.speed = 80.0;
-		valkyrie.framesIdle = [Gfx.entities[12]];
-		valkyrie.framesWalk = [Gfx.entities[13], Gfx.entities[14]];
-		valkyrie.animSpeed = 7;
-		valkyrie.weaponClass = SwordProjectile;
-		valkyrie.weaponCooldown = 0.50;		
-		valkyrie.meleeDamage = 5;
-		valkyrie.meleeCooldown = 0.40;
-		
-		// the elf is fast
-		var elf = new CharacterClassProps();
-		elf.colBox = Bounds.fromValues(10, 10, 12, 12);
-		elf.health = 7000;
-		elf.speed = 112.0;
-		elf.framesIdle = [Gfx.entities[16]];
-		elf.framesWalk = [Gfx.entities[17], Gfx.entities[18]];
-		elf.animSpeed = 10;
-		elf.weaponClass = ArrowProjectile;
-		elf.weaponCooldown = 0.35;		
-		elf.meleeDamage = 3;
-		elf.meleeCooldown = 0.35;		
-		
-		// the wizard shoots an exploding fireball
-		var wizard = new CharacterClassProps();
-		wizard.colBox = Bounds.fromValues(8, 8, 16, 16);
-		wizard.health = 5000;
-		wizard.speed = 48.0;
-		wizard.framesIdle = [Gfx.entities[20]];
-		wizard.framesWalk = [Gfx.entities[21], Gfx.entities[22]];
-		wizard.animSpeed = 3;
-		wizard.weaponClass = FireballProjectile;
-		wizard.weaponCooldown = 1;		
-		wizard.meleeDamage = 2;
-		wizard.meleeCooldown = 0.50;			
-		*/
+		var wizard = CharacterClassProps.fromData(GameData.WizardCharacter);		
 		
 		CHARACTER_CLASSES_PROPS = new Array<CharacterClassProps>();		
 		CHARACTER_CLASSES_PROPS[cast(CharacterClass.WARRIOR, Int)] = warrior;   // FIXME -- why do i need to cast an abstract int to an int?
