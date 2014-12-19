@@ -228,20 +228,13 @@ class PlayerActor extends Actor {
 				other.remove();
 			}
 			
-			case EntityType.MONSTER: {
-				if (active && melee.canStrike) {
-					melee.strike(other);
-				}
-			}
-			case EntityType.MONSTER_GENERATOR: {
-				if (active && melee.canStrike) {
-					melee.strike(other);
-				}
-			}
-			
 			default:
-				// nop
+				// nop								
 		}
+		
+		if (active && melee.canStrike && Std.is(other, Damageable)) {
+			melee.strike(other);
+		}	
 	}
 	
 	override public function takeDamage(source:Entity, dmg:Int) {

@@ -12,7 +12,7 @@ import rj.helmet.fx.ShakeEntityFx;
  * ...
  * @author roguedjack
  */
-class MonsterGenerator extends Entity {
+class MonsterGenerator extends Entity implements Damageable {
 	
 	public var monsterClass(default, null):Class<Monster>;
 	public var spawnCooldown(default, default):Float;
@@ -111,11 +111,11 @@ class MonsterGenerator extends Entity {
 		world.spawnEntity(m, x, y);
 	}
 
-	public function takeHit(source:Entity, damage:Int) {
+	public function takeDamage(source:Entity, dmg:Int) {
 		spawnDebris();		
 		
 		if (hitPoints > 0) {
-			if ((hitPoints -= damage) <= 0) {
+			if ((hitPoints -= dmg) <= 0) {
 				playSfx(Res.sfx.monster_die);
 				spawnDebris(); // spawn x2 debris when destroyed
 				remove();

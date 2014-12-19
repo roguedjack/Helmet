@@ -80,7 +80,7 @@ class Projectile extends Actor {
 	}
 
 	/**
-	 * Remove and inflict damage to other if monster/player/generator.
+	 * Remove and inflict damage to other if damageable.
 	 * @param	other
 	 * @param	vx
 	 * @param	vy
@@ -91,15 +91,8 @@ class Projectile extends Actor {
 		
 		remove();
 		
-		switch (other.type) {
-			case EntityType.MONSTER:
-				cast(other, Actor).takeDamage(this, power);
-			case EntityType.PLAYER:
-				cast(other, Actor).takeDamage(this, power);
-			case EntityType.MONSTER_GENERATOR:
-				cast(other, MonsterGenerator).takeHit(this, power);
-			default:
-				// no effect on other.
+		if (Std.is(other, Damageable)) {
+			cast(other, Damageable).takeDamage(this, power);
 		}
 	}
 	

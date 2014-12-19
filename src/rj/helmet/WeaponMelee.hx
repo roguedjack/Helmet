@@ -35,16 +35,14 @@ class WeaponMelee {
 	}
 	
 	/**
-	 * Can damage actors & generators.
+	 * Damage target if damageable.
 	 * @param	target
 	 */
 	public function strike(target:Entity) {
 		timer += cooldown;	
-		
-		if (Std.is(target, Actor)) {
-			cast(target, Actor).takeDamage(owner, damage);
-		} else if (Std.is(target, MonsterGenerator)) {
-			cast(target, MonsterGenerator).takeHit(owner, damage);
+				
+		if (Std.is(target, Damageable)) {
+			cast(target, Damageable).takeDamage(owner, damage);
 		}
 	}	
 }

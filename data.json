@@ -191,6 +191,13 @@
 			"colbox"		: [1, 1, 30, 30],
 			"speed"			: 24,
 			"crush"			: { "damage": 3, "cooldown": 0.5, "pushForce": 32, "pushDuration": 0.5 }
+		},
+		{
+			"id"			: "DestructibleWall",
+			"gfx"			: [3, 4, 5],
+			"colbox"		: [1, 1, 30, 30],
+			"hits"			: 30,
+			"debris"		: { "color": "0xB26C47", "amount":8 }
 		}
 	]
 }

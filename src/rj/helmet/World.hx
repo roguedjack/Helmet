@@ -5,6 +5,7 @@ import hxd.res.TiledMap;
 import rj.helmet.dat.GameData;
 import rj.helmet.entities.DebrisParticle;
 import rj.helmet.entities.DemonMonster;
+import rj.helmet.entities.DestructibleWall;
 import rj.helmet.entities.DoorEntity;
 import rj.helmet.entities.ExitEntity;
 import rj.helmet.entities.HealthItem;
@@ -107,6 +108,8 @@ class World {
 					e = new MovingWall(false, GameData.MovingWall);
 				case Main.TILEDOBJ_VWALL:
 					e = new MovingWall(true, GameData.MovingWall);					
+				case Main.TILEDOBJ_DWALL:
+					e = new DestructibleWall(GameData.DestructibleWall);
 			}
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;

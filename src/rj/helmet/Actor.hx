@@ -17,7 +17,7 @@ import rj.helmet.Entity.EntityType;
  * 
  * @author roguedjack
  */
-class Actor extends Entity {
+class Actor extends Entity implements Damageable {
 	
 	public var state(default, set):ActorState;
 	public var health(default, default):Int;

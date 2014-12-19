@@ -132,8 +132,10 @@ class Monster extends Actor {
 		if (active && other.type == EntityType.PLAYER) {
 			moveCollidedWithPlayer = true;
 		}
-		// strike player in melee if we can
-		if (active && other.type == EntityType.PLAYER && strike.canStrike) {
+		// strike on-friendly damageable in melee if we can
+		if (active && strike.canStrike
+			&& other.type != EntityType.MONSTER && other.type != EntityType.MONSTER_GENERATOR
+			&& Std.is(other, Damageable)) {
 			strike.strike(other);
 		}
 		// notify ai
