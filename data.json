@@ -8,8 +8,8 @@
 			"framesIdle"		: [ 8 ],
 			"framesWalk"		: [ 9, 10 ],
 			"animSpeed"			: 5,
-			"weapon" 			: { "projectile": "AxeProjectile", "cooldown": 0.75 },
-			"melee"				: {	"damage": 10, "cooldown": 0.50 }
+			"weapon" 			: { "projectile": "AxeProjectile", "firerate": 1.25 },
+			"melee"				: {	"damage": 10, "firerate": 1.75 }
 		},
 		{
 			"id"				: "ValkyrieCharacter",
@@ -19,8 +19,8 @@
 			"framesIdle"		: [ 12 ],
 			"framesWalk"		: [ 13, 14 ],
 			"animSpeed"			: 7,
-			"weapon"			: {	"projectile": "SwordProjectile", "cooldown": 0.55 },
-			"melee"				: {	"damage": 5, "cooldown": 0.40 },
+			"weapon"			: {	"projectile": "SwordProjectile", "firerate": 2.00 },
+			"melee"				: {	"damage": 5, "firerate": 2.25 },
 			"shield"			: { "xanchor": -5, "yanchor": -8, "gfx": 7, "colbox": [13,13,6,6]}			
 		},
 		{
@@ -31,8 +31,8 @@
 			"framesIdle"		: [ 16 ],
 			"framesWalk"		: [ 17, 18 ],
 			"animSpeed"			: 10,
-			"weapon"			: { "projectile": "ArrowProjectile", "cooldown": 0.35 },
-			"melee"				: { "damage": 3, "cooldown":0.35 }
+			"weapon"			: { "projectile": "ArrowProjectile", "firerate": 3.00 },
+			"melee"				: { "damage": 3, "firerate":1.50 }
 		},		
 		{
 			"id"				: "WizardCharacter",
@@ -42,8 +42,8 @@
 			"framesIdle"		: [ 20 ],
 			"framesWalk"		: [ 21, 22 ],
 			"animSpeed"			: 3,
-			"weapon"			: { "projectile": "FireballProjectile", "cooldown": 1.0 },
-			"melee"				: { "damage": 2, "cooldown": 0.60 }
+			"weapon"			: { "projectile": "FireballProjectile", "firerate": 1.00 },
+			"melee"				: { "damage": 2, "firerate":1.00 }
 		}
 	],
 
@@ -133,7 +133,7 @@
 			"score"			: 10,
 			"aggroRange"	: 256,
 			"spawnTime"		: 1.0,
-			"melee"			: { "damage": 5, "cooldown": 1.0 },
+			"melee"			: { "damage": 5, "firerate": 1.0 },
 			"weapon"		: null,			
 			"ai"			: {
 				"idle"	: { "script": "Idle", "time": 1.0 },
@@ -153,8 +153,8 @@
 			"score"			: 20,
 			"aggroRange"	: 256,
 			"spawnTime"		: 1.0,
-			"melee"			: { "damage": 5, "cooldown": 1.0 },
-			"weapon"		: { "projectile": "DemonShotProjectile", "cooldown": 1.0, "angleMargin": 10.0 },			
+			"melee"			: { "damage": 5, "firerate": 1.0 },
+			"weapon"		: { "projectile": "DemonShotProjectile", "firerate": 1.0, "angleMargin": 10.0 },			
 			"ai"			: {
 				"idle"	: { "script": "Idle", "time": 0.5 },
 				"path"	: { "script": "ShootOrPathToPlayer" },

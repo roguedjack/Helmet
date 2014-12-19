@@ -58,9 +58,9 @@ class CharacterClassProps {
 		if (p.weaponClass == null) {
 			throw "unknown character weapon class " + wpnClassname;
 		}
-		p.weaponCooldown = data.weapon.cooldown;
+		p.weaponCooldown = 1.0 / data.weapon.firerate;
 		p.meleeDamage = data.melee.damage;
-		p.meleeCooldown = data.melee.cooldown;
+		p.meleeCooldown = 1.0 / data.melee.firerate;
 		p.framesIdle = GameData.parseEntityFrames(data.framesIdle);
 		p.framesWalk = GameData.parseEntityFrames(data.framesWalk);
 		p.animSpeed = data.animSpeed;

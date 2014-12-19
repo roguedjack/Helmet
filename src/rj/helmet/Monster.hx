@@ -62,7 +62,7 @@ class Monster extends Actor {
 		
 		strike = new WeaponMelee(this, data.melee.damage, data.melee.cooldown);
 		if (data.weapon != null) {
-			shoot = new WeaponShooter(this, cast Type.resolveClass("rj.helmet.entities." + data.weapon.projectile), data.weapon.cooldown);			
+			shoot = new WeaponShooter(this, cast Type.resolveClass("rj.helmet.entities." + data.weapon.projectile), 1.0 / data.weapon.firerate);			
 			shootAngleMargin = data.weapon.angleMargin;
 		} else {
 			shoot = null;
