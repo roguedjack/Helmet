@@ -133,7 +133,15 @@
 			"glowColor"	: "0xE5C316",
 			"gfx"		: 61,
 			"colbox"	: [8, 8, 16, 16]
-		}		
+		},
+		{
+			"id"		: "PowerBonus",
+			"value" 	: 5,			
+			"duration"	: 30.0,
+			"glowColor"	: "0xE5C316",
+			"gfx"		: 62,
+			"colbox"	: [8, 8, 16, 16]
+		}	
 	],
 
 	"Monsters": [

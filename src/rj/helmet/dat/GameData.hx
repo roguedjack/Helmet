@@ -21,6 +21,7 @@ class GameData {
 	public static var TreasureItem:Dynamic;
 	public static var SpeedBonus:Dynamic;
 	public static var FirerateBonus:Dynamic;
+	public static var PowerBonus:Dynamic;
 	
 	public static var GhostMonster:Dynamic;
 	public static var DemonMonster:Dynamic;
@@ -72,6 +73,7 @@ class GameData {
 		TreasureItem = findById(json.Items, "TreasureItem");
 		SpeedBonus = findById(json.Items, "SpeedBonus");
 		FirerateBonus = findById(json.Items, "FirerateBonus");
+		PowerBonus = findById(json.Items, "PowerBonus");		
 		
 		// Monsters
 		GhostMonster = findById(json.Monsters, "GhostMonster");

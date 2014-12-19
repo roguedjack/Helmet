@@ -115,6 +115,8 @@ class World {
 					e = new BonusItem(ItemType.SPEED_BONUS, GameData.SpeedBonus, GameData.SpeedBonus);
 				case Main.TILEDOBJ_FIRERATEBONUS:
 					e = new BonusItem(ItemType.FIRERATE_BONUS, GameData.FirerateBonus, GameData.FirerateBonus);					
+				case Main.TILEDOBJ_POWERBONUS:
+					e = new BonusItem(ItemType.POWER_BONUS, GameData.PowerBonus, GameData.PowerBonus);										
 			}
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;

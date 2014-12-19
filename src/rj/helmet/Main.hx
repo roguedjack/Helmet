@@ -39,6 +39,7 @@ class Main extends App {
 	public static inline var TILEDOBJ_HEALTH = "health";
 	public static inline var TILEDOBJ_SPEEDBONUS = "bspeed";
 	public static inline var TILEDOBJ_FIRERATEBONUS = "bfirerate";
+	public static inline var TILEDOBJ_POWERBONUS = "bpower";
 	public static inline var TILEDOBJ_HWALL = "hwall";
 	public static inline var TILEDOBJ_VWALL = "vwall";
 	public static inline var TILEDOBJ_DWALL = "dwall";

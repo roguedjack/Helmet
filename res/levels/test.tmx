@@ -42,5 +42,6 @@
   <object name="destructiblewall13" type="dwall" x="448" y="160" width="32" height="32"/>
   <object name="bonus1" type="bspeed" x="64" y="32" width="32" height="32"/>
   <object name="bonus2" type="bfirerate" x="64" y="64" width="32" height="32"/>
+  <object name="bonus3" type="bpower" x="32" y="64" width="32" height="32"/>
  </objectgroup>
 </map>

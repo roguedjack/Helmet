@@ -36,6 +36,9 @@ class BonusItem extends Item {
 			case ItemType.FIRERATE_BONUS:
 				p.weapon.cooldown = 1.0 / ((1.0 / p.weapon.cooldown) + value);
 				p.melee.cooldown = 1.0 / ((1.0 / p.melee.cooldown) + value);
+			case ItemType.POWER_BONUS:
+				p.weapon.power += Std.int(value);
+				p.melee.damage += Std.int(value);
 			default:
 				throw "not a bonus!";
 		}
@@ -48,6 +51,9 @@ class BonusItem extends Item {
 			case ItemType.FIRERATE_BONUS:
 				p.weapon.cooldown = 1.0 / ((1.0 / p.weapon.cooldown) - value);
 				p.melee.cooldown = 1.0 / ((1.0 / p.melee.cooldown) - value);				
+			case ItemType.POWER_BONUS:
+				p.weapon.power -= Std.int(value);
+				p.melee.damage -= Std.int(value);
 			default:
 				throw "not a bonus!";
 		}		

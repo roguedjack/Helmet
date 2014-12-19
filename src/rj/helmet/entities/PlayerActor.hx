@@ -273,30 +273,28 @@ class PlayerActor extends Actor {
 	}
 		
 	function addToInventory(it:Item) {
-		switch (it.itemType) {
-			case ItemType.KEY:
-				++data.nbKeys;
-				playSfx(Res.sfx.pickup_key_wav);
-				refreshHud();
-			case ItemType.TREASURE:
-				scorePoints(cast(it, TreasureItem).score);
-				playSfx(Res.sfx.pickup_treasure_wav);
-				refreshHud();
-			case ItemType.HEALTH:
-				heal(cast(it, HealthItem).health);
-				playSfx(Res.sfx.pickup_health_wav);
-				refreshHud();
-			case ItemType.SPEED_BONUS:
-				applyBonus(cast(it, BonusItem));
-				playSfx(Res.sfx.pickup_bonus_wav);
-				refreshHud();
-			case ItemType.FIRERATE_BONUS:
-				applyBonus(cast(it, BonusItem));
-				playSfx(Res.sfx.pickup_bonus_wav);
-				refreshHud();				
-			default:
-				// nop
-		}		
+		if (Std.is(it, BonusItem)) {
+			applyBonus(cast(it, BonusItem));
+			playSfx(Res.sfx.pickup_bonus_wav);
+			refreshHud();
+		} else {		
+			switch (it.itemType) {
+				case ItemType.KEY:
+					++data.nbKeys;
+					playSfx(Res.sfx.pickup_key_wav);
+					refreshHud();
+				case ItemType.TREASURE:
+					scorePoints(cast(it, TreasureItem).score);
+					playSfx(Res.sfx.pickup_treasure_wav);
+					refreshHud();
+				case ItemType.HEALTH:
+					heal(cast(it, HealthItem).health);
+					playSfx(Res.sfx.pickup_health_wav);
+					refreshHud();				
+				default:
+					// nop
+			}		
+		}
 	}
 	
 	inline function refreshHud() {

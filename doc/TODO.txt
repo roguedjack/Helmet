@@ -29,5 +29,5 @@ X - Destructible walls (actually entities).
 X - Moving walls (entities)
 - Teleporters.
 - Tutorial messages.
-- Bonuses : moving speed, fire rate, fire power.
+X - Bonuses : moving speed, fire rate, fire power.
 - Real maps not just test maps :-)
