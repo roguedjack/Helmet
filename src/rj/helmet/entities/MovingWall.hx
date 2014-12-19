@@ -61,14 +61,14 @@ class MovingWall extends Entity {
 	}
 	
 	/**
-	 * Inflicts crush damage to player, monsters & generators and push them.
+	 * Inflicts crush damage to damageable and push them.
 	 * @param	other
 	 * @param	vx
 	 * @param	vy
 	 * @param	active
 	 */
 	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {
-		if (active && crush.canStrike && (other.type == EntityType.PLAYER || other.type == EntityType.MONSTER || other.type == EntityType.MONSTER_GENERATOR)) {			
+		if (active && crush.canStrike && Std.is(other, Damageable)) {			
 			crush.strike(other);
 			other.startFx(new PushFx(pushForce * mx, pushForce * my, pushDuration));
 		}
