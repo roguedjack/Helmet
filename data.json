@@ -121,11 +121,19 @@
 		{
 			"id"		: "SpeedBonus",
 			"value" 	: 32,			
-			"duration"	: 10.0,
+			"duration"	: 30.0,
 			"glowColor"	: "0x54E516",
 			"gfx"		: 60,
 			"colbox"	: [8, 8, 16, 16]
-		}
+		},
+		{
+			"id"		: "FirerateBonus",
+			"value" 	: 0.5,			
+			"duration"	: 30.0,
+			"glowColor"	: "0xE5C316",
+			"gfx"		: 61,
+			"colbox"	: [8, 8, 16, 16]
+		}		
 	],
 
 	"Monsters": [

@@ -113,6 +113,8 @@ class World {
 					e = new DestructibleWall(GameData.DestructibleWall);
 				case Main.TILEDOBJ_SPEEDBONUS:
 					e = new BonusItem(ItemType.SPEED_BONUS, GameData.SpeedBonus, GameData.SpeedBonus);
+				case Main.TILEDOBJ_FIRERATEBONUS:
+					e = new BonusItem(ItemType.FIRERATE_BONUS, GameData.FirerateBonus, GameData.FirerateBonus);					
 			}
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;

@@ -90,9 +90,9 @@ class PlayerActor extends Actor {
 	
 	public static var CHARACTER_CLASSES_PROPS:Array<CharacterClassProps>;
 
+	public var weapon(default,null):WeaponShooter;
+	public var melee(default,null):WeaponMelee;	
 	var data:PlayerSaveData;
-	var weapon:WeaponShooter;
-	var melee:WeaponMelee;
 	var lifeLeakTimer:CooldownTimer;
 	var exitLevelTimer:CooldownTimer;
 	var hurtFx:HurtEntityFx;
@@ -290,6 +290,10 @@ class PlayerActor extends Actor {
 				applyBonus(cast(it, BonusItem));
 				playSfx(Res.sfx.pickup_bonus_wav);
 				refreshHud();
+			case ItemType.FIRERATE_BONUS:
+				applyBonus(cast(it, BonusItem));
+				playSfx(Res.sfx.pickup_bonus_wav);
+				refreshHud();				
 			default:
 				// nop
 		}		

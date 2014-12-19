@@ -33,6 +33,9 @@ class BonusItem extends Item {
 		switch (itemType) {
 			case ItemType.SPEED_BONUS:
 				p.speed += value;
+			case ItemType.FIRERATE_BONUS:
+				p.weapon.cooldown = 1.0 / ((1.0 / p.weapon.cooldown) + value);
+				p.melee.cooldown = 1.0 / ((1.0 / p.melee.cooldown) + value);
 			default:
 				throw "not a bonus!";
 		}
@@ -42,6 +45,9 @@ class BonusItem extends Item {
 		switch (itemType) {
 			case ItemType.SPEED_BONUS:
 				p.speed -= value;
+			case ItemType.FIRERATE_BONUS:
+				p.weapon.cooldown = 1.0 / ((1.0 / p.weapon.cooldown) - value);
+				p.melee.cooldown = 1.0 / ((1.0 / p.melee.cooldown) - value);				
 			default:
 				throw "not a bonus!";
 		}		
