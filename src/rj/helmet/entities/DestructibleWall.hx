@@ -35,12 +35,13 @@ class DestructibleWall extends Entity implements Damageable {
 	}
 	
 	public function takeDamage(source:Entity, dmg:Int) {
-		playSfx(Res.sfx.monster_hit_wav);
 		spawnDebris();
 		if ((hits -= dmg) <= 0) {
+			playSfx(Res.sfx.monster_die);
 			remove();
 			spawnDebris(); // x2 debris when destroyed
 		} else {
+			playSfx(Res.sfx.monster_hit_wav);			
 			refreshImage(); 
 		}
 	}
