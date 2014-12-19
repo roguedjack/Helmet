@@ -25,7 +25,7 @@ X - New monster : shooting demons.
 	X - Monsters.
 	X - Generators.
 X - The Valkyrie should have something to make it special vs the Warrior : carries has a small shield on her left that protects her.
-- Destructible walls (actually entities).
+X - Destructible walls (actually entities).
 X - Moving walls (entities)
 - Teleporters.
 - Tutorial messages.
