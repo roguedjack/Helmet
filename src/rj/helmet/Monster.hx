@@ -60,7 +60,7 @@ class Monster extends Actor {
 			addAnim(ANIM_SHOOT, new Anim(GameData.parseEntityFrames(data.framesShoot), data.animSpeed));
 		}
 		
-		strike = new WeaponMelee(this, data.melee.damage, data.melee.cooldown);
+		strike = new WeaponMelee(this, data.melee.damage, 1.0 / data.melee.firerate);
 		if (data.weapon != null) {
 			shoot = new WeaponShooter(this, cast Type.resolveClass("rj.helmet.entities." + data.weapon.projectile), 1.0 / data.weapon.firerate);			
 			shootAngleMargin = data.weapon.angleMargin;
