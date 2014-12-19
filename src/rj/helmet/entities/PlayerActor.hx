@@ -14,6 +14,7 @@ import rj.helmet.entities.PlayerActor.CharacterClassProps;
 import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.fx.HurtEntityFx;
+import rj.helmet.fx.TemporaryBonusFx;
 import rj.helmet.Item.ItemType;
 import rj.helmet.PlayerSaveData;
 import rj.helmet.WeaponMelee;
@@ -124,6 +125,11 @@ class PlayerActor extends Actor {
 	
 	function heal(amount:Int) {
 		health += amount;
+	}
+		
+	function applyBonus(b:BonusItem) {
+		var fx = new TemporaryBonusFx(b, b.duration); 
+		startFx(fx);
 	}
 	
 	override function onStartSpawning() {
@@ -279,6 +285,10 @@ class PlayerActor extends Actor {
 			case ItemType.HEALTH:
 				heal(cast(it, HealthItem).health);
 				playSfx(Res.sfx.pickup_health_wav);
+				refreshHud();
+			case ItemType.SPEED_BONUS:
+				applyBonus(cast(it, BonusItem));
+				playSfx(Res.sfx.pickup_bonus_wav);
 				refreshHud();
 			default:
 				// nop

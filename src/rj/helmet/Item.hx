@@ -9,6 +9,7 @@ import rj.helmet.fx.HoverEntityFx;
 	var KEY = 0;
 	var TREASURE = 1;
 	var HEALTH = 2;
+	var SPEED_BONUS = 3;
 }
 
 /**

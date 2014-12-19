@@ -117,6 +117,14 @@
 			"score"		: 500,
 			"gfx"		: 57,
 			"colbox"	: [8, 8, 16, 16]
+		},
+		{
+			"id"		: "SpeedBonus",
+			"value" 	: 32,			
+			"duration"	: 10.0,
+			"glowColor"	: "0x54E516",
+			"gfx"		: 60,
+			"colbox"	: [8, 8, 16, 16]
 		}
 	],
 

@@ -3,6 +3,7 @@ import h2d.col.Bounds;
 import hxd.Res;
 import hxd.res.TiledMap;
 import rj.helmet.dat.GameData;
+import rj.helmet.entities.BonusItem;
 import rj.helmet.entities.DebrisParticle;
 import rj.helmet.entities.DemonMonster;
 import rj.helmet.entities.DestructibleWall;
@@ -110,6 +111,8 @@ class World {
 					e = new MovingWall(true, GameData.MovingWall);					
 				case Main.TILEDOBJ_DWALL:
 					e = new DestructibleWall(GameData.DestructibleWall);
+				case Main.TILEDOBJ_SPEEDBONUS:
+					e = new BonusItem(ItemType.SPEED_BONUS, GameData.SpeedBonus, GameData.SpeedBonus);
 			}
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;
