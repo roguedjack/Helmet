@@ -30,4 +30,6 @@ X - Moving walls (entities)
 - Teleporters.
 - Tutorial messages.
 X - Bonuses : moving speed, fire rate, fire power.
+- Boss monsters.
 - Real maps not just test maps :-)
+- Two play modes : "Story" (levels) "Adventure" (roguelike style random levels)
