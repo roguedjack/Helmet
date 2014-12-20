@@ -16,6 +16,7 @@ import rj.helmet.Entity.EntityType;
 import rj.helmet.fx.HurtEntityFx;
 import rj.helmet.fx.TemporaryBonusFx;
 import rj.helmet.Item.ItemType;
+import rj.helmet.ParticleGenerator;
 import rj.helmet.PlayerSaveData;
 import rj.helmet.WeaponMelee;
 import rj.helmet.WeaponShooter;
@@ -134,7 +135,11 @@ class PlayerActor extends Actor {
 	
 	override function onStartSpawning() {
 		super.onStartSpawning();
+		
 		playAnim(ANIM_IDLE);
+		new ParticleGenerator(SpriteParticle, [Gfx.entities[48], [14, 14, 4, 4]], 1.0, 2.0, 8.0, 16.0, 32).emitBatch(bounds);
+		playSfx(Res.sfx.spawning_wav);		
+		
 		lifeLeakTimer = new CooldownTimer(LIFELEAK_TIMER);
 		hurtFx = new HurtEntityFx(HURTEFFECT_DURATION);
 		
@@ -262,8 +267,9 @@ class PlayerActor extends Actor {
 	
 	function startExitingLevel() {
 		exitLevelTimer = new CooldownTimer(EXIT_LEVEL_TIMER);
-		canCollide = false;							
-		// TODO --- play sfx		
+		canCollide = false;				
+		new ParticleGenerator(SpriteParticle, [Gfx.entities[48], [14, 14, 4, 4]], 1.0, 2.0, 8.0, 16.0, 32).emitBatch(bounds);
+		playSfx(Res.sfx.despawning_wav);
 	}
 	
 	function animExitingLevel(elapsed:Float) {

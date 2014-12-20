@@ -10,6 +10,11 @@ import rj.helmet.Entity;
 class Particle extends Entity {
 	
 	/**
+	 * Dimensions of the particle (tile size by default)
+	 */
+	public var size(default, null): { width:Float, height:Float };
+	
+	/**
 	 * Duration of the particle life.
 	 */
 	public var lifeTime(default, null):Float;
@@ -27,7 +32,7 @@ class Particle extends Entity {
 	public var vy(default, null):Float;
 
 	/**
-	 * Concrete class should setup collision box & image.
+	 * Concrete class should setup dimensions, collision box & image.
 	 * @param	img
 	 * @param	lifeTime duration of the particle life
 	 * @param	vx initial x velocity
@@ -41,6 +46,7 @@ class Particle extends Entity {
 		canCollide = true;
 		hardCollision = false;
 		canForceWallAlignement = true;
+		size = { width:Main.TILE_SIZE, height:Main.TILE_SIZE };
 	}
 	
 	override public function spawn(x:Float, y:Float) {

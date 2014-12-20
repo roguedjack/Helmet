@@ -52,8 +52,8 @@ class ParticleGenerator {
 		for (a in particleArgs) {
 			args.push(a);
 		}
-		var p = Type.createInstance(particleClass, args);
-		Main.Instance.world.spawnEntity(p, x, y);
+		var p:Particle = cast Type.createInstance(particleClass, args);
+		Main.Instance.world.spawnEntity(p, x - 0.5 * p.size.width, y - 0.5 * p.size.height);
 	}
 	
 	/**

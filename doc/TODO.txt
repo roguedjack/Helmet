@@ -27,6 +27,7 @@ X - New monster : shooting demons.
 X - The Valkyrie should have something to make it special vs the Warrior : carries has a small shield on her left that protects her.
 X - Destructible walls (actually entities).
 X - Moving walls (entities)
+X - Sparkles when spawning player.
 - Teleporters.
 - Tutorial messages.
 X - Bonuses : moving speed, fire rate, fire power.

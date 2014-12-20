@@ -31,6 +31,7 @@ class DebrisParticle extends Particle {
 	 */
 	public function new(lifeTime:Float, vx:Float, vy:Float, color:Int) {
 		super(lifeTime, vx, vy);
+		size = { width:2, height:2 };
 		setImage(getDebrisImageForColor(color));
 		setCollisionBox(14, 14, 2, 2);
 		landTime = LAND_TIME * lifeTime;
