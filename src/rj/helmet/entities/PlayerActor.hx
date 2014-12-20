@@ -92,26 +92,26 @@ class PlayerActor extends Actor {
 
 	public var weapon(default,null):WeaponShooter;
 	public var melee(default,null):WeaponMelee;	
-	var data:PlayerSaveData;
+	var save:PlayerSaveData;
 	var lifeLeakTimer:CooldownTimer;
 	var exitLevelTimer:CooldownTimer;
 	var hurtFx:HurtEntityFx;
 	var shield:ShieldAttachement;
 
-	public function new(data:PlayerSaveData) {
-		this.data = data;
-		var cl = CHARACTER_CLASSES_PROPS[cast(data.characterClass, Int)];  // FIXME -- why do i need to cast an abstract int to an int?
+	public function new(save:PlayerSaveData) {
+		this.save = save;
+		var cl = CHARACTER_CLASSES_PROPS[cast(save.characterClass, Int)];  // FIXME -- why do i need to cast an abstract int to an int?
 		
 		super(EntityType.PLAYER, { 
-			speed:data.speed,
-			health:data.health
+			speed:cl.speed,
+			health:save.health
 		});
 		
 		setCollisionBox(Std.int(cl.colBox.xMin), Std.int(cl.colBox.yMin), Std.int(cl.colBox.width), Std.int(cl.colBox.height));		
 		addAnim(ANIM_IDLE, new Anim(cl.framesIdle, cl.animSpeed));		
 		addAnim(ANIM_WALK, new Anim(cl.framesWalk, cl.animSpeed));		
-		equipWeapon(new WeaponShooter(this, cl.weaponClass, data.weaponCooldown));
-		equipMelee(new WeaponMelee(this, data.meleeDamage, data.meleeCooldown));
+		equipWeapon(new WeaponShooter(this, cl.weaponClass, cl.weaponCooldown));
+		equipMelee(new WeaponMelee(this, cl.meleeDamage, cl.meleeCooldown));
 		refreshHud();
 	}
 	
@@ -139,7 +139,7 @@ class PlayerActor extends Actor {
 		hurtFx = new HurtEntityFx(HURTEFFECT_DURATION);
 		
 		// special: valkyrie shield
-		if (data.characterClass == CharacterClass.VALKYRIE) {
+		if (save.characterClass == CharacterClass.VALKYRIE) {
 			var shieldData = GameData.ValkyrieCharacter.shield;
 			shield = new ShieldAttachement(this, shieldData.xanchor, shieldData.yanchor, Gfx.entities[shieldData.gfx], shieldData.colbox);
 			world.spawnEntity(shield, pos.x, pos.y);			
@@ -223,8 +223,8 @@ class PlayerActor extends Actor {
 				}				
 			}
 			case EntityType.DOOR: {
-				if (data.nbKeys > 0) {
-					--data.nbKeys;
+				if (save.nbKeys > 0) {
+					--save.nbKeys;
 					refreshHud();					
 					cast(other, DoorEntity).open();				
 				}
@@ -280,7 +280,7 @@ class PlayerActor extends Actor {
 		} else {		
 			switch (it.itemType) {
 				case ItemType.KEY:
-					++data.nbKeys;
+					++save.nbKeys;
 					playSfx(Res.sfx.pickup_key_wav);
 					refreshHud();
 				case ItemType.TREASURE:
@@ -302,7 +302,7 @@ class PlayerActor extends Actor {
 	}
 	
 	public function scorePoints(pts:Int) {
-		data.score += pts;
+		save.score += pts;
 		refreshHud();
 	}
 	

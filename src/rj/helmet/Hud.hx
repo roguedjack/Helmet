@@ -80,9 +80,9 @@ class Hud extends Sprite {
 	
 	function doRefresh() {
 		var player = Main.Instance.world.player;
-		var data = Main.Instance.playerSaveData;
+		var save = Main.Instance.playerSaveData;
 		
-		levelTxt.text = 'LEVEL : ${data.level}';
+		levelTxt.text = 'LEVEL : ${save.level}';
 				
 		inline function drawInventoryItem(canvas:BitmapData, x:Int, y:Int, itType:ItemType) {
 			var itile;
@@ -102,7 +102,7 @@ class Hud extends Sprite {
 			// redraw inventory			
 			var x = 0;
 			var y = 0;
-			for (i in 0...data.nbKeys) {
+			for (i in 0...save.nbKeys) {
 				drawInventoryItem(canvas, x, 0, ItemType.KEY);
 				if ((x += Main.TILE_SIZE) >= WIDTH - Main.TILE_SIZE) {
 					x = 0;
@@ -111,7 +111,7 @@ class Hud extends Sprite {
 			}
 			// update counters
 			healthTxt.text = "HEALTH\n" + player.health;
-			scoreTxt.text = "SCORE\n" + data.score;
+			scoreTxt.text = "SCORE\n" + save.score;
 		} else {
 			canvas.clear(0);
 		}
