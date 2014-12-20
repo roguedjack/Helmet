@@ -14,7 +14,7 @@ class SpriteParticle extends Particle {
 		setCollisionBox(colbox[0], colbox[1], colbox[2], colbox[3]);
 		if (scaleMin < scaleMax && scaleMin != 1.0) {
 			var scale = scaleMin + Math.random() * (scaleMax - scaleMin);			
-			sprite.setScale(scale);
+			anchor.setScale(scale);
 			size = { width:size.width*scale, height:size.height*scale };
 		}
 	}
