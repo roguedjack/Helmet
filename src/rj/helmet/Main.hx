@@ -124,7 +124,6 @@ class Main extends App {
 	public function startLevel(i:Int) {
 		if (world.player != null) {
 			playerSaveData.takeSnapshot(world.player);
-			playerSaveData.nbKeys = 0;  // remove all keys but not other bonuses
 		}
 		playerSaveData.level = i % mapCycle.length;
 		world.loadMap(mapCycle[playerSaveData.level]);
