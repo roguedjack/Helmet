@@ -222,6 +222,13 @@
 			"colbox"		: [1, 1, 30, 30],
 			"hits"			: 30,
 			"debris"		: { "color": "0xB26C47", "amount":8 }
-		}
+		},
+		{
+			"id"			: "PushableWall",
+			"gfx"			: 6,
+			"colbox"		: [1, 1, 30, 30],
+			"selfpush"		: { "force": 1, "duration": 0.1 },
+			"crush"			: { "damage": 1, "cooldown": 0.5, "pushForce": 16, "pushDuration": 0.25 }			
+		}		
 	]
 }

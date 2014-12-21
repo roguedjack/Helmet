@@ -70,7 +70,7 @@ class MovingWall extends Entity {
 	override function onCollisionWith(other:Entity, vx:Float, vy:Float, active:Bool) {
 		if (active && crush.canStrike && Std.is(other, Damageable)) {			
 			crush.strike(other);
-			other.startFx(new PushFx(pushForce * mx, pushForce * my, pushDuration));
+			other.push(pushForce * mx, pushForce * my, pushDuration);
 		}
 	}
 }

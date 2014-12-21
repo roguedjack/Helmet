@@ -7,6 +7,7 @@ import h2d.Sprite;
 import h2d.Tile;
 import haxe.EnumFlags;
 import hxd.res.Sound;
+import rj.helmet.fx.PushFx;
 
 @:enum abstract EntityType(Int) {
 	var PLAYER = 0;
@@ -260,6 +261,16 @@ class Entity {
 		return { vx:newvx, vy:newvy };
 	}
 	
+	
+	/**
+	 * Push the entity.
+	 * @param	px x push
+	 * @param	py y push
+	 * @param	duration duration of the push
+	 */
+	public function push(px:Float, py:Float, duration:Float) {
+		startFx(new PushFx(px, py, duration));		
+	}
 	/**
 	 * 
 	 * @param	vx attempted x movement

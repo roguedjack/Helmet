@@ -31,6 +31,7 @@ class GameData {
 	
 	public static var MovingWall:Dynamic;
 	public static var DestructibleWall:Dynamic;
+	public static var PushableWall:Dynamic;
 		
 	static inline var DATA_FILE = "data.json";
 	
@@ -86,6 +87,7 @@ class GameData {
 		// Traps
 		MovingWall = findById(json.Traps, "MovingWall");
 		DestructibleWall = findById(json.Traps, "DestructibleWall");		
+		PushableWall = findById(json.Traps, "PushableWall");		
 	}
 	
 	public static function parseEntityFrames(framesData:Array<Int>) : Array<Tile> {

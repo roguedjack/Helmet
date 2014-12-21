@@ -14,6 +14,7 @@ import rj.helmet.entities.KeyItem;
 import rj.helmet.entities.MovingWall;
 import rj.helmet.entities.PlayerActor;
 import rj.helmet.entities.GhostMonster;
+import rj.helmet.entities.PushableWall;
 import rj.helmet.entities.StartEntity;
 import rj.helmet.entities.TreasureItem;
 import rj.helmet.Entity.EntityType;
@@ -111,6 +112,8 @@ class World {
 					e = new MovingWall(true, GameData.MovingWall);					
 				case Main.TILEDOBJ_DWALL:
 					e = new DestructibleWall(GameData.DestructibleWall);
+				case Main.TILEDOBJ_PWALL:
+					e = new PushableWall(GameData.PushableWall);					
 				case Main.TILEDOBJ_SPEEDBONUS:
 					e = new BonusItem(ItemType.SPEED_BONUS, GameData.SpeedBonus, GameData.SpeedBonus);
 				case Main.TILEDOBJ_FIRERATEBONUS:
