@@ -28,7 +28,7 @@ X - The Valkyrie should have something to make it special vs the Warrior : carri
 X - Destructible walls (actually entities).
 X - Moving walls (entities)
 X - Sparkles when spawning player.
-- Pushable walls (entities).
+X - Pushable walls (entities).
 - Teleporters.
 - Tutorial messages.
 X - Bonuses : moving speed, fire rate, fire power.
