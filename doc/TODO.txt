@@ -29,6 +29,7 @@ X - Destructible walls (actually entities).
 X - Moving walls (entities)
 X - Sparkles when spawning player.
 X - Pushable walls (entities).
+- Projectile hit gfx.
 - Teleporters.
 - Tutorial messages.
 X - Bonuses : moving speed, fire rate, fire power.

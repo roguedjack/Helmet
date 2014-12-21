@@ -54,6 +54,7 @@
 			"speed"		: 192.0,
 			"spin"		: 0.0,
 			"gfx"		: 19,
+			"hitgfx"	: 49,
 			"colbox"	: [ 12, 12, 8, 8 ]
 		},		
 		{
@@ -62,6 +63,7 @@
 			"speed"		: 128.0,
 			"spin"		: 720.0,
 			"gfx"		: 11,
+			"hitgfx"	: 49,
 			"colbox"	: [ 8, 8, 16, 16 ]
 		},		
 		{
@@ -70,12 +72,14 @@
 			"speed"		: 128.0,
 			"spin"		: 720.0,
 			"gfx"		: 23,
+			"hitgfx"	: -1,
 			"colbox"	: [ 9, 9, 14, 14 ],
 			"time"		: 1.0,
 			"particles"	: 8,
 			"sub_power"		: 5,
 			"sub_speed"		: 160.0,
 			"sub_gfx"		: 31,
+			"sub_hitgfx"	: -1,
 			"sub_colbox"	: [ 13, 13, 7, 7 ],
 			"sub_time"		: 1,
 			"sub_particles"	: 4,
@@ -88,6 +92,7 @@
 			"speed"		: 160.0,
 			"spin"		: 0.0,
 			"gfx"		: 15,
+			"hitgfx"	: 49,
 			"colbox"	: [ 10, 10, 12, 12 ]
 		},
 		{
@@ -96,6 +101,7 @@
 			"speed"		: 128.0,
 			"spin"		: 720.0,
 			"gfx"		: 39,
+			"hitgfx"	: -1,
 			"colbox"	: [ 12, 12, 8, 8 ]
 		}
 	],

@@ -28,6 +28,7 @@ class ArrowProjectile extends Projectile {
 	override function onWorldCollision(colFlags:EnumFlags<ColFlags>, vx:Float, vy:Float) {
 		if (bounced) {
 			remove();
+			onHit(vx, vy);
 		} else {
 			playSfx(Res.sfx.arrow_bounce_wav);
 			bounced = true;
