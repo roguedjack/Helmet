@@ -9,7 +9,7 @@
 			"framesWalk"		: [ 9, 10 ],
 			"animSpeed"			: 5,
 			"weapon" 			: { "projectile": "AxeProjectile", "firerate": 1.25 },
-			"melee"				: {	"damage": 10, "firerate": 1.75 }
+			"melee"				: {	"damage": 10, "firerate": 2.00 }
 		},
 		{
 			"id"				: "ValkyrieCharacter",
@@ -20,7 +20,7 @@
 			"framesWalk"		: [ 13, 14 ],
 			"animSpeed"			: 7,
 			"weapon"			: {	"projectile": "SwordProjectile", "firerate": 2.00 },
-			"melee"				: {	"damage": 5, "firerate": 2.25 },
+			"melee"				: {	"damage": 5, "firerate": 2.50 },
 			"shield"			: { "xanchor": -5, "yanchor": -8, "gfx": 7, "colbox": [13,13,6,6]}			
 		},
 		{
