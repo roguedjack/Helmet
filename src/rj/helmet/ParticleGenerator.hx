@@ -41,12 +41,12 @@ class ParticleGenerator {
 	 * @param	y
 	 */
 	public function emitParticle(x:Float, y:Float) {
-		var vx = minVelocity + Math.random() * (maxVelocity - minVelocity);
+		var vx = (maxVelocity > minVelocity ? minVelocity + Math.random() * (maxVelocity - minVelocity) : minVelocity);
 		if (Math.random() < 0.5) vx = -vx;
-		var vy = minVelocity + Math.random() * (maxVelocity - minVelocity);
+		var vy = (maxVelocity > minVelocity ? minVelocity + Math.random() * (maxVelocity - minVelocity) : minVelocity);
 		if (Math.random() < 0.5) vy = -vy;
 		
-		var lifeTime = minLifetime + Math.random() * (maxLifetime - minLifetime);
+		var lifeTime = (maxLifetime > minLifetime ? minLifetime + Math.random() * (maxLifetime - minLifetime) : minLifetime);
 		
 		var args = [ lifeTime, vx, vy ];
 		for (a in particleArgs) {
