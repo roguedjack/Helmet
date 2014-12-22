@@ -2,7 +2,6 @@ package hxd.fmt.fbx;
 using hxd.fmt.fbx.Data;
 import hxd.fmt.fbx.BaseLibrary;
 import hxd.fmt.hmd.Data;
-import hxd.fmt.hmd.Data.GeometryDataFormat.*; // rj --- compilation fix
 
 class HMDOut extends BaseLibrary {
 

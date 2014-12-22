@@ -9,8 +9,6 @@ package h3d.scene;
 	public inline function toInt() return this;
 }
 
-// rj --- compilation fix : missing ObjectFlags. qualifiers
-
 class Object {
 
 	static inline var ROT2RAD = -0.017453292519943295769236907684886;
@@ -70,16 +68,16 @@ class Object {
 			parent.addChild(this);
 	}
 
-	inline function get_visible() return (flags & ObjectFlags.FVisible.toInt()) != 0;
-	inline function get_posChanged() return (flags & ObjectFlags.FPosChanged.toInt()) != 0;
-	inline function get_culled() return (flags & ObjectFlags.FCulled.toInt()) != 0;
-	inline function get_followPositionOnly() return (flags & ObjectFlags.FFollowPosition.toInt()) != 0;
-	inline function get_lightCameraCenter() return (flags & ObjectFlags.FLightCameraCenter.toInt()) != 0;
-	inline function set_posChanged(b) { if( b ) flags |= ObjectFlags.FPosChanged.toInt() else flags &= ~ObjectFlags.FPosChanged.toInt(); return b; }
-	inline function set_culled(b) { if( b ) flags |= ObjectFlags.FCulled.toInt() else flags &= ~ObjectFlags.FCulled.toInt(); return b; }
-	inline function set_visible(b) { culled = !b; if( b ) flags |= ObjectFlags.FVisible.toInt() else flags &= ~ObjectFlags.FVisible.toInt(); return b; }
-	inline function set_followPositionOnly(b) { if( b ) flags |= ObjectFlags.FFollowPosition.toInt() else flags &= ~ObjectFlags.FFollowPosition.toInt(); return b; }
-	inline function set_lightCameraCenter(b) { if( b ) flags |= ObjectFlags.FLightCameraCenter.toInt() else flags &= ~ObjectFlags.FLightCameraCenter.toInt(); return b; }
+	inline function get_visible() return (flags & FVisible.toInt()) != 0;
+	inline function get_posChanged() return (flags & FPosChanged.toInt()) != 0;
+	inline function get_culled() return (flags & FCulled.toInt()) != 0;
+	inline function get_followPositionOnly() return (flags & FFollowPosition.toInt()) != 0;
+	inline function get_lightCameraCenter() return (flags & FLightCameraCenter.toInt()) != 0;
+	inline function set_posChanged(b) { if( b ) flags |= FPosChanged.toInt() else flags &= ~FPosChanged.toInt(); return b; }
+	inline function set_culled(b) { if( b ) flags |= FCulled.toInt() else flags &= ~FCulled.toInt(); return b; }
+	inline function set_visible(b) { culled = !b; if( b ) flags |= FVisible.toInt() else flags &= ~FVisible.toInt(); return b; }
+	inline function set_followPositionOnly(b) { if( b ) flags |= FFollowPosition.toInt() else flags &= ~FFollowPosition.toInt(); return b; }
+	inline function set_lightCameraCenter(b) { if( b ) flags |= FLightCameraCenter.toInt() else flags &= ~FLightCameraCenter.toInt(); return b; }
 
 	public function playAnimation( a : h3d.anim.Animation ) {
 		return currentAnimation = a.createInstance(this);
