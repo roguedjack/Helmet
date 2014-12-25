@@ -32,6 +32,8 @@ class GameData {
 	public static var MovingWall:Dynamic;
 	public static var DestructibleWall:Dynamic;
 	public static var PushableWall:Dynamic;
+	
+	public static var Hints:Array<Dynamic>;
 		
 	static inline var DATA_FILE = "data.json";
 	
@@ -88,6 +90,21 @@ class GameData {
 		MovingWall = findById(json.Traps, "MovingWall");
 		DestructibleWall = findById(json.Traps, "DestructibleWall");		
 		PushableWall = findById(json.Traps, "PushableWall");		
+		
+		// Hints
+		Hints = json.Hints;
+	}
+	
+	public static function getHintData(hintId:String, mustFind:Bool = true):Dynamic {		
+		for (h in Hints) {
+			if (h.id == hintId) {
+				return h;
+			}
+		}
+		if (mustFind) {
+			throw "could not find hint with id " + hintId;
+		}
+		return null;
 	}
 	
 	public static function parseEntityFrames(framesData:Array<Int>) : Array<Tile> {

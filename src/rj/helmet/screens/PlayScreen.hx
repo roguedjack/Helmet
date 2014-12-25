@@ -28,7 +28,9 @@ class PlayScreen extends Screen {
 	
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
-		game.world.update(elapsed);
+		if (game.view.messageBox == null) {
+			game.world.update(elapsed);
+		}
 		game.view.update(elapsed);
 	}
 	

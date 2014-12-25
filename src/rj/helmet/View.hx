@@ -5,6 +5,7 @@ import h2d.Layers;
 import h2d.Sprite;
 import h2d.Tile;
 import hxd.BitmapData;
+import hxd.Key;
 import hxd.Res;
 import hxd.res.TiledMap.TiledMapData;
 import hxd.res.TiledMap.TiledMapLayer;
@@ -21,6 +22,7 @@ class View extends Sprite {
 
 	public var followTarget(default, default):Entity;	
 	public var hud(default, null):Hud;
+	public var messageBox(default, null):MessageBox;
 	var tilesSetBmp:BitmapData;
 	var mapLayers:Layers;
 	var floorLayer:Sprite;
@@ -82,18 +84,28 @@ class View extends Sprite {
 				itemsLayer;			
 			case EntityType.TRAP:
 				actorsLayer;
+			case EntityType.TRIGGER:
+				itemsLayer;
 			default:
 				throw "layer: unhandled entity type " + e.type;
 		}
 	}
-	
-	
+		
 	public function addEntitySprite(e:Entity) {
 		getEntityLayer(e).addChild(e.sprite);
 	}	
 	
 	public function removeEntitySprite(e:Entity) {
 		e.sprite.remove();
+	}
+	
+	public function displayMessageBox(text:String) {
+		messageBox = new MessageBox(this, text);		
+	}
+	
+	public function closeMessageBox() {
+		messageBox.remove();
+		messageBox = null;
 	}
 	
 	public function onNewLevel() {

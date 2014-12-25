@@ -19,8 +19,9 @@ import rj.helmet.fx.PushFx;
 	var PARTICLE = 6;
 	var ATTACHEMENT = 7;
 	var TRAP = 8;
-	var START = 9;
-	var EXIT = 10;	
+	var TRIGGER = 9;
+	var START = 10;
+	var EXIT = 11;	
 }
 
 enum ColFlags {

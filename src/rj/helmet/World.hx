@@ -11,6 +11,7 @@ import rj.helmet.entities.DoorEntity;
 import rj.helmet.entities.ExitEntity;
 import rj.helmet.entities.HealthItem;
 import rj.helmet.entities.KeyItem;
+import rj.helmet.entities.MessageTrigger;
 import rj.helmet.entities.MovingWall;
 import rj.helmet.entities.PlayerActor;
 import rj.helmet.entities.GhostMonster;
@@ -120,6 +121,10 @@ class World {
 					e = new BonusItem(ItemType.FIRERATE_BONUS, GameData.FirerateBonus, GameData.FirerateBonus);					
 				case Main.TILEDOBJ_POWERBONUS:
 					e = new BonusItem(ItemType.POWER_BONUS, GameData.PowerBonus, GameData.PowerBonus);										
+				case Main.TILEDOBJ_MESSAGE:
+					var hintData = GameData.getHintData(o.name);
+					e = new MessageTrigger(hintData.text, hintData.delay);
+					
 			}
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;
@@ -129,10 +134,12 @@ class World {
 			o.x = Main.TILE_SIZE * Math.floor(o.x / Main.TILE_SIZE);
 			o.y = Main.TILE_SIZE * Math.floor(o.y / Main.TILE_SIZE);
 			
-			// die if another entity is already there!
-			for (other in entitiesToSpawn) {
-				if (other.sx == o.x && other.sy == o.y) {
-					throw "map parsing: entities "+o.name+" and another one on the same tile -- fix your map :-)";
+			// die if another hard collidable entity is already there!
+			if (e.hardCollision) {
+				for (other in entitiesToSpawn) {
+					if (other.se.hardCollision && other.sx == o.x && other.sy == o.y) {
+						throw "map parsing: hard entities "+o.name+" and another one on the same tile -- fix your map :-)";
+					}
 				}
 			}
 			

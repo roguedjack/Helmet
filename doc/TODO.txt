@@ -31,7 +31,7 @@ X - Sparkles when spawning player.
 X - Pushable walls (entities).
 X - Projectile hit gfx.
 - Teleporters.
-- Tutorial messages.
+X - Tutorial messages.
 X - Bonuses : moving speed, fire rate, fire power.
 - Boss monsters.
 - Real maps not just test maps :-)

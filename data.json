@@ -236,5 +236,13 @@
 			"selfpush"		: { "force": 1, "duration": 0.1 },
 			"crush"			: { "damage": 1, "cooldown": 0.5, "pushForce": 16, "pushDuration": 0.25 }			
 		}		
+	],
+
+	"Hints" : [
+		{
+			"id"		: "hint_move",
+			"text"		: "Welcome to HELMET!<br/>WASD or CURSOR keys to move.<br/>SPACE or CLICK to shoot.",
+			"delay"		: 1.0
+		}
 	]
 }
