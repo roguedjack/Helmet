@@ -40,6 +40,9 @@ class DoorEntity extends Entity {
 	}
 	
 	function sameDoorGroupFilter(other:Entity):Bool {
+		if (other == this) {
+			return false;
+		}
 		if (other.type != EntityType.DOOR) {
 			return false;
 		}
