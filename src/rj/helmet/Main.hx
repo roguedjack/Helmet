@@ -87,7 +87,7 @@ class Main extends App {
 		Gfx.init();
 		PlayerActor.initCharacterClasses();
 		
-		mapCycle = [ Res.levels.test, Res.levels.level0, Res.levels.level1 ];
+		mapCycle = [ Res.levels.tutorial, Res.levels.level1 ];
 		
 		world = new World(this);
 		view = null;
