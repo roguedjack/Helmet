@@ -1,10 +1,11 @@
 package rj.helmet.entities;
 
+import hxd.Res;
 import rj.helmet.Entity.EntityType;
 import rj.helmet.Trigger;
 
 /**
- * Trigger that displays a message box.
+ * Trigger that displays a message box, typically hints.
  * 
  * @author roguedjack
  */
@@ -25,6 +26,7 @@ class MessageTrigger extends Trigger {
 			return;
 		}
 		
+		playSfx(Res.sfx.hint_wav);
 		Main.Instance.view.displayMessageBox(text);
 
 		// remove all message triggers of same id
