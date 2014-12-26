@@ -163,6 +163,11 @@ class View extends Sprite {
 	}
 	
 	public function update(elapsed:Float) {
+		// message box?
+		if (messageBox != null) {
+			messageBox.update(elapsed);
+		}
+		
 		// autofollow player or start point.
 		if (Main.Instance.world.player != null) {
 			followTarget = Main.Instance.world.player;

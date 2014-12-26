@@ -19,6 +19,7 @@ class MessageBox extends Interactive {
 	var font:Font;
 	var bg:ScaleGrid;
 	var html:HtmlText;
+	var minTimeOpen:Float;
 	
 	function set_text(t:String) {
 		this.text = t;
@@ -26,9 +27,10 @@ class MessageBox extends Interactive {
 		return text;
 	}
 
-	public function new(view:View, text:String) {
+	public function new(view:View, text:String, minTimeOpen:Float = 1.0) {
 		super(Main.Instance.s2d.width, Main.Instance.s2d.height, view);	
-		this.view = view;
+		this.view = view;		
+		this.minTimeOpen = minTimeOpen;
 		
 		font = FontBuilder.getFont("arial", 14);
 		bg = new ScaleGrid(Gfx.messageBox, 11, 11, this);
@@ -49,7 +51,13 @@ class MessageBox extends Interactive {
 		
 	}
 	
+	public function update(elapsed:Float) {
+		minTimeOpen -= elapsed;
+	}
+	
 	override public function onKeyDown(e:hxd.Event) {
-		view.closeMessageBox();
+		if (minTimeOpen <= 0) {
+			view.closeMessageBox();
+		}
 	}
 }
