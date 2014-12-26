@@ -14,6 +14,7 @@ class Trigger extends Entity {
 	public var repeatable(default, null):Bool;
 	public var delay(default, null):Float;
 	var triggerTime:Float;
+	var triggered:Bool;
 
 	public function new(delay:Float = 0, repeatable:Bool = false) {		
 		super(EntityType.TRIGGER);
@@ -28,7 +29,7 @@ class Trigger extends Entity {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 		
-		if (triggerTime > 0) {
+		if (triggered) {
 			if ((triggerTime -= elapsed) <= 0) {
 				fireTrigger();
 				if (!repeatable) {
@@ -41,6 +42,7 @@ class Trigger extends Entity {
 			}
 			if (world.player.bounds.collide(bounds)) {
 				triggerTime = delay;
+				triggered = true;
 			}
 		}
 	}
