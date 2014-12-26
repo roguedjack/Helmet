@@ -47,5 +47,6 @@
   <object name="pushablewall2" type="pwall" x="448" y="416" width="32" height="32"/>
   <object name="pushablewall3" type="pwall" x="32" y="160" width="32" height="32"/>
   <object name="hint_move" type="message" x="32" y="32" width="32" height="32"/>
+  <object name="hint_move" type="message" x="64" y="32" width="32" height="32"/>
  </objectgroup>
 </map>

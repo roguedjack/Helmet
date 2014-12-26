@@ -122,8 +122,7 @@ class World {
 				case Main.TILEDOBJ_POWERBONUS:
 					e = new BonusItem(ItemType.POWER_BONUS, GameData.PowerBonus, GameData.PowerBonus);										
 				case Main.TILEDOBJ_MESSAGE:
-					var hintData = GameData.getHintData(o.name);
-					e = new MessageTrigger(hintData.text, hintData.delay);
+					e = new MessageTrigger(GameData.getHintData(o.name));
 					
 			}
 			if (e == null) {

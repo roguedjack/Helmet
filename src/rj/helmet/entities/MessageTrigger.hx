@@ -1,5 +1,6 @@
 package rj.helmet.entities;
 
+import rj.helmet.Entity.EntityType;
 import rj.helmet.Trigger;
 
 /**
@@ -8,15 +9,32 @@ import rj.helmet.Trigger;
  * @author roguedjack
  */
 class MessageTrigger extends Trigger {
-	
+
+	public var id(default, null):String;	
 	public var text(default, null):String;
 
-	public function new(text:String, delay:Float) {
-		super(delay, false);		
-		this.text = text;
+	public function new(data) {
+		super(data.delay, false);		
+		this.id = data.id;
+		this.text = data.text;
 	}
 	
 	override function fireTrigger() {
+		if (isRemoved) {
+			// might happen if another trigger removed us but we fired on the same frame.
+			return;
+		}
+		
 		Main.Instance.view.displayMessageBox(text);
+
+		// remove all message triggers of same id
+		for (otherTrigger in world.filterEntities(sameMessageIdFilter)) {
+			otherTrigger.remove();
+		}
+	}
+	
+	function sameMessageIdFilter(other:Entity):Bool {
+		return other != this && other.type == EntityType.TRIGGER 
+			&& Std.is(other, MessageTrigger) && cast(other, MessageTrigger).id == this.id;		
 	}
 }
