@@ -88,43 +88,42 @@ class World {
 		// entities
 		for (o in entitiesMap.objects) {
 			var e:Entity = null;
-			switch (o.type) {
-				case Main.TILEDOBJ_EXIT:
+			if (o.type == GameData.Exit.editor) {
 					e = new ExitEntity();
-				case Main.TILEDOBJ_START:
+			} else if (o.type == GameData.Start.editor) {
 					e = new StartEntity();
-				case Main.TILEDOBJ_GEN_GHOST:
+			} else if (o.type == GameData.GhostGenerator.editor) {
 					e = new MonsterGenerator(GhostMonster, new ParticleGenerator(DebrisParticle, [0x999999]), GameData.GhostGenerator);
-				case Main.TILEDOBJ_GEN_DEMON:
+			} else if (o.type == GameData.DemonGenerator.editor) {
 					e = new MonsterGenerator(DemonMonster, new ParticleGenerator(DebrisParticle, [0x999999]), GameData.DemonGenerator);	
-				case Main.TILEDOBJ_HDOOR:
+			} else if (o.type == GameData.Door.editor[0]) {
 					e = new DoorEntity(o.name, false);
-				case Main.TILEDOBJ_VDOOR:
+			} else if (o.type ==  GameData.Door.editor[1]) {
 					e = new DoorEntity(o.name, true);
-				case Main.TILEDOBJ_KEY:
+			} else if (o.type == GameData.KeyItem.editor) {
 					e = new KeyItem();					
-				case Main.TILEDOBJ_TREASURE:
+			} else if (o.type == GameData.TreasureItem.editor) {
 					e = new TreasureItem();
-				case Main.TILEDOBJ_HEALTH:
+			} else if (o.type == GameData.HealthItem.editor) {
 					e = new HealthItem();
-				case Main.TILEDOBJ_HWALL:
+			} else if (o.type == GameData.MovingWall.editor[0]) {
 					e = new MovingWall(false, GameData.MovingWall);
-				case Main.TILEDOBJ_VWALL:
+			} else if (o.type == GameData.MovingWall.editor[1]) {
 					e = new MovingWall(true, GameData.MovingWall);					
-				case Main.TILEDOBJ_DWALL:
+			} else if (o.type == GameData.DestructibleWall.editor) {
 					e = new DestructibleWall(GameData.DestructibleWall);
-				case Main.TILEDOBJ_PWALL:
+			} else if (o.type == GameData.PushableWall.editor) {
 					e = new PushableWall(GameData.PushableWall);					
-				case Main.TILEDOBJ_SPEEDBONUS:
+			} else if (o.type == GameData.SpeedBonus.editor) {
 					e = new BonusItem(ItemType.SPEED_BONUS, GameData.SpeedBonus, GameData.SpeedBonus);
-				case Main.TILEDOBJ_FIRERATEBONUS:
+			} else if (o.type == GameData.FirerateBonus.editor) {
 					e = new BonusItem(ItemType.FIRERATE_BONUS, GameData.FirerateBonus, GameData.FirerateBonus);					
-				case Main.TILEDOBJ_POWERBONUS:
+			} else if (o.type == GameData.PowerBonus.editor) {
 					e = new BonusItem(ItemType.POWER_BONUS, GameData.PowerBonus, GameData.PowerBonus);										
-				case Main.TILEDOBJ_MESSAGE:
-					e = new MessageTrigger(GameData.getHintData(o.name));
-					
+			} else if (o.type == GameData.MessageTrigger.editor) {
+					e = new MessageTrigger(GameData.getHintData(o.name));					
 			}
+			
 			if (e == null) {
 				throw "unknown entity type " + o.type+" at " + o.x+','+o.y;
 			}

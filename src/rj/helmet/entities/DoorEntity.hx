@@ -1,6 +1,7 @@
 package rj.helmet.entities;
 import h2d.filter.Glow;
 import hxd.Res;
+import rj.helmet.dat.GameData;
 import rj.helmet.Entity;
 
 using rj.helmet.Entity.EntityType;
@@ -15,16 +16,15 @@ class DoorEntity extends Entity {
 
 	public function new(doorGroup:String, isVertical:Bool) {
 		super(EntityType.DOOR);
-		setImage(Gfx.entities[1]);					
+		var index = (isVertical ? 1 : 0);
+		setImage(Gfx.entities[GameData.Door.gfx[index]]);
 		this.doorGroup = doorGroup;
 		canCollide = true;		
 		hardCollision = true;
-		if (isVertical) {
-			rotation = 0.5 * Math.PI;
-			setCollisionBox(11, 0, 10, 32);						
-		} else {
-			setCollisionBox(0, 11, 32, 10);			
+		if (GameData.Door.rotation[index] != 0) {
+			rotation = GameData.Door.rotation[index] * Math.PI / 180.0;
 		}
+		setCollisionBox(GameData.Door.colbox[index][0],	GameData.Door.colbox[index][1], GameData.Door.colbox[index][2], GameData.Door.colbox[index][3]);		
 	}
 	
 	/**

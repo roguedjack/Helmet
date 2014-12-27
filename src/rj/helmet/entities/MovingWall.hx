@@ -21,8 +21,9 @@ class MovingWall extends Entity {
 
 	public function new(isVertical:Bool, data) {
 		super(EntityType.TRAP);
-		setCollisionBox(data.colbox[0], data.colbox[1], data.colbox[2], data.colbox[3]);
-		setImage(Gfx.entities[data.gfx]);
+		var index = (isVertical ? 0 : 1);
+		setCollisionBox(data.colbox[index][0], data.colbox[index][1], data.colbox[index][2], data.colbox[index][3]);
+		setImage(Gfx.entities[data.gfx[index]]);
 		speed = data.speed;
 		canCollide = true;
 		hardCollision = true;

@@ -28,24 +28,6 @@ class Main extends App {
 	public static inline var TILED_FLOOR_LAYER_NAME = "floor";
 	public static inline var TILED_WALLS_LAYER_NAME = "walls";
 	public static inline var TILED_ENTITIES_LAYER_NAME = "entities";
-	public static inline var TILEDOBJ_EXIT = "exit";
-	public static inline var TILEDOBJ_START = "start";
-	public static inline var TILEDOBJ_GEN_GHOST = "gen_ghost";
-	public static inline var TILEDOBJ_GEN_DEMON = "gen_demon";
-	public static inline var TILEDOBJ_HDOOR = "hdoor";
-	public static inline var TILEDOBJ_VDOOR = "vdoor";
-	public static inline var TILEDOBJ_KEY = "key";
-	public static inline var TILEDOBJ_TREASURE = "treasure";
-	public static inline var TILEDOBJ_HEALTH = "health";
-	public static inline var TILEDOBJ_SPEEDBONUS = "bspeed";
-	public static inline var TILEDOBJ_FIRERATEBONUS = "bfirerate";
-	public static inline var TILEDOBJ_POWERBONUS = "bpower";
-	public static inline var TILEDOBJ_HWALL = "hwall";
-	public static inline var TILEDOBJ_VWALL = "vwall";
-	public static inline var TILEDOBJ_DWALL = "dwall";
-	public static inline var TILEDOBJ_PWALL = "pwall";
-	public static inline var TILEDOBJ_MESSAGE = "message";
-	
 	public static var Instance:Main;
 		
 	public var world(default, null):World;	

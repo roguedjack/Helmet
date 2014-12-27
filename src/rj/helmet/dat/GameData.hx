@@ -34,6 +34,11 @@ class GameData {
 	public static var PushableWall:Dynamic;
 	
 	public static var Hints:Array<Dynamic>;
+	
+	public static var Start:Dynamic;
+	public static var Exit:Dynamic;
+	public static var Door:Dynamic;
+	public static var MessageTrigger:Dynamic;
 		
 	static inline var DATA_FILE = "data.json";
 	
@@ -93,6 +98,12 @@ class GameData {
 		
 		// Hints
 		Hints = json.Hints;
+		
+		// Miscs
+		Start = findById(json.Misc, "Start");
+		Exit = findById(json.Misc, "Exit");
+		Door = findById(json.Misc, "Door");
+		MessageTrigger = findById(json.Misc, "MessageTrigger");
 	}
 	
 	public static function getHintData(hintId:String, mustFind:Bool = true):Dynamic {		
