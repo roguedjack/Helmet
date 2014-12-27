@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="17" height="12" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="17" height="15" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
   <image source="../gfx/tiles.png" width="256" height="256"/>
  </tileset>
- <layer name="floor" width="17" height="12">
+ <layer name="floor" width="17" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBzFo3gUE4UBSfcAzQ==
+   eJxjZGBgYBzFo3gUDylMDQAA/6cA7w==
   </data>
  </layer>
- <layer name="walls" width="17" height="12">
+ <layer name="walls" width="17" height="15">
   <data encoding="base64" compression="zlib">
-   eJzjZmBgYEXCfCTyeYCYjQEVkMMfNYP2ZvCTyMdmBqlgMJnBxYCadknFvEAMAGwhAfE=
+   eJzjZmBgYEXCfCTyeYCYjQEVkMMfNYP2ZvCTyMdmBqlg1AzamMHFgJoPScW8QAwAwlQCFQ==
   </data>
  </layer>
- <objectgroup name="entities" width="17" height="12">
-  <object name="start" type="start" x="256" y="320" width="32" height="32"/>
+ <objectgroup name="entities" width="17" height="15">
+  <object name="start" type="start" x="256" y="384" width="32" height="32"/>
   <object name="warrior" type="charselect" x="64" y="160" width="32" height="32"/>
   <object name="valkyrie" type="charselect" x="192" y="160" width="32" height="32"/>
   <object name="elf" type="charselect" x="320" y="160" width="32" height="32"/>
@@ -51,7 +51,7 @@
   <object name="hint_wizard" type="message" x="416" y="256" width="32" height="32"/>
   <object name="hint_wizard" type="message" x="448" y="256" width="32" height="32"/>
   <object name="hint_wizard" type="message" x="480" y="256" width="32" height="32"/>
-  <object name="hint_move" type="message" x="256" y="320" width="32" height="32"/>
-  <object name="hint_selectchar" type="message" x="256" y="320" width="32" height="32"/>
+  <object name="hint_move" type="message" x="256" y="384" width="32" height="32"/>
+  <object name="hint_selectchar" type="message" x="256" y="384" width="32" height="32"/>
  </objectgroup>
 </map>
