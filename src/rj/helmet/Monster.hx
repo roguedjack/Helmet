@@ -1,5 +1,7 @@
 package rj.helmet;
 import h2d.Anim;
+import h2d.filter.Filter;
+import h2d.filter.Glow;
 import haxe.EnumFlags;
 import hxd.Res;
 import rj.helmet.Actor.ActorState;
@@ -46,6 +48,7 @@ class Monster extends Actor {
 	var lastMoveY:Float;
 	var lastDir:Int;
 	var moveCollidedWithPlayer:Bool;  // flag if we collided with the player in this frame movement
+	var spawnGlow:Glow;
 	
 	public function new(data) {
 		super(EntityType.MONSTER, { 
@@ -98,7 +101,7 @@ class Monster extends Actor {
 		spawnTimer = 0;
 		rotation = Math.random() * 2 * Math.PI;
 		playAnim(ANIM_IDLE);
-		
+		bitmap.filters.push(spawnGlow = new Glow(0xB200FF, 1, 1, 4));
 		aiState = aiIdleState;
 	}		
 	
@@ -106,8 +109,10 @@ class Monster extends Actor {
 		canCollide = true;
 		spawnTimer += elapsed;
 		if (spawnTimer >= spawnTime) {
-			state = ActorState.LIVING;
+			bitmap.filters.remove(spawnGlow);
+			spawnGlow = null;
 			bitmap.alpha = 1;
+			state = ActorState.LIVING;			
 		} else {
 			bitmap.alpha = 0.25 + 0.75 * spawnTimer / spawnTime;
 		}
