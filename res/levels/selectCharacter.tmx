@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="17" height="15" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="25" height="15" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
   <image source="../gfx/tiles.png" width="256" height="256"/>
  </tileset>
- <layer name="floor" width="17" height="15">
+ <layer name="floor" width="25" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBzFo3gUDylMDQAA/6cA7w==
+   eJxjZGBgYBzFo3gUj+JRPKwwAFOoAXg=
   </data>
  </layer>
- <layer name="walls" width="17" height="15">
+ <layer name="walls" width="25" height="15">
   <data encoding="base64" compression="zlib">
-   eJzjZmBgYEXCfCTyeYCYjQEVkMMfNYP2ZvCTyMdmBqlg1AzamMHFgJoPScW8QAwAwlQCFQ==
+   eJzjZmBgYEXCfBTy0TEPELMxoAJK+eiAbdQOnHwWBtT44KSBHehgoMKKn0Q+OXaQCsiJD0rtwCZPS38w08gObPKU2oGeBmjhD0IAZD4XA/5yk1LMC8QAwVcDDQ==
   </data>
  </layer>
- <objectgroup name="entities" width="17" height="15">
+ <objectgroup name="entities" width="25" height="15">
   <object name="start" type="start" x="256" y="384" width="32" height="32"/>
   <object name="warrior" type="charselect" x="64" y="160" width="32" height="32"/>
   <object name="valkyrie" type="charselect" x="192" y="160" width="32" height="32"/>
@@ -53,5 +53,20 @@
   <object name="hint_wizard" type="message" x="480" y="256" width="32" height="32"/>
   <object name="hint_move" type="message" x="256" y="384" width="32" height="32"/>
   <object name="hint_selectchar" type="message" x="256" y="384" width="32" height="32"/>
+  <object name="door5" type="vdoor" x="512" y="416" width="32" height="32"/>
+  <object name="key5" type="key" x="480" y="384" width="32" height="32"/>
+  <object name="hint_training" type="message" x="480" y="416" width="32" height="32"/>
+  <object name="door6" type="vdoor" x="640" y="160" width="32" height="32"/>
+  <object name="door6" type="vdoor" x="640" y="192" width="32" height="32"/>
+  <object name="door6" type="vdoor" x="640" y="224" width="32" height="32"/>
+  <object name="door7" type="vdoor" x="640" y="32" width="32" height="32"/>
+  <object name="door7" type="vdoor" x="640" y="64" width="32" height="32"/>
+  <object name="door7" type="vdoor" x="640" y="96" width="32" height="32"/>
+  <object name="gen1" type="gen_ghost" x="704" y="192" width="32" height="32"/>
+  <object name="gen2" type="gen_demon" x="704" y="64" width="32" height="32"/>
+  <object name="key6" type="key" x="608" y="192" width="32" height="32"/>
+  <object name="key7" type="key" x="608" y="64" width="32" height="32"/>
+  <object name="health1" type="health" x="736" y="192" width="32" height="32"/>
+  <object name="health2" type="health" x="736" y="64" width="32" height="32"/>
  </objectgroup>
 </map>

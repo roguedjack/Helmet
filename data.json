@@ -257,8 +257,13 @@
 		},
 		{
 			"id"		: "hint_selectchar",
-			"text"		: "Find and touch the statues to change your character class.<br/>You can try all the classes as long as you want.<br/>When you are ready go to an exit to start your adventure!",
-			"delay"		: 4.0
+			"text"		: "Find and touch the statues to change your character class.<br/>You can try all the classes as long as you want.<br/>Feeling brave? Try the training ground to the east!<br/>When you are ready go to an exit to start your adventure!",
+			"delay"		: 3.0
+		},
+		{
+			"id"		: "hint_training",
+			"text"		: "<font color='#FFC0C0'>WARNING!<br/>Training ground!<br/>Live monsters!</font>",
+			"delay"		: 0.0
 		},
 		{
 			"id"		: "hint_warrior",
