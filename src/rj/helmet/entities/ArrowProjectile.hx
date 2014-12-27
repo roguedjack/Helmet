@@ -13,25 +13,27 @@ import rj.helmet.Projectile;
  */
 class ArrowProjectile extends Projectile {
 	
-	var bounced:Bool;
+	var maxBounces:Int;
+	var bouncesLeft:Int;
 	
 	public function new(owner:Entity, vx:Float, vy:Float) {
 		super(owner, vx, vy, GameData.ArrowProjectile);
 		disableSameCollision = true;
+		maxBounces = GameData.ArrowProjectile.maxbounces;
 	}
 	
 	override function onStartSpawning() {
 		super.onStartSpawning();
-		bounced = false;
+		bouncesLeft = maxBounces;
 	}
 	
 	override function onWorldCollision(colFlags:EnumFlags<ColFlags>, vx:Float, vy:Float) {
-		if (bounced) {
+		bouncesLeft--;
+		if (bouncesLeft < 0) {
 			remove();
 			onHit(vx, vy);
 		} else {
 			playSfx(Res.sfx.arrow_bounce_wav);
-			bounced = true;
 			if (colFlags.has(ColFlags.COL_LEFT) || colFlags.has(ColFlags.COL_RIGHT)) {
 				dx *= -1;
 			}
