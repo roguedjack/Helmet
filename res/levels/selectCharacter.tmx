@@ -10,7 +10,7 @@
  </layer>
  <layer name="walls" width="25" height="15">
   <data encoding="base64" compression="zlib">
-   eJzjZmBgYEXCfBTy0TEPELMxoAJK+eiAbdQOnHwWBtT44KSBHehgoMKKn0Q+OXaQCsiJD0rtwCZPS38w08gObPKU2oGeBmjhD0IAZD4XA/5yk1LMC8QAwVcDDQ==
+   eJzjZmBgYEXCfBTy0TEPELMxoAJK+eiAbdQOnHwWBtT44KSBHehgoMKKn0Q+OXaQCsiJD0rtwCZPK38w09AObPKU2oGeBmjhD0IAZD4XA/5yk1LMC8QAtT8DAw==
   </data>
  </layer>
  <objectgroup name="entities" width="25" height="15">
