@@ -279,62 +279,7 @@
 			"id"		: "hint_wizard",
 			"text"		: "The <font color='#FFA0A0'>Wizard</font> shoots powerful exploding fireballs...<br/>but is very slow and weak.<br/><br/>-> Blast everything with your fireballs!<br/>-> Avoid melee combat, you are weak!",
 			"delay"		: 0.0
-		},
-		{
-			"id"		: "hint_key",
-			"text"		: "Pickup keys to open doors.",
-			"delay"		: 0.0
-		},
-		{
-			"id"		: "hint_treasure",
-			"text"		: "Pickup treasures for points.",
-			"delay"		: 0.0
-		},		
-		{
-			"id"		: "hint_gen",
-			"text"		: "Generators create monsters.<br/>Kill the monsters and destroy the generators!<br/>You can shoot or bash them.",
-			"delay"		: 0.0
-		},		
-		{
-			"id"		: "hint_dwall",
-			"text"		: "Some walls can be destroyed.<br/>Shoot or bash them!",
-			"delay"		: 0.0
-		},
-		{
-			"id"		: "hint_mwall",
-			"text"		: "Some walls are moving.<br/>Don't get crushed!<br/>Monsters can get crushed too, try to lure them.",
-			"delay"		: 0.0
-		},
-		{
-			"id"		: "hint_pwall",
-			"text"		: "Some walls can be pushed.<br/>Monsters can push them too, don't get crushed!",
-			"delay"		: 0.0
-		},
-		{
-			"id"		: "hint_health",
-			"text"		: "Pickup hearts to regain health.",
-			"delay"		: 0.0
-		},
-		{
-			"id"		: "hint_bspeed",
-			"text"		: "Pickup speed potions to move faster for a few seconds.",
-			"delay"		: 0.0
-		},
-		{
-			"id"		: "hint_bfirerate",
-			"text"		: "Pickup fire potions to shoot and fight faster for a few seconds.",
-			"delay"		: 0.0
-		},
-		{
-			"id"		: "hint_bpower",
-			"text"		: "Pickup power potions to shoot and fight stronger for a few seconds.",
-			"delay"		: 0.0
-		},
-		{
-			"id"		: "hint_tutend",
-			"text"		: "You know the basics to survive in the dungeons.<br/>Let the real adventure begin!",
-			"delay"		: 0.0
-		}
+		}	
 	],
 
 	"Misc"	: [
