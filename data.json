@@ -277,7 +277,7 @@
 		},
 		{
 			"id"		: "hint_wizard",
-			"text"		: "The <font color='#FFA0A0'>Wizard</font> shoots powerful exploding fireballs...<br/>but is very slow and weak.<br/><br/>-> Time your fireballs!<br/>-> Avoid melee combat, you are weak!",
+			"text"		: "The <font color='#FFA0A0'>Wizard</font> shoots powerful exploding fireballs...<br/>but is very slow and weak.<br/><br/>-> Blast everything with your fireballs!<br/>-> Avoid melee combat, you are weak!",
 			"delay"		: 0.0
 		},
 		{
