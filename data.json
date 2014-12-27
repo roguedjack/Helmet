@@ -170,7 +170,7 @@
 			"score"			: 10,
 			"aggroRange"	: 256,
 			"spawnTime"		: 1.0,
-			"melee"			: { "damage": 5, "firerate": 1.0 },
+			"melee"			: { "damage": 3, "firerate": 1.0 },
 			"weapon"		: null,			
 			"ai"			: {
 				"idle"	: { "script": "Idle", "time": 1.0 },
@@ -189,7 +189,7 @@
 			"speed"			: 48,
 			"score"			: 20,
 			"aggroRange"	: 256,
-			"spawnTime"		: 1.0,
+			"spawnTime"		: 2.0,
 			"melee"			: { "damage": 5, "firerate": 1.0 },
 			"weapon"		: { "projectile": "DemonShotProjectile", "firerate": 1.0, "angleMargin": 10.0 },			
 			"ai"			: {
