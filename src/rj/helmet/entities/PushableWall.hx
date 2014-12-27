@@ -3,7 +3,6 @@ package rj.helmet.entities;
 import haxe.EnumFlags;
 import rj.helmet.Entity;
 import rj.helmet.Entity.EntityType;
-import rj.helmet.fx.PushFx;
 import rj.helmet.WeaponMelee;
 
 /**

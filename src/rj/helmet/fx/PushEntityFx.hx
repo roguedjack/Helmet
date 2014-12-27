@@ -6,7 +6,7 @@ import rj.helmet.EntityFx;
  * ...
  * @author roguedjack
  */
-class PushFx extends EntityFx {
+class PushEntityFx extends EntityFx {
 	
 	public var px(default, default):Float;
 	public var py(default, default):Float;	
