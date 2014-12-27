@@ -1,6 +1,7 @@
 package rj.helmet;
 
 import h2d.col.Bounds;
+import h2d.col.Point;
 import h2d.Tile;
 import hxd.Res;
 import rj.helmet.dat.GameData;
@@ -23,7 +24,7 @@ class MonsterGenerator extends Entity implements Damageable {
 	var maxHitPoints:Int;
 	var hitPoints:Int;
 	var tiles:Array<Tile>;
-	var tmpSpawningPos:Array<{tx:Int, ty:Int}>;	
+	var tmpSpawningPos:Array<{x:Float, y:Float}>;	
 
 	/**
 	 * 
@@ -47,7 +48,7 @@ class MonsterGenerator extends Entity implements Damageable {
 		hardCollision = true;
 		setCollisionBox(data.colbox[0], data.colbox[1], data.colbox[2], data.colbox[3]);		
 		refreshImage();
-		tmpSpawningPos = new Array<{tx:Int,ty:Int}>();
+		tmpSpawningPos = new Array<{x:Float, y:Float}>();
 	}
 	
 	function refreshImage() {
@@ -77,33 +78,36 @@ class MonsterGenerator extends Entity implements Damageable {
 	}
 	
 	function trySpawningMonster():Bool {
-		// find all adjacent free tiles.
-		var t = world.toTilePos(pos.x, pos.y);		
+		// find adjacent free positions.
+		var spawnBounds = Bounds.fromPoints(new Point(pos.x - Main.TILE_SIZE, pos.y - Main.TILE_SIZE), new Point(pos.x + Main.TILE_SIZE, pos.y + Main.TILE_SIZE));
 		var nbSpawnPos = 0;
-		for (tx in t.tx - 1...t.tx + 2) {						
-			for (ty in t.ty - 1...t.ty + 2) {				
-				if (tx == t.tx && ty == t.ty) {
-					continue;
+		var x, y;
+		x = spawnBounds.xMin;
+		while (x <= spawnBounds.xMax) {
+			y = spawnBounds.yMin;
+			while (y <= spawnBounds.yMax) {
+				if (canSpawnAt(x, y)) {
+					tmpSpawningPos[nbSpawnPos++] = { x:x, y:y };
 				}
-				if (canSpawnAt(tx, ty)) {
-					tmpSpawningPos[nbSpawnPos++] = { tx:tx, ty:ty };
-				}
+				y += 0.5 * Main.TILE_SIZE;
 			}
+			x += 0.5 * Main.TILE_SIZE;
 		}
 		if (nbSpawnPos == 0) {
 			return false;
 		}
 		// spawn a monster in one of them.		
 		var i = Std.random(nbSpawnPos);
-		spawnMonster(tmpSpawningPos[i].tx * Main.TILE_SIZE, tmpSpawningPos[i].ty * Main.TILE_SIZE);
+		spawnMonster(tmpSpawningPos[i].x, tmpSpawningPos[i].y);		
 		return true;
 	}
 	
-	inline function canSpawnAt(tx:Int, ty:Int):Bool {
-		if (world.isBlockingAt(tx, ty)) {
+	inline function canSpawnAt(x:Float, y:Float):Bool {
+		var t = world.toTilePos(x, y);
+		if (world.isBlockingAt(t.tx, t.ty)) {	
 			return false;
 		}
-		return world.isFreeForSpawning(Bounds.fromValues(tx * Main.TILE_SIZE,  ty * Main.TILE_SIZE, Main.TILE_SIZE, Main.TILE_SIZE));
+		return world.isFreeForSpawning(Bounds.fromValues(x, y, Main.TILE_SIZE, Main.TILE_SIZE));
 	}
 	
 	function spawnMonster(x:Float, y:Float) {
