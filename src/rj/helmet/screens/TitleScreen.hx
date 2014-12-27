@@ -28,7 +28,7 @@ class TitleScreen extends Screen {
 		addChild(title);
 		
 		msg = new Text(FontBuilder.getFont("arial", 16));
-		msg.text = "Press 1 - Play as WARRIOR\n\nPress 2 - Play as VALKYRIE\n\nPress 3 - Play as ELF\n\nPress 4 - Play as WIZARD";
+		msg.text = "Press SPACE to start!";
 		msg.textColor = 0xFFFFFF;
 		msg.textAlign = Align.Center;
 		msg.dropShadow = { dx:1, dy:1, color:0, alpha:1 };
@@ -39,14 +39,10 @@ class TitleScreen extends Screen {
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 		
-		if (Key.isDown(Key.NUMBER_1) || Key.isDown(Key.NUMPAD_1)) {
+		msg.alpha = Std.int(time * 2) % 2 == 0 ? 1 : 0;
+		
+		if (Key.isDown(Key.SPACE)) {
 			game.startNewGame(CharacterClass.WARRIOR);
-		} else if (Key.isDown(Key.NUMBER_2) || Key.isDown(Key.NUMPAD_2)) {
-			game.startNewGame(CharacterClass.VALKYRIE);
-		} else if (Key.isDown(Key.NUMBER_3) || Key.isDown(Key.NUMPAD_3)) {
-			game.startNewGame(CharacterClass.ELF);
-		} else if (Key.isDown(Key.NUMBER_4) || Key.isDown(Key.NUMPAD_4)) {
-			game.startNewGame(CharacterClass.WIZARD);
 		}
 	}
 }

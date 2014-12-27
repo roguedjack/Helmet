@@ -33,6 +33,16 @@ import rj.helmet.entities.SwordProjectile;
 	var VALKYRIE = 1;
 	var ELF = 2;
 	var WIZARD = 3;
+	
+	public static function fromName(name:String):CharacterClass {
+		return switch (name.toLowerCase()) {
+			case "warrior": WARRIOR;
+			case "valkyrie": VALKYRIE;
+			case "elf": ELF;
+			case "wizard": WIZARD;
+			default: throw "unknown character class name " + name;
+		}
+	}
 }
 
 class CharacterClassProps {

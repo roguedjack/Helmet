@@ -4,6 +4,7 @@ import hxd.Res;
 import hxd.res.TiledMap;
 import rj.helmet.dat.GameData;
 import rj.helmet.entities.BonusItem;
+import rj.helmet.entities.CharacterSelector;
 import rj.helmet.entities.DebrisParticle;
 import rj.helmet.entities.DemonMonster;
 import rj.helmet.entities.DestructibleWall;
@@ -89,39 +90,41 @@ class World {
 		for (o in entitiesMap.objects) {
 			var e:Entity = null;
 			if (o.type == GameData.Exit.editor) {
-					e = new ExitEntity();
+				e = new ExitEntity();
 			} else if (o.type == GameData.Start.editor) {
-					e = new StartEntity();
+				e = new StartEntity();
 			} else if (o.type == GameData.GhostGenerator.editor) {
-					e = new MonsterGenerator(GhostMonster, new ParticleGenerator(DebrisParticle, [0x999999]), GameData.GhostGenerator);
+				e = new MonsterGenerator(GhostMonster, new ParticleGenerator(DebrisParticle, [0x999999]), GameData.GhostGenerator);
 			} else if (o.type == GameData.DemonGenerator.editor) {
-					e = new MonsterGenerator(DemonMonster, new ParticleGenerator(DebrisParticle, [0x999999]), GameData.DemonGenerator);	
+				e = new MonsterGenerator(DemonMonster, new ParticleGenerator(DebrisParticle, [0x999999]), GameData.DemonGenerator);	
 			} else if (o.type == GameData.Door.editor[0]) {
-					e = new DoorEntity(o.name, false);
+				e = new DoorEntity(o.name, false);
 			} else if (o.type ==  GameData.Door.editor[1]) {
-					e = new DoorEntity(o.name, true);
+				e = new DoorEntity(o.name, true);
 			} else if (o.type == GameData.KeyItem.editor) {
-					e = new KeyItem();					
+				e = new KeyItem();					
 			} else if (o.type == GameData.TreasureItem.editor) {
-					e = new TreasureItem();
+				e = new TreasureItem();
 			} else if (o.type == GameData.HealthItem.editor) {
-					e = new HealthItem();
+				e = new HealthItem();
 			} else if (o.type == GameData.MovingWall.editor[0]) {
-					e = new MovingWall(false, GameData.MovingWall);
+				e = new MovingWall(false, GameData.MovingWall);
 			} else if (o.type == GameData.MovingWall.editor[1]) {
-					e = new MovingWall(true, GameData.MovingWall);					
+				e = new MovingWall(true, GameData.MovingWall);					
 			} else if (o.type == GameData.DestructibleWall.editor) {
-					e = new DestructibleWall(GameData.DestructibleWall);
+				e = new DestructibleWall(GameData.DestructibleWall);
 			} else if (o.type == GameData.PushableWall.editor) {
-					e = new PushableWall(GameData.PushableWall);					
+				e = new PushableWall(GameData.PushableWall);					
 			} else if (o.type == GameData.SpeedBonus.editor) {
-					e = new BonusItem(ItemType.SPEED_BONUS, GameData.SpeedBonus, GameData.SpeedBonus);
+				e = new BonusItem(ItemType.SPEED_BONUS, GameData.SpeedBonus, GameData.SpeedBonus);
 			} else if (o.type == GameData.FirerateBonus.editor) {
-					e = new BonusItem(ItemType.FIRERATE_BONUS, GameData.FirerateBonus, GameData.FirerateBonus);					
+				e = new BonusItem(ItemType.FIRERATE_BONUS, GameData.FirerateBonus, GameData.FirerateBonus);					
 			} else if (o.type == GameData.PowerBonus.editor) {
-					e = new BonusItem(ItemType.POWER_BONUS, GameData.PowerBonus, GameData.PowerBonus);										
+				e = new BonusItem(ItemType.POWER_BONUS, GameData.PowerBonus, GameData.PowerBonus);										
 			} else if (o.type == GameData.MessageTrigger.editor) {
-					e = new MessageTrigger(GameData.getHintData(o.name));					
+				e = new MessageTrigger(GameData.getHintData(o.name));					
+			} else if (o.type == GameData.CharacterSelector.editor) {
+				e = new CharacterSelector(CharacterClass.fromName(o.name), GameData.CharacterSelector);
 			}
 			
 			if (e == null) {

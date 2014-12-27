@@ -39,6 +39,7 @@ class GameData {
 	public static var Exit:Dynamic;
 	public static var Door:Dynamic;
 	public static var MessageTrigger:Dynamic;
+	public static var CharacterSelector:Dynamic;
 		
 	static inline var DATA_FILE = "data.json";
 	
@@ -104,6 +105,7 @@ class GameData {
 		Exit = findById(json.Misc, "Exit");
 		Door = findById(json.Misc, "Door");
 		MessageTrigger = findById(json.Misc, "MessageTrigger");
+		CharacterSelector = findById(json.Misc, "CharacterSelector");
 	}
 	
 	public static function getHintData(hintId:String, mustFind:Bool = true):Dynamic {		

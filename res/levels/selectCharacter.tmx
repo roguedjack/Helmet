@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="17" height="12" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tiles" tilewidth="32" tileheight="32">
+  <image source="../gfx/tiles.png" width="256" height="256"/>
+ </tileset>
+ <layer name="floor" width="17" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYBzFo3gUE4UBSfcAzQ==
+  </data>
+ </layer>
+ <layer name="walls" width="17" height="12">
+  <data encoding="base64" compression="zlib">
+   eJzjZmBgYEXCfCTyeYCYjQEVkMMfNYP2ZvCTyMdmBqlgMJnBxYCadknFvEAMAGwhAfE=
+  </data>
+ </layer>
+ <objectgroup name="entities" width="17" height="12">
+  <object name="start" type="start" x="256" y="320" width="32" height="32"/>
+  <object name="warrior" type="charselect" x="64" y="160" width="32" height="32"/>
+  <object name="valkyrie" type="charselect" x="192" y="160" width="32" height="32"/>
+  <object name="elf" type="charselect" x="320" y="160" width="32" height="32"/>
+  <object name="wizard" type="charselect" x="448" y="160" width="32" height="32"/>
+  <object name="door1" type="hdoor" x="32" y="224" width="32" height="32"/>
+  <object name="door1" type="hdoor" x="64" y="224" width="32" height="32"/>
+  <object name="door1" type="hdoor" x="96" y="224" width="32" height="32"/>
+  <object name="door2" type="hdoor" x="160" y="224" width="32" height="32"/>
+  <object name="door2" type="hdoor" x="192" y="224" width="32" height="32"/>
+  <object name="door2" type="hdoor" x="224" y="224" width="32" height="32"/>
+  <object name="door3" type="hdoor" x="288" y="224" width="32" height="32"/>
+  <object name="door3" type="hdoor" x="320" y="224" width="32" height="32"/>
+  <object name="door3" type="hdoor" x="352" y="224" width="32" height="32"/>
+  <object name="door4" type="hdoor" x="416" y="224" width="32" height="32"/>
+  <object name="door4" type="hdoor" x="448" y="224" width="32" height="32"/>
+  <object name="door4" type="hdoor" x="480" y="224" width="32" height="32"/>
+  <object name="key1" type="key" x="64" y="288" width="32" height="32"/>
+  <object name="key2" type="key" x="192" y="288" width="32" height="32"/>
+  <object name="key3" type="key" x="320" y="288" width="32" height="32"/>
+  <object name="key4" type="key" x="448" y="288" width="32" height="32"/>
+  <object name="exit1" type="exit" x="64" y="32" width="32" height="32"/>
+  <object name="exit1" type="exit" x="192" y="32" width="32" height="32"/>
+  <object name="exit1" type="exit" x="320" y="32" width="32" height="32"/>
+  <object name="exit1" type="exit" x="448" y="32" width="32" height="32"/>
+  <object name="hint_warrior" type="message" x="32" y="256" width="32" height="32"/>
+  <object name="hint_warrior" type="message" x="64" y="256" width="32" height="32"/>
+  <object name="hint_warrior" type="message" x="96" y="256" width="32" height="32"/>
+  <object name="hint_valkyrie" type="message" x="160" y="256" width="32" height="32"/>
+  <object name="hint_valkyrie" type="message" x="192" y="256" width="32" height="32"/>
+  <object name="hint_valkyrie" type="message" x="224" y="256" width="32" height="32"/>
+  <object name="hint_elf" type="message" x="288" y="256" width="32" height="32"/>
+  <object name="hint_elf" type="message" x="320" y="256" width="32" height="32"/>
+  <object name="hint_elf" type="message" x="352" y="256" width="32" height="32"/>
+  <object name="hint_wizard" type="message" x="416" y="256" width="32" height="32"/>
+  <object name="hint_wizard" type="message" x="448" y="256" width="32" height="32"/>
+  <object name="hint_wizard" type="message" x="480" y="256" width="32" height="32"/>
+  <object name="hint_move" type="message" x="256" y="320" width="32" height="32"/>
+  <object name="hint_selectchar" type="message" x="256" y="320" width="32" height="32"/>
+ </objectgroup>
+</map>

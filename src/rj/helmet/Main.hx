@@ -69,7 +69,7 @@ class Main extends App {
 		Gfx.init();
 		PlayerActor.initCharacterClasses();
 		
-		mapCycle = [ Res.levels.tutorial, Res.levels.level1 ];
+		mapCycle = [ Res.levels.selectCharacter, Res.levels.tutorial, Res.levels.level1 ];
 		
 		world = new World(this);
 		view = null;
@@ -99,6 +99,12 @@ class Main extends App {
 		playerSaveData = new PlayerSaveData(cl);
 		screen = playScreen;		
 		startLevel(0);
+	}
+	
+	public function selectNewCharacterClass(cl:CharacterClass) {
+		playerSaveData = new PlayerSaveData(cl);
+		world.player.remove();
+		world.spawnEntity(new PlayerActor(playerSaveData), world.player.pos.x, world.player.pos.y);		
 	}
 	
 	public function startNextLevel() {
