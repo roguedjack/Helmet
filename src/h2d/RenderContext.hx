@@ -4,9 +4,9 @@ class RenderContext extends h3d.impl.RenderContext {
 
 	static inline var BUFFERING = false;
 
+	public var globalAlpha = 1.;
 	public var buffer : hxd.FloatBuffer;
 	public var bufPos : Int;
-
 	public var textures : h3d.impl.TextureCache;
 
 	public var tmpBounds = new h2d.col.Bounds();
@@ -24,6 +24,11 @@ class RenderContext extends h3d.impl.RenderContext {
 	var s2d : Scene;
 	var targetsStack : Array<{ t : h3d.mat.Texture, x : Int, y : Int, w : Int, h : Int }>;
 	var hasUVPos : Bool;
+
+	var curX : Int;
+	var curY : Int;
+	var curWidth : Int;
+	var curHeight : Int;
 
 	public function new(s2d) {
 		super();
@@ -52,6 +57,10 @@ class RenderContext extends h3d.impl.RenderContext {
 		currentObj = null;
 		bufPos = 0;
 		stride = 0;
+		curX = 0;
+		curY = 0;
+		curWidth = s2d.width;
+		curHeight = s2d.height;
 		// todo : we might prefer to auto-detect this by running a test and capturing its output
 		baseShader.pixelAlign = #if flash true #else false #end;
 		baseShader.halfPixelInverse.set(0.5 / engine.width, 0.5 / engine.height);
@@ -91,6 +100,10 @@ class RenderContext extends h3d.impl.RenderContext {
 		baseShader.halfPixelInverse.set(0.5 / (t == null ? engine.width : t.width), 0.5 / (t == null ? engine.height : t.height));
 		baseShader.viewport.set( -width * 0.5 - startX, -height * 0.5 - startY, 2 / width, -2 / height);
 		targetsStack.push( { t : t, x : startX, y : startY, w : width, h : height } );
+		curX = startX;
+		curY = startY;
+		curWidth = width;
+		curHeight = height;
 	}
 
 	public function popTarget( restore = true ) {
@@ -110,6 +123,10 @@ class RenderContext extends h3d.impl.RenderContext {
 		initShaders(baseShaderList);
 		baseShader.halfPixelInverse.set(0.5 / (t == null ? engine.width : t.width), 0.5 / (t == null ? engine.height : t.height));
 		baseShader.viewport.set( -width * 0.5 - startX, -height * 0.5 - startY, 2 / width, -2 / height);
+		curX = startX;
+		curY = startY;
+		curWidth = width;
+		curHeight = height;
 	}
 
 	public inline function flush() {
@@ -143,7 +160,7 @@ class RenderContext extends h3d.impl.RenderContext {
 	@:access(h2d.Drawable)
 	public function beginDrawObject( obj : h2d.Drawable, texture : h3d.mat.Texture ) {
 		beginDraw(obj, texture, true);
-		baseShader.color.set(obj.color.r, obj.color.g, obj.color.b, obj.color.a);
+		baseShader.color.set(obj.color.r, obj.color.g, obj.color.b, obj.color.a * globalAlpha);
 		baseShader.absoluteMatrixA.set(obj.matA, obj.matC, obj.absX);
 		baseShader.absoluteMatrixB.set(obj.matB, obj.matD, obj.absY);
 		beforeDraw();
@@ -156,8 +173,39 @@ class RenderContext extends h3d.impl.RenderContext {
 
 	@:access(h2d.Drawable)
 	public function drawTile( obj : h2d.Drawable, tile : h2d.Tile ) {
+
+		// check if our tile is outside of the viewport
+		if( obj.matB == 0 && obj.matC == 0 ) {
+			var tx = tile.dx + tile.width * 0.5;
+			var ty = tile.dy + tile.height * 0.5;
+			var tr = (tile.width > tile.height ? tile.width : tile.height) * 1.5 * hxd.Math.max(hxd.Math.abs(obj.matA),hxd.Math.abs(obj.matD));
+			var cx = obj.absX + tx * obj.matA - curX;
+			var cy = obj.absY + ty * obj.matD - curY;
+			if( cx < -tr || cy < -tr || cx - tr > curWidth || cy - tr > curHeight ) return;
+		} else {
+			var xMin = 1e20, yMin = 1e20, xMax = -1e20, yMax = -1e20;
+			inline function calc(x:Int, y:Int) {
+				var px = (x + tile.dx) * obj.matA + (y + tile.dy) * obj.matC;
+				var py = (x + tile.dx) * obj.matB + (y + tile.dy) * obj.matD;
+				if( px < xMin ) xMin = px;
+				if( px > xMax ) xMax = px;
+				if( py < yMin ) yMin = py;
+				if( py > yMax ) yMax = py;
+			}
+			var hw = tile.width * 0.5;
+			var hh = tile.height * 0.5;
+			calc(0, 0);
+			calc(tile.width, 0);
+			calc(0, tile.height);
+			calc(tile.width, tile.height);
+			var cx = obj.absX - curX;
+			var cy = obj.absY - curY;
+			if( cx + xMax < 0 || cy + yMax < 0 || cx + xMin > curWidth || cy + yMin > curHeight )
+				return;
+		}
+
 		beginDraw(obj, tile.getTexture(), true, true);
-		baseShader.color.set(obj.color.r, obj.color.g, obj.color.b, obj.color.a);
+		baseShader.color.set(obj.color.r, obj.color.g, obj.color.b, obj.color.a * globalAlpha);
 		baseShader.absoluteMatrixA.set(tile.width * obj.matA, tile.height * obj.matC, obj.absX + tile.dx * obj.matA + tile.dy * obj.matC);
 		baseShader.absoluteMatrixB.set(tile.width * obj.matB, tile.height * obj.matD, obj.absY + tile.dx * obj.matB + tile.dy * obj.matD);
 		baseShader.uvPos.set(tile.u, tile.v, tile.u2 - tile.u, tile.v2 - tile.v);

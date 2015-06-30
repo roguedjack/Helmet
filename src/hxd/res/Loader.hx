@@ -2,7 +2,7 @@ package hxd.res;
 
 class Loader {
 
-	public var fs(default,null) : FileSystem;
+	public var fs(default,null) : hxd.fs.FileSystem;
 	var cache : Map<String,Dynamic>;
 
 	public function new(fs) {
@@ -22,15 +22,6 @@ class Loader {
 		var m : FbxModel = cache.get(path);
 		if( m == null ) {
 			m = new FbxModel(fs.get(path));
-			cache.set(path, m);
-		}
-		return m;
-	}
-
-	function loadAwdModel( path : String ) : AwdModel {
-		var m : AwdModel = cache.get(path);
-		if( m == null ) {
-			m = new AwdModel(fs.get(path));
 			cache.set(path, m);
 		}
 		return m;

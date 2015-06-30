@@ -8,6 +8,11 @@ class Default extends Base {
 	var globals(get, never) : hxsl.Globals;
 	var cachedBuffer : h3d.shader.Buffers;
 	var tcache : h3d.impl.TextureCache;
+	var shaderCount : Int = 1;
+	var textureCount : Int = 1;
+	var shaderIdMap : Array<Int>;
+	var textureIdMap : Array<Int>;
+	var sortPasses = true;
 
 	inline function get_globals() return manager.globals;
 
@@ -26,6 +31,8 @@ class Default extends Base {
 		super();
 		manager = new h3d.shader.Manager(getOutputs());
 		tcache = new h3d.impl.TextureCache();
+		shaderIdMap = [];
+		textureIdMap = [];
 		initGlobals();
 	}
 
@@ -71,6 +78,13 @@ class Default extends Base {
 			}
 			p.shader = manager.compileShaders(shaders);
 			p.shaders = shaders;
+			var t = p.shader.fragment.textures2D;
+			if( t == null )
+				p.texture = 0;
+			else {
+				var t : h3d.mat.Texture = manager.getParamValue(t, shaders);
+				p.texture = t == null ? 0 : t.id;
+			}
 			p = p.next;
 		}
 	}
@@ -91,16 +105,31 @@ class Default extends Base {
 			globals.fastSet(k, ctx.sharedGlobals.get(k));
 		setGlobals();
 		setupShaders(passes);
-		passes = haxe.ds.ListSort.sortSingleLinked(passes, function(o1:Object, o2:Object) {
-			var d = o1.shader.id - o2.shader.id;
-			if( d != 0 ) return d;
-			// TODO : sort by textures
-			return 0;
-		});
+		var p = passes;
+		var shaderStart = shaderCount, textureStart = textureCount;
+		while( p != null ) {
+			if( !(shaderIdMap[p.shader.id] >= shaderStart) )
+				shaderIdMap[p.shader.id] = shaderCount++;
+			if( !(textureIdMap[p.texture] >= textureStart) )
+				textureIdMap[p.texture] = textureCount++;
+			p = p.next;
+		}
+		if( sortPasses )
+			passes = haxe.ds.ListSort.sortSingleLinked(passes, function(o1:Object, o2:Object) {
+				var d = shaderIdMap[o1.shader.id] - shaderIdMap[o2.shader.id];
+				if( d != 0 ) return d;
+				return textureIdMap[o1.texture] - textureIdMap[o2.texture];
+			});
 		ctx.uploadParams = uploadParams;
 		var p = passes;
 		var buf = cachedBuffer, prevShader = null;
-		log("Pass " + (passes == null ? "???" : passes.pass.name) + " start");
+		var drawTri = 0, drawCalls = 0, shaderSwitches = 0;
+		if( ctx.engine.driver.logEnable ) {
+			log("Pass " + (passes == null ? "???" : passes.pass.name) + " start");
+			drawTri = ctx.engine.drawTriangles;
+			drawCalls = ctx.engine.drawCalls;
+			shaderSwitches = ctx.engine.shaderSwitches;
+		}
 		while( p != null ) {
 			log("Render " + p.obj + "." + p.pass.name);
 			globalModelView = p.obj.absPos;
@@ -126,7 +155,10 @@ class Default extends Base {
 			p.obj.draw(ctx);
 			p = p.next;
 		}
-		log("Pass " + (passes == null ? "???" : passes.pass.name) + " end");
+		if( ctx.engine.driver.logEnable ) {
+			log("Pass " + (passes == null ? "???" : passes.pass.name) + " end");
+			log("\t" + (ctx.engine.drawTriangles - drawTri) + " tri " + (ctx.engine.drawCalls - drawCalls) + " calls " + (ctx.engine.shaderSwitches - shaderSwitches) + " shaders");
+		}
 		ctx.nextPass();
 		return passes;
 	}

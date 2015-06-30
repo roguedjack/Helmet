@@ -193,8 +193,11 @@ class Stage3dDriver extends Driver {
 		ctx.present();
 	}
 
-	override function disposeTexture( t : Texture ) {
-		t.dispose();
+	override function disposeTexture( t : h3d.mat.Texture ) {
+		if( t.t != null ) {
+			t.t.dispose();
+			t.t = null;
+		}
 	}
 
 	override function allocVertexes( buf : ManagedBuffer ) : VertexBuffer {
@@ -475,7 +478,7 @@ class Stage3dDriver extends Driver {
 			for( i in 0...curShader.s.fragment.textures2DCount + curShader.s.fragment.texturesCubeCount ) {
 				var t = buffers.fragment.tex[i];
 				if( t == null || t.isDisposed() )
-					t = h3d.mat.Texture.fromColor(0xFF00FF);
+					t = h3d.mat.Texture.fromColor(loadingTextureColor,(loadingTextureColor>>>24)/255);
 				if( t != null && t.t == null && t.realloc != null ) {
 					t.alloc();
 					t.realloc();

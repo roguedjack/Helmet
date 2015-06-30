@@ -9,6 +9,7 @@ class App {
 	public function new(?engine) {
 		if( engine != null ) {
 			this.engine = engine;
+			engine.onReady = setup;
 			haxe.Timer.delay(setup, 0);
 		} else {
 			hxd.System.start(function() {
@@ -52,18 +53,34 @@ class App {
 			var old = driver.logEnable;
 			var log = new h3d.impl.LogDriver(driver);
 			log.logLines = [];
-			@:privateAccess engine.driver = log;
+			engine.setDriver(log);
 			try {
 				engine.render(s3d);
 			} catch( e : Dynamic ) {
 				log.logLines.push(Std.string(e));
 			}
 			driver.logEnable = old;
-			@:privateAccess engine.driver = driver;
+			engine.setDriver(driver);
 			hxd.File.saveBytes("log.txt", haxe.io.Bytes.ofString(log.logLines.join("\n")));
-		} else
-		#end
+		} else {
+			var scnDriver = Std.instance(engine.driver, h3d.impl.ScnDriver);
+			if( hxd.Key.isDown(hxd.Key.CTRL) && hxd.Key.isDown(hxd.Key.F11) ) {
+				if( scnDriver == null ) {
+					engine.setDriver(new h3d.impl.ScnDriver(engine.driver));
+					engine.mem.onContextLost();
+					engine.onContextLost();
+					engine.resize(engine.width, engine.height);
+					engine.render(s3d); // first render to perform allocations
+				}
+			} else if( scnDriver != null ) {
+				engine.setDriver(scnDriver.getDriver());
+				hxd.File.saveBytes("record.scn", scnDriver.getBytes());
+			}
 			engine.render(s3d);
+		}
+		#else
+			engine.render(s3d);
+		#end
 	}
 
 	function update( dt : Float ) {

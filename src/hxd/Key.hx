@@ -67,6 +67,22 @@ class Key {
 	public static inline var MOUSE_LEFT = 0;
 	public static inline var MOUSE_RIGHT = 1;
 
+	/** a bit that is set for left keys **/
+	public static inline var LOC_LEFT = 256;
+	/** a bit that is set for right keys **/
+	public static inline var LOC_RIGHT = 512;
+
+	public static inline var LSHIFT = SHIFT | LOC_LEFT;
+	public static inline var RSHIFT = SHIFT | LOC_RIGHT;
+	public static inline var LCTRL = CTRL | LOC_LEFT;
+	public static inline var RCTRL = CTRL | LOC_RIGHT;
+	public static inline var LALT = ALT | LOC_LEFT;
+	public static inline var RALT = ALT | LOC_RIGHT;
+
+	#if noEngine
+	public static var frameCount = 0;
+	#end
+
 	static var initDone = false;
 	static var keyPressed : Array<Int> = [];
 
@@ -74,12 +90,20 @@ class Key {
 		return keyPressed[code] > 0;
 	}
 
+	public static inline function getFrame() {
+		#if noEngine
+		return frameCount;
+		#else
+		return h3d.Engine.getCurrent().frameCount + 1;
+		#end
+	}
+
 	public static function isPressed( code : Int ) {
-		return keyPressed[code] == h3d.Engine.getCurrent().frameCount+1;
+		return keyPressed[code] == getFrame();
 	}
 
 	public static function isReleased( code : Int ) {
-		return keyPressed[code] == -(h3d.Engine.getCurrent().frameCount+1);
+		return keyPressed[code] == -getFrame();
 	}
 
 	public static function initialize() {
@@ -113,13 +137,13 @@ class Key {
 	static function onEvent( e : Event ) {
 		switch( e.kind ) {
 		case EKeyDown:
-			keyPressed[e.keyCode] = h3d.Engine.getCurrent().frameCount+1;
+			keyPressed[e.keyCode] = getFrame();
 		case EKeyUp:
-			keyPressed[e.keyCode] = -(h3d.Engine.getCurrent().frameCount+1);
+			keyPressed[e.keyCode] = -getFrame();
 		case EPush:
-			keyPressed[e.button] = h3d.Engine.getCurrent().frameCount+1;
+			keyPressed[e.button] = getFrame();
 		case ERelease:
-			keyPressed[e.button] = -(h3d.Engine.getCurrent().frameCount+1);
+			keyPressed[e.button] = -getFrame();
 		default:
 		}
 	}

@@ -1,5 +1,5 @@
 package hxd.fmt.pak;
-import hxd.res.FileEntry;
+import hxd.fs.FileEntry;
 #if air3
 import hxd.impl.Air3File;
 #else
@@ -106,7 +106,7 @@ private class PakEntry extends FileEntry {
 		});
 		loader.contentLoaderInfo.addEventListener(flash.events.Event.COMPLETE, function(_) {
 			var content : flash.display.Bitmap = cast loader.content;
-			onLoaded(new hxd.res.LoadedBitmap(content.bitmapData));
+			onLoaded(new hxd.fs.LoadedBitmap(content.bitmapData));
 			loader.unload();
 		});
 		var op = openedBytes != null;
@@ -120,10 +120,11 @@ private class PakEntry extends FileEntry {
 
 }
 
-class FileSystem implements hxd.res.FileSystem {
+class FileSystem implements hxd.fs.FileSystem {
 
 	var root : PakEntry;
 	var dict : Map<String,PakEntry>;
+	var files : Array<FileInput>;
 
 	public function new( pakFile : String ) {
 		dict = new Map();
@@ -131,6 +132,7 @@ class FileSystem implements hxd.res.FileSystem {
 		f.name = "<root>";
 		f.isDirectory = true;
 		f.content = [];
+		files = [];
 		root = new PakEntry(null, f, null);
 		loadPak(pakFile);
 	}
@@ -143,6 +145,13 @@ class FileSystem implements hxd.res.FileSystem {
 				addRec(root, f.name, f, s, pak.headerSize);
 		} else
 			addRec(root, pak.root.name, pak.root, s, pak.headerSize);
+		files.push(s);
+	}
+
+	public function close() {
+		for( f in files )
+			f.close();
+		files = [];
 	}
 
 	function addRec( parent : PakEntry, path : String, f : Data.File, pak : FileInput, delta : Int ) {

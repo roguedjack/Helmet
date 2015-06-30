@@ -1,9 +1,9 @@
-package hxd.res;
+package hxd.fs;
 
 #if (air3 || sys)
 
-@:allow(hxd.res.LocalFileSystem)
-@:access(hxd.res.LocalFileSystem)
+@:allow(hxd.fs.LocalFileSystem)
+@:access(hxd.fs.LocalFileSystem)
 private class LocalEntry extends FileEntry {
 
 	var fs : LocalFileSystem;
@@ -11,6 +11,7 @@ private class LocalEntry extends FileEntry {
 	#if air3
 	var file : flash.filesystem.File;
 	var fread : flash.filesystem.FileStream;
+	var checkExists : Bool;
 	#else
 	var file : String;
 	var fread : sys.io.FileInput;
@@ -21,12 +22,12 @@ private class LocalEntry extends FileEntry {
 		this.name = name;
 		this.relPath = relPath;
 		this.file = file;
-		if( fs.createHMD && (extension == "fbx" || extension == "xtra") )
+		if( fs.createHMD && extension == "fbx" )
 			convertToHMD();
-		else if( fs.createXBX && extension == "fbx" )
-			convertToXBX();
 		if( fs.createMP3 && extension == "wav" )
 			convertToMP3();
+		if( fs.createOGG && extension == "wav" )
+			convertToOGG();
 	}
 
 	static var INVALID_CHARS = ~/[^A-Za-z0-9_]/g;
@@ -34,18 +35,10 @@ private class LocalEntry extends FileEntry {
 	function convertToHMD() {
 		function getHMD() {
 			var fbx = null;
-			var content;
-			if( extension == "xtra" ) {
-				fs.createHMD = false;
-				content = fs.get(relPath.substr(0, relPath.length - 4) + "FBX").getBytes();
-				fs.createHMD = true;
-			} else
-				content = getBytes();
+			var content = getBytes();
 			try fbx = hxd.fmt.fbx.Parser.parse(content.toString()) catch( e : Dynamic ) throw Std.string(e) + " in " + relPath;
 			var hmdout = new hxd.fmt.fbx.HMDOut();
 			hmdout.load(fbx);
-			if( extension == "xtra" )
-				hmdout.loadXtra(getBytes().toString());
 			var hmd = hmdout.toHMD(null, !StringTools.startsWith(name, "Anim_"));
 			var out = new haxe.io.BytesOutput();
 			new hxd.fmt.hmd.Writer(out).write(hmd);
@@ -60,8 +53,8 @@ private class LocalEntry extends FileEntry {
 			out.open(target, flash.filesystem.FileMode.WRITE);
 			out.writeBytes(hmd.getData());
 			out.close();
+			checkExists = true;
 		}
-		file = target;
 		#else
 		var ttime = try sys.FileSystem.stat(target) catch( e : Dynamic ) null;
 		if( ttime == null || ttime.mtime.getTime() < sys.FileSystem.stat(file).mtime.getTime() ) {
@@ -69,35 +62,7 @@ private class LocalEntry extends FileEntry {
 			sys.io.File.saveBytes(target, hmd);
 		}
 		#end
-	}
-
-	function convertToXBX() {
-		function getXBX() {
-			var fbx = null;
-			try fbx = hxd.fmt.fbx.Parser.parse(getBytes().toString()) catch( e : Dynamic ) throw Std.string(e) + " in " + relPath;
-			fbx = fs.xbxFilter(this, fbx);
-			var out = new haxe.io.BytesOutput();
-			new hxd.fmt.fbx.XBXWriter(out).write(fbx);
-			return out.getBytes();
-		}
-		var target = fs.tmpDir + "R_" + INVALID_CHARS.replace(relPath,"_") + ".xbx";
-		#if air3
-		var target = new flash.filesystem.File(target);
-		if( !target.exists || target.modificationDate.getTime() < file.modificationDate.getTime() ) {
-			var fbx = getXBX();
-			var out = new flash.filesystem.FileStream();
-			out.open(target, flash.filesystem.FileMode.WRITE);
-			out.writeBytes(fbx.getData());
-			out.close();
-		}
 		file = target;
-		#else
-		var ttime = try sys.FileSystem.stat(target) catch( e : Dynamic ) null;
-		if( ttime == null || ttime.mtime.getTime() < sys.FileSystem.stat(file).mtime.getTime() ) {
-			var fbx = getXBX();
-			sys.io.File.saveBytes(target, fbx);
-		}
-		#end
 	}
 
 	function convertToMP3() {
@@ -105,24 +70,31 @@ private class LocalEntry extends FileEntry {
 		#if air3
 		var target = new flash.filesystem.File(target);
 		if( !target.exists || target.modificationDate.getTime() < file.modificationDate.getTime() ) {
-			var p = new flash.desktop.NativeProcess();
-			var i = new flash.desktop.NativeProcessStartupInfo();
-			i.arguments = flash.Vector.ofArray(["--resample", "44100", "-h",file.nativePath,target.nativePath]);
-			var f = new flash.filesystem.File("d:/projects/shiroTools/tools/lame.exe");
-			i.executable = f;
-			i.workingDirectory = f.parent;
-			p.addEventListener("exit", function(e:Dynamic) {
-				var code : Int = Reflect.field(e, "exitCode");
-				if( code == 0 )
-					file = target;
-			});
-			p.addEventListener(flash.events.IOErrorEvent.IO_ERROR, function(e) {
-				trace(e);
-			});
-			p.start(i);
-		} else
-			file = target;
+			hxd.snd.Convert.toMP3(file.nativePath, target.nativePath);
+			checkExists = true;
+		}
+		#else
+		var ttime = try sys.FileSystem.stat(target) catch( e : Dynamic ) null;
+		if( ttime == null || ttime.mtime.getTime() < sys.FileSystem.stat(file).mtime.getTime() )
+			hxd.snd.Convert.toMP3(file, target);
 		#end
+		file = target;
+	}
+
+	function convertToOGG() {
+		var target = fs.tmpDir + "R_" + INVALID_CHARS.replace(relPath,"_") + ".ogg";
+		#if air3
+		var target = new flash.filesystem.File(target);
+		if( !target.exists || target.modificationDate.getTime() < file.modificationDate.getTime() ) {
+			hxd.snd.Convert.toOGG(file.nativePath, target.nativePath);
+			checkExists = true;
+		}
+		#else
+		var ttime = try sys.FileSystem.stat(target) catch( e : Dynamic ) null;
+		if( ttime == null || ttime.mtime.getTime() < sys.FileSystem.stat(file).mtime.getTime() )
+			hxd.snd.Convert.toOGG(file, target);
+		#end
+		file = target;
 	}
 
 	override function getSign() : Int {
@@ -144,6 +116,8 @@ private class LocalEntry extends FileEntry {
 
 	override function getBytes() : haxe.io.Bytes {
 		#if air3
+		if( checkExists && !file.exists )
+			return haxe.io.Bytes.alloc(0);
 		var fs = new flash.filesystem.FileStream();
 		fs.open(file, flash.filesystem.FileMode.READ);
 		var bytes = haxe.io.Bytes.alloc(fs.bytesAvailable);
@@ -226,7 +200,7 @@ private class LocalEntry extends FileEntry {
 		#end
 	}
 
-	override function loadBitmap( onLoaded : hxd.res.LoadedBitmap -> Void ) : Void {
+	override function loadBitmap( onLoaded : hxd.fs.LoadedBitmap -> Void ) : Void {
 		#if flash
 		var loader = new flash.display.Loader();
 		loader.contentLoaderInfo.addEventListener(flash.events.IOErrorEvent.IO_ERROR, function(e:flash.events.IOErrorEvent) {
@@ -234,7 +208,7 @@ private class LocalEntry extends FileEntry {
 		});
 		loader.contentLoaderInfo.addEventListener(flash.events.Event.COMPLETE, function(_) {
 			var content : flash.display.Bitmap = cast loader.content;
-			onLoaded(new hxd.res.LoadedBitmap(content.bitmapData));
+			onLoaded(new hxd.fs.LoadedBitmap(content.bitmapData));
 			loader.unload();
 		});
 		loader.load(new flash.net.URLRequest(file.url));
@@ -353,9 +327,9 @@ class LocalFileSystem implements FileSystem {
 	var fileCache = new Map<String,{r:flash.filesystem.File}>();
 	#end
 	public var baseDir(default,null) : String;
-	public var createXBX : Bool;
-	public var createHMD : Bool;
+	var createHMD : Bool = true;
 	public var createMP3 : Bool;
+	public var createOGG : Bool;
 	public var tmpDir : String;
 
 	public function new( dir : String ) {
@@ -371,16 +345,16 @@ class LocalFileSystem implements FileSystem {
 		var exePath = Sys.executablePath().split("\\").join("/").split("/");
 		exePath.pop();
 		var froot = sys.FileSystem.fullPath(exePath.join("/") + "/" + baseDir);
-		if( !sys.FileSystem.isDirectory(froot) ) throw "Could not find dir " + dir;
+		if( !sys.FileSystem.isDirectory(froot) ) {
+			froot = sys.FileSystem.fullPath(baseDir);
+			if( !sys.FileSystem.isDirectory(froot) )
+				throw "Could not find dir " + dir;
+		}
 		baseDir = froot.split("\\").join("/");
 		if( !StringTools.endsWith(baseDir, "/") ) baseDir += "/";
 		root = new LocalEntry(this, "root", null, baseDir);
 		#end
 		tmpDir = baseDir + ".tmp/";
-	}
-
-	public dynamic function xbxFilter( entry : FileEntry, fbx : hxd.fmt.fbx.Data.FbxNode ) : hxd.fmt.fbx.Data.FbxNode {
-		return fbx;
 	}
 
 	public function getRoot() : FileEntry {

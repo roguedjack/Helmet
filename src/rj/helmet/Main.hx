@@ -1,11 +1,14 @@
 package rj.helmet;
+import flash.net.FileReference;
 import h2d.Text;
 import haxe.Resource;
 import hxd.App;
+import hxd.BitmapData;
 import hxd.Key;
 import hxd.Res;
 import hxd.res.FontBuilder;
 import hxd.res.TiledMap;
+import hxd.Timer;
 import rj.helmet.dat.GameData;
 import rj.helmet.entities.PlayerActor;
 import rj.helmet.screens.TitleScreen;
@@ -64,7 +67,7 @@ class Main extends App {
 		GameData.load();
 				
 		s2d.setFixedSize(WIDTH, HEIGHT);
-		engine.backgroundColor = 0x101010;
+		engine.backgroundColor = 0xFF101010;
 		
 		Gfx.init();
 		PlayerActor.initCharacterClasses();
@@ -80,8 +83,21 @@ class Main extends App {
 	}	
 	
 	override function update(dt:Float) {
-		// using dt instead of raw fps, if I understood it correctly it does some smoothing and lag check.
-		screen.update(dt * TARGET_FRAME_TIME); // raw fps --- screen.update(1.0 / engine.fps);
+		#if debug
+		// screenshot
+		if (Key.isPressed(Key.F1)) {
+			var bmp = new BitmapData(Main.WIDTH, Main.HEIGHT);
+			engine.setCapture(bmp, function():Void {
+				var png = bmp.toPNG();
+				var file = new FileReference();
+				file.save(png.getData(), "screenshot.png");
+				bmp.dispose();
+			});
+		}
+		#end
+		
+		// update screen
+		screen.update(dt * TARGET_FRAME_TIME); 
 		
 		if (DEBUG_INFO) {
 			if (debugText == null) {

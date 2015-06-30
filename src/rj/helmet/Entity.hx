@@ -332,8 +332,7 @@ class Entity {
 	function onWorldCollision(colFlags:EnumFlags<ColFlags>, vx:Float, vy:Float) { }
 
 	public function playSfx(sfx:Sound, vol:Float = 0.5) {
-		sfx.volume = vol;
-		sfx.play();
+		sfx.play(false, vol);
 	}
 
 	public function startFx(fx:EntityFx) {

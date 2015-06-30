@@ -31,7 +31,6 @@ class FileTree {
 		pairedExt.set("fnt", ["png"]);
 		pairedExt.set("fbx", ["png"]);
 		pairedExt.set("cdb", ["img"]);
-		pairedExt.set("xtra", ["fbx"]);
 		isFlash = Context.defined("flash");
 		isJS = Context.defined("js");
 		isCPP = Context.defined("cpp");
@@ -56,6 +55,8 @@ class FileTree {
 		if( options == null ) options = { };
 		var needTmp = options.compressSounds;
 		if( options.tmpDir == null ) options.tmpDir = path + "/.tmp/";
+		// if the OGG library is detected, compress as OGG by default, unless compressAsMp3 is set
+		if( options.compressAsMp3 == null ) options.compressAsMp3 = options.compressSounds && !Context.defined("stb_ogg_sound");
 		if( needTmp && !sys.FileSystem.exists(options.tmpDir) )
 			sys.FileSystem.createDirectory(options.tmpDir);
 		this.options = options;
@@ -106,19 +107,35 @@ class FileTree {
 
 		switch( ext.toLowerCase() ) {
 		case "wav" if( options.compressSounds ):
-			var tmp = options.tmpDir + name + ".mp3";
-			if( getTime(tmp) < getTime(fullPath) ) {
-				Sys.println("Converting " + relPath);
-				if( Sys.command("lame", ["--resample","44100","--silent","-h",fullPath,tmp]) != 0 )
-					Context.warning("Failed to run lame on " + path, pos);
-				else {
+			if( options.compressAsMp3 || !Context.defined("stb_ogg_sound") ) {
+				var tmp = options.tmpDir + name + ".mp3";
+				if( getTime(tmp) < getTime(fullPath) ) {
+					Sys.println("Converting " + relPath);
+					try {
+						hxd.snd.Convert.toMP3(fullPath, tmp);
+						fullPath = tmp;
+					} catch( e : Dynamic ) {
+						Context.warning(e, pos);
+					}
+				} else {
 					fullPath = tmp;
 				}
 			} else {
-				fullPath = tmp;
+				var tmp = options.tmpDir + name + ".ogg";
+				if( getTime(tmp) < getTime(fullPath) ) {
+					Sys.println("Converting " + relPath);
+					try {
+						hxd.snd.Convert.toOGG(fullPath, tmp);
+						fullPath = tmp;
+					} catch( e : Dynamic ) {
+						Context.warning(e, pos);
+					}
+				} else {
+					fullPath = tmp;
+				}
 			}
 			Context.registerModuleDependency(currentModule, fullPath);
-		case "fbx" if( options.createHMD ):
+		case "fbx":
 			var tmp = options.tmpDir + name + ".hmd";
 			if( getTime(tmp) < getTime(fullPath) ) {
 				Sys.println("Converting " + relPath);
@@ -127,19 +144,6 @@ class FileTree {
 				var h3d = fbx.toHMD(fullPath.substr(0,fullPath.length-file.length), !StringTools.startsWith(file,"Anim_") );
 				var out = sys.io.File.write(tmp);
 				new hxd.fmt.hmd.Writer(out).write(h3d);
-				out.close();
-			}
-			Context.registerModuleDependency(currentModule, fullPath);
-			fullPath = tmp;
-		case "fbx" if( options.createXBX ):
-			var tmp = options.tmpDir + name + ".xbx";
-			if( getTime(tmp) < getTime(fullPath) ) {
-				Sys.println("Converting " + relPath);
-				var fbx = hxd.fmt.fbx.Parser.parse(sys.io.File.getContent(fullPath));
-				if( options.xbxFilter != null )
-					fbx = options.xbxFilter(relPath,fbx);
-				var out = sys.io.File.write(tmp);
-				new hxd.fmt.fbx.XBXWriter(out).write(fbx);
 				out.close();
 			}
 			Context.registerModuleDependency(currentModule, fullPath);
@@ -305,7 +309,7 @@ class FileTree {
 				};
 				fields.push(field);
 				fields.push(fget);
-				dict.set(f, { path : relPath + "/" + fileName, field : field, fget : fget });
+				dict.set(fname, { path : relPath + "/" + fileName, field : field, fget : fget });
 			}
 		}
 	}
@@ -349,15 +353,13 @@ class FileTree {
 		switch( ext.toLowerCase() ) {
 		case "jpg", "png":
 			return { e : macro loader.loadImage($epath), t : macro : hxd.res.Image };
-		case "fbx", "xbx", "xtra":
+		case "fbx":
 			return { e : macro loader.loadFbxModel($epath), t : macro : hxd.res.FbxModel };
-		case "awd":
-			return { e : macro loader.loadAwdModel($epath), t : macro : hxd.res.AwdModel };
 		case "ttf":
 			return { e : macro loader.loadFont($epath), t : macro : hxd.res.Font };
 		case "fnt":
 			return { e : macro loader.loadBitmapFont($epath), t : macro : hxd.res.BitmapFont };
-		case "wav", "mp3":
+		case "wav", "mp3", "ogg":
 			return { e : macro loader.loadSound($epath), t : macro : hxd.res.Sound };
 		case "tmx":
 			return { e : macro loader.loadTiledMap($epath), t : macro : hxd.res.TiledMap };

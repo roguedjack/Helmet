@@ -15,8 +15,8 @@ private class FormatMap {
 }
 
 class GeometryBuffer {
-	public var vertexes : haxe.ds.Vector<Float>;
-	public var indexes : haxe.ds.Vector<Int>;
+	public var vertexes : haxe.ds.Vector<hxd.impl.Float32>;
+	public var indexes : haxe.ds.Vector<hxd.impl.UInt16>;
 	public function new() {
 	}
 }
@@ -24,7 +24,7 @@ class GeometryBuffer {
 class Library {
 
 	public var header : Data;
-	var entry : hxd.res.FileEntry;
+	var entry : hxd.fs.FileEntry;
 	var cachedPrimitives : Array<h3d.prim.Primitive>;
 	var cachedAnimations : Map<String, h3d.anim.Animation>;
 	var cachedSkin : Map<String, h3d.anim.Skin>;
@@ -339,10 +339,7 @@ class Library {
 		return objs[0];
 	}
 
-	public function loadAnimation( ?mode : h3d.anim.Mode, ?name : String ) : h3d.anim.Animation {
-
-		if( mode != null && mode != LinearAnim )
-			throw "Mode should be LinearAnim";
+	public function loadAnimation( ?name : String ) : h3d.anim.Animation {
 
 		var a = cachedAnimations.get(name == null ? "" : name);
 		if( a != null )
@@ -447,11 +444,21 @@ class Library {
 				l.addAlphaCurve(o.name, fl);
 				hxd.impl.Tmp.saveBytes(data);
 			}
+			if( o.flags.has(HasProps) ) {
+				for( p in o.props ) {
+					var fl = new haxe.ds.Vector(a.frames);
+					var size = 4 * a.frames;
+					var data = hxd.impl.Tmp.getBytes(size);
+					entry.read(data, 0, size);
+					for( i in 0...fl.length )
+						fl[i] = data.getFloat(i * 4);
+					l.addPropCurve(o.name, p, fl);
+					hxd.impl.Tmp.saveBytes(data);
+				}
+			}
 		}
 
 		entry.close();
-
-
 		return l;
 	}
 

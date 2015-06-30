@@ -12,6 +12,10 @@ typedef Texture = { t : js.html.webgl.Texture, width : Int, height : Int, fmt : 
 typedef IndexBuffer = nme.gl.GLBuffer;
 typedef VertexBuffer = { b : nme.gl.GLBuffer, stride : Int };
 typedef Texture = { t : nme.gl.GLTexture, width : Int, height : Int, fmt : Int, ?fb : nme.gl.GLFramebuffer, ?rb : nme.gl.GLRenderbuffer };
+#elseif hxsdl
+typedef IndexBuffer = sdl.GL.Buffer;
+typedef VertexBuffer = { b : sdl.GL.Buffer, stride : Int };
+typedef Texture = { t : sdl.GL.Texture, width : Int, height : Int, fmt : Int, ?fb : sdl.GL.Framebuffer, ?rb : sdl.GL.Renderbuffer };
 #else
 typedef IndexBuffer = Int;
 typedef VertexBuffer = Int;
@@ -48,6 +52,7 @@ enum Feature {
 class Driver {
 
 	public var logEnable : Bool;
+	public var loadingTextureColor = 0xFFFF00FF;
 
 	public function hasFeature( f : Feature ) {
 		return false;
@@ -142,7 +147,7 @@ class Driver {
 		return null;
 	}
 
-	public function disposeTexture( t : Texture ) {
+	public function disposeTexture( t : h3d.mat.Texture ) {
 	}
 
 	public function disposeIndexes( i : IndexBuffer ) {

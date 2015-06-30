@@ -33,21 +33,7 @@ class Stage {
 		stage = flash.Lib.current.stage;
 		stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
 		stage.addEventListener(flash.events.Event.RESIZE, onResize);
-		if( hxd.System.isTouch ) {
-			flash.ui.Multitouch.inputMode = flash.ui.MultitouchInputMode.TOUCH_POINT;
-			stage.addEventListener(flash.events.TouchEvent.TOUCH_BEGIN, onTouchDown);
-			stage.addEventListener(flash.events.TouchEvent.TOUCH_MOVE, onTouchMove);
-			stage.addEventListener(flash.events.TouchEvent.TOUCH_END, onTouchUp);
-		} else {
-			stage.addEventListener(flash.events.MouseEvent.MOUSE_DOWN, onMouseDown);
-			stage.addEventListener(flash.events.MouseEvent.MOUSE_MOVE, onMouseMove);
-			stage.addEventListener(flash.events.MouseEvent.MOUSE_UP, onMouseUp);
-			stage.addEventListener(flash.events.MouseEvent.MOUSE_WHEEL, onMouseWheel);
-			stage.addEventListener(flash.events.KeyboardEvent.KEY_DOWN, onKeyDown);
-			stage.addEventListener(flash.events.KeyboardEvent.KEY_UP, onKeyUp);
-			stage.addEventListener(flash.events.MouseEvent.RIGHT_MOUSE_DOWN, onRMouseDown);
-			stage.addEventListener(flash.events.MouseEvent.RIGHT_MOUSE_UP, onRMouseUp);
-		}
+		initGesture(false);
 		#elseif js
 		canvas = getCanvas();
 		canvasPos = canvas.getBoundingClientRect();
@@ -81,6 +67,38 @@ class Stage {
 	}
 
 	#if flash
+
+	function initGesture(b) {
+		if( hxd.System.isTouch ) {
+			if( b )  {
+				flash.ui.Multitouch.inputMode = flash.ui.MultitouchInputMode.GESTURE;
+				stage.removeEventListener(flash.events.TouchEvent.TOUCH_BEGIN, onTouchDown);
+				stage.removeEventListener(flash.events.TouchEvent.TOUCH_MOVE, onTouchMove);
+				stage.removeEventListener(flash.events.TouchEvent.TOUCH_END, onTouchUp);
+				stage.addEventListener(flash.events.MouseEvent.MOUSE_DOWN, onMouseDown);
+				stage.addEventListener(flash.events.MouseEvent.MOUSE_MOVE, onMouseMove);
+				stage.addEventListener(flash.events.MouseEvent.MOUSE_UP, onMouseUp);
+			} else {
+				flash.ui.Multitouch.inputMode = flash.ui.MultitouchInputMode.TOUCH_POINT;
+				stage.addEventListener(flash.events.TouchEvent.TOUCH_BEGIN, onTouchDown);
+				stage.addEventListener(flash.events.TouchEvent.TOUCH_MOVE, onTouchMove);
+				stage.addEventListener(flash.events.TouchEvent.TOUCH_END, onTouchUp);
+				stage.removeEventListener(flash.events.MouseEvent.MOUSE_DOWN, onMouseDown);
+				stage.removeEventListener(flash.events.MouseEvent.MOUSE_MOVE, onMouseMove);
+				stage.removeEventListener(flash.events.MouseEvent.MOUSE_UP, onMouseUp);
+			}
+		} else {
+			stage.addEventListener(flash.events.MouseEvent.MOUSE_DOWN, onMouseDown);
+			stage.addEventListener(flash.events.MouseEvent.MOUSE_MOVE, onMouseMove);
+			stage.addEventListener(flash.events.MouseEvent.MOUSE_UP, onMouseUp);
+			stage.addEventListener(flash.events.MouseEvent.MOUSE_WHEEL, onMouseWheel);
+			stage.addEventListener(flash.events.KeyboardEvent.KEY_DOWN, onKeyDown);
+			stage.addEventListener(flash.events.KeyboardEvent.KEY_UP, onKeyUp);
+			stage.addEventListener(flash.events.MouseEvent.RIGHT_MOUSE_DOWN, onRMouseDown);
+			stage.addEventListener(flash.events.MouseEvent.RIGHT_MOUSE_UP, onRMouseUp);
+		}
+	}
+
 	function setupOnCloseEvent() {
 		var nw : flash.events.EventDispatcher = Reflect.field(stage, "nativeWindow");
 		if( nw == null ) return;
@@ -124,6 +142,11 @@ class Stage {
 		#end
 	}
 
+	function onResize(e:Dynamic) {
+		for( r in resizeEvents )
+			r();
+	}
+
 	public function setFullScreen( v : Bool ) {
 		#if flash
 		var isAir = flash.system.Capabilities.playerType == "Desktop";
@@ -138,7 +161,9 @@ class Stage {
 			}
 			stage.displayState = state;
 		}
-		#else
+		#elseif hxsdl
+		var win = @:privateAccess System.win;
+		win.fullScreen = v;
 		#end
 	}
 
@@ -180,11 +205,6 @@ class Stage {
 		#else
 		return stage.mouseLock = v;
 		#end
-	}
-
-	function onResize(_) {
-		for( e in resizeEvents )
-			e();
 	}
 
 	function onMouseDown(e:Dynamic) {
@@ -368,9 +388,31 @@ class Stage {
 		event(ev);
 	}
 
-	function onResize(e) {
-		for( r in resizeEvents )
-			r();
+#elseif hxsdl
+
+	function get_mouseX() {
+		return @:privateAccess System.mouseX;
+	}
+
+	function get_mouseY() {
+		return @:privateAccess System.mouseY;
+	}
+
+	function get_width() {
+		return @:privateAccess System.windowWidth;
+	}
+
+	function get_height() {
+		return @:privateAccess System.windowHeight;
+	}
+
+	function get_mouseLock() {
+		return false;
+	}
+
+	function set_mouseLock(b) {
+		if( b ) throw "Not implemented";
+		return b;
 	}
 
 #else
@@ -389,6 +431,15 @@ class Stage {
 
 	function get_height() {
 		return 0;
+	}
+
+	function get_mouseLock() {
+		return false;
+	}
+
+	function set_mouseLock(b) {
+		if( b ) throw "Not implemented";
+		return b;
 	}
 
 #end

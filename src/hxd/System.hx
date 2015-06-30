@@ -1,5 +1,9 @@
 package hxd;
 
+#if hxsdl
+import hxd.Key in K;
+#end
+
 enum Cursor {
 	Default;
 	Button;
@@ -20,6 +24,8 @@ class System {
 	public static var isIOS(get, never) : Bool;
 
 	public static var screenDPI(get,never) : Float;
+
+	public static var setCursor = setNativeCursor;
 
 	#if (flash || nme || openfl)
 
@@ -107,7 +113,14 @@ class System {
             nme.Lib.current.stage.align = nme.display.StageAlign.TOP_LEFT;
             nme.Lib.current.stage.scaleMode = nme.display.StageScaleMode.NO_SCALE;
             nme.Lib.current.loaderInfo = nme.display.LoaderInfo.create(null);
-            callb();
+			try {
+				callb();
+			} catch( e : Dynamic ) {
+				Sys.println(e);
+				#if debug
+				Sys.println(haxe.CallStack.toString(haxe.CallStack.exceptionStack()));
+				#end
+			}
          },
          width, height,
          120, // using 60 FPS with no vsync gives a fps ~= 50
@@ -144,8 +157,6 @@ class System {
 		#end
 			flash.system.System.exit(0);
 	}
-
-	public static var setCursor = setNativeCursor;
 
 	public static function setNativeCursor( c : Cursor ) {
 		#if cpp
@@ -247,8 +258,6 @@ class System {
 		callb();
 	}
 
-	public static var setCursor = setNativeCursor;
-
 	public static function setNativeCursor( c : Cursor ) {
 		var canvas = js.Browser.document.getElementById("webgl");
 		if( canvas != null ) {
@@ -294,6 +303,195 @@ class System {
 	static function get_height() {
 		return Math.round(js.Browser.document.body.clientHeight  * js.Browser.window.devicePixelRatio);
 	}
+
+	#elseif hxsdl
+
+	public static function setNativeCursor( c : Cursor ) {
+		trace("TODO " + c);
+	}
+
+	static function get_screenDPI() {
+		return 72; // not implemented in SDL ???
+	}
+
+	static function get_isIOS() {
+		return false;
+	}
+
+	static function get_isAndroid() {
+		return false;
+	}
+
+	static function get_isWindowed() {
+		return true;
+	}
+
+	static function get_isTouch() {
+		return false;
+	}
+
+	static function get_lang() {
+		return "en";
+	}
+
+	static function get_width() {
+		return sdl.Sdl.getScreenWidth();
+	}
+
+	static function get_height() {
+		return sdl.Sdl.getScreenHeight();
+	}
+
+	public static function exit() {
+		Sys.exit(0);
+	}
+
+	static var win : sdl.Window;
+	static var windowWidth = 800;
+	static var windowHeight = 600;
+	static var mouseX = 0;
+	static var mouseY = 0;
+	static var currentLoop = null;
+	static var CODEMAP = [for( i in 0...2048 ) i];
+	static var CHARMAP = [for( i in 0...2048 ) 0];
+
+	public static function setLoop( f : Void -> Void ) {
+		currentLoop = f;
+	}
+
+	static function mainLoop() {
+		if( currentLoop != null ) currentLoop();
+		win.present();
+	}
+
+	static function onEvent( e : sdl.Event ) {
+		var eh = null;
+		switch( e.type ) {
+		case WindowState:
+			switch( e.state ) {
+			case Resize:
+				windowWidth = win.width;
+				windowHeight = win.height;
+				@:privateAccess Stage.getInstance().onResize(null);
+			default:
+			}
+		case MouseDown:
+			mouseX = e.mouseX;
+			mouseY = e.mouseY;
+			eh = new Event(EPush, e.mouseX, e.mouseY);
+		case MouseUp:
+			mouseX = e.mouseX;
+			mouseY = e.mouseY;
+			eh = new Event(ERelease, e.mouseX, e.mouseY);
+		case MouseMove:
+			mouseX = e.mouseX;
+			mouseY = e.mouseY;
+			eh = new Event(EMove, e.mouseX, e.mouseY);
+		case KeyDown:
+			eh = new Event(EKeyDown);
+			if( e.keyCode & (1 << 30) != 0 ) e.keyCode = (e.keyCode & ((1 << 30) - 1)) + 1000;
+			eh.keyCode = CODEMAP[e.keyCode];
+			eh.charCode = CHARMAP[e.keyCode];
+			if( eh.keyCode & (K.LOC_LEFT | K.LOC_RIGHT) != 0 ) {
+				e.keyCode = eh.keyCode & 0xFF;
+				onEvent(e);
+			}
+		case KeyUp:
+			eh = new Event(EKeyUp);
+			if( e.keyCode & (1 << 30) != 0 ) e.keyCode = (e.keyCode & ((1 << 30) - 1)) + 1000;
+			eh.keyCode = CODEMAP[e.keyCode];
+			eh.charCode = CHARMAP[e.keyCode];
+			if( eh.keyCode & (K.LOC_LEFT | K.LOC_RIGHT) != 0 ) {
+				e.keyCode = eh.keyCode & 0xFF;
+				onEvent(e);
+			}
+		case MouseWheel:
+			eh = new Event(EWheel, mouseX, mouseY);
+			eh.wheelDelta = -e.wheelDelta;
+		default:
+		}
+		if( eh != null ) Stage.getInstance().event(eh);
+	}
+
+	public static function start( init : Void -> Void ) {
+		inline function addKey(sdl, keyCode, charCode=0) {
+			CODEMAP[sdl] = keyCode;
+			if( charCode != 0 ) CHARMAP[sdl] = charCode;
+		}
+		var keys = [
+			//K.BACKSPACE
+			//K.TAB
+			//K.ENTER
+			1225 => K.LSHIFT,
+			1229 => K.RSHIFT,
+			1224 => K.LCTRL,
+			1228 => K.RCTRL,
+			1226 => K.LALT,
+			1230 => K.RALT,
+			// K.ESCAPE
+			// K.SPACE
+			1075 => K.PGUP,
+			1078 => K.PGDOWN,
+			1077 => K.END,
+			1074 => K.HOME,
+			1080 => K.LEFT,
+			1082 => K.UP,
+			1079 => K.RIGHT,
+			1081 => K.DOWN,
+			1073 => K.INSERT,
+			127 => K.DELETE,
+			//K.NUMBER_0-9
+			1098 => K.NUMPAD_0,
+			//K.A-Z
+			//K.F1-F12
+			1085 => K.NUMPAD_MULT,
+			1087 => K.NUMPAD_ADD,
+			1088 => K.NUMPAD_ENTER,
+			1086 => K.NUMPAD_SUB,
+			1099 => K.NUMPAD_DOT,
+			1084 => K.NUMPAD_DIV,
+		];
+
+		/*
+			SDL 2.0 does not allow to get the charCode from a key event.
+			let's for now do a simple mapping, even if not very efficient
+		*/
+		CHARMAP[1098] = "0".code;
+		CHARMAP[1085] = "*".code;
+		CHARMAP[1087] = "+".code;
+		CHARMAP[1088] = 13;
+		CHARMAP[1086] = "-".code;
+		CHARMAP[1084] = "/".code;
+		CHARMAP[1099] = ".".code;
+		CHARMAP[K.BACKSPACE] = 8;
+		CHARMAP[K.TAB] = 9;
+		CHARMAP[K.ENTER] = 13;
+		CHARMAP[K.SPACE] = 32;
+
+		for( i in 0...10 )
+			CHARMAP[K.NUMBER_0 + i] = "0".code + i;
+
+		for( i in 0...9 )
+			addKey(1089 + i, K.NUMPAD_1 + i, "1".code + i);
+		for( i in 0...26 )
+			addKey(97 + i, K.A + i, "a".code + i);
+		for( i in 0...12 )
+			addKey(1058 + i, K.F1 + i);
+		for( sdl in keys.keys() )
+			addKey(sdl, keys.get(sdl));
+		sdl.Sdl.init();
+		var size = haxe.macro.Compiler.getDefine("windowSize");
+		if( size != null ) {
+			var p = size.split("x");
+			windowWidth = Std.parseInt(p[0]);
+			windowHeight = Std.parseInt(p[1]);
+		}
+		win = new sdl.Window("", windowWidth, windowHeight);
+		init();
+		sdl.Sdl.loop(mainLoop,onEvent);
+		sdl.Sdl.quit();
+	}
+
 
 	#end
 

@@ -134,7 +134,7 @@ class View extends Sprite {
 		// draw the tiles				
 		var floorCanvas:BitmapData = new BitmapData(mapData.width * Main.TILE_SIZE, mapData.height * Main.TILE_SIZE);		
 		var wallsCanvas:BitmapData = new BitmapData(mapData.width * Main.TILE_SIZE, mapData.height * Main.TILE_SIZE);		
-		floorCanvas.lock();		
+		floorCanvas.lock();
 		wallsCanvas.lock();
 		inline function tileToSheetXY(t) {
 			t--;
@@ -162,7 +162,7 @@ class View extends Sprite {
 		wallsCanvas.dispose();
 	}
 	
-	public function update(elapsed:Float) {
+	public function update(elapsed:Float) {		
 		// message box?
 		if (messageBox != null) {
 			messageBox.update(elapsed);

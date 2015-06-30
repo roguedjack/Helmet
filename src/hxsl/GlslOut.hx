@@ -32,10 +32,12 @@ class GlslOut {
 	var isVertex : Bool;
 	var allNames : Map<String, Int>;
 	public var varNames : Map<Int,String>;
+	public var flipY : Bool;
 
 	public function new() {
 		varNames = new Map();
 		allNames = new Map();
+		flipY = true;
 	}
 
 	inline function add( v : Dynamic ) {
@@ -189,7 +191,7 @@ class GlslOut {
 			case Texture2D:
 				// convert S/T (bottom left) to U/V (top left)
 				// we don't use 1. because of pixel rounding (fixes artifacts in blur)
-				decl("vec4 _texture2D( sampler2D t, vec2 v ) { return texture2D(t,vec2(v.x,0.999999-v.y)); }");
+				decl("vec4 _texture2D( sampler2D t, vec2 v ) { return texture2D(t,vec2(v.x,"+(flipY?"0.999999-v.y":"v.y")+")); }");
 			default:
 			}
 			add(GLOBALS.get(g));
@@ -213,6 +215,12 @@ class GlslOut {
 				decl(MAT34);
 				decl("vec3 m3x4mult( vec3 v, mat3x4 m) { vec4 ve = vec4(v,1.0); return vec3(dot(m.a,ve),dot(m.b,ve),dot(m.c,ve)); }");
 				add("m3x4mult(");
+				addValue(e1, tabs);
+				add(",");
+				addValue(e2, tabs);
+				add(")");
+			case [OpMod, _, _]:
+				add("mod(");
 				addValue(e1, tabs);
 				add(",");
 				addValue(e2, tabs);
